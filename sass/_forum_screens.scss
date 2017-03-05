@@ -1,0 +1,221 @@
+/*
+ Style adjustments required to make the forums look good on any system.
+ */
+@media screen and (max-width: 960px) {
+  .forum-row {
+    .forum-icon-wrapper {
+      padding: 0.5rem;
+    }
+
+    .forum-statistics {
+      display: none;
+    }
+  }
+
+  .heading-statistics {
+    display: none;
+  }
+
+  .thread-row {
+    .thread-statistics {
+      display: none;
+    }
+  }
+
+  html[dir="ltr"] .ipsDataItem_modCheck {
+    display: flex;
+    left: initial;
+    position: relative;
+    top: initial;
+    padding: 12px 10px;
+    justify-content: center;
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .thread-reply-body-metadata {
+    flex-direction: column;
+  }
+
+  .reply-actions {
+    flex-wrap: wrap;
+    margin-left: 0;
+  }
+
+  html[dir="ltr"] .cForumQuestions .cForumQuestion .ipsDataItem_modCheck, html[dir="ltr"] .cForumQuestions .cForumQuestion .ipsDataItem_main + .cForumQuestion_stat {
+    margin-left: 0;
+  }
+
+  .ipsStream {
+    margin-top: 0;
+  }
+}
+
+@media screen and (max-width: 679px) {
+  .thread-list-actions {
+    flex-direction: column;
+    justify-content: center;
+    align-items: stretch;
+
+    .thread-list-buttons {
+      flex-direction: column;
+      align-items: stretch;
+      margin-left: 0;
+
+      li {
+        margin-left: 0;
+        margin-bottom: 0.5rem;
+
+        &:last-child {
+          margin-bottom: 0;
+        }
+      }
+
+      a {
+        padding: 0.5rem 1rem;
+        text-align: center;
+      }
+    }
+  }
+
+  section.thread-replies {
+    article.thread-reply {
+      flex-direction: column;
+      align-items: center;
+      padding: 1rem;
+
+      .thread-reply-author {
+        flex-direction: row;
+        width: auto;
+        margin-bottom: 1rem;
+
+        .profile-picture {
+          margin-bottom: 0;
+          width: 90px;
+          height: 90px;
+        }
+
+        .user-details {
+          margin-left: 1rem;
+        }
+      }
+
+      .thread-reply-body {
+        margin-left: 0;
+      }
+    }
+  }
+
+  html[dir="ltr"] .ipsDataItem_modCheck {
+    padding: 0.5rem;
+    justify-content: flex-end;
+    background: none;
+    border-left: none;
+    border-top: 1px solid $section-highlight;
+  }
+
+  .forum-row {
+    flex-direction: column;
+    align-items: stretch;
+    margin-bottom: 0.5rem;
+    //background: #fff;
+
+    .forum-icon-wrapper {
+      display: none;
+    }
+
+    .forum-icon-mobile {
+      display: inline-block;
+    }
+
+    &:first-child {
+      .forum-info {
+        border-top: none;
+      }
+    }
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+
+    .forum-info, .forum-statistics, .forum-last-post {
+      flex-basis: auto;
+      border-left: none;
+    }
+
+    .forum-info {
+      align-items: stretch;
+      border-top: 1px solid $section-highlight;
+
+      .forum-details {
+        align-items: center;
+      }
+
+      .forum-children {
+        display: none;
+      }
+    }
+
+    .forum-last-post {
+      align-items: stretch;
+      border-top: 1px solid $section-highlight;
+    }
+
+    .forum-last-post-fact {
+      align-items: flex-start;
+    }
+  }
+
+  section.thread-list {
+    .heading {
+      display: none;
+    }
+  }
+
+  .thread-row {
+    flex-direction: column;
+    align-items: stretch;
+    margin-bottom: 0.5rem;
+    background: #fff;
+
+    .thread-icon-wrapper {
+      display: none;
+    }
+
+    &:first-child {
+      border-top-left-radius: 3px;
+      border-top-right-radius: 3px;
+
+      .thread-info {
+        border-top: none;
+      }
+    }
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+
+    .thread-info, .thread-statistics, .thread-last-post {
+      flex-basis: auto;
+      border-left: none;
+    }
+
+    .thread-info {
+      align-items: stretch;
+      border-top: 1px solid $section-highlight;
+
+      .thread-details {
+        align-items: center;
+      }
+    }
+
+    .thread-last-post {
+      align-items: stretch;
+      border-top: 1px solid $section-highlight;
+    }
+
+    .thread-last-post-fact {
+      align-items: flex-start;
+    }
+  }
+}

@@ -1,0 +1,51 @@
+$accent1: #2e4460;
+$accent2: #de9e59;
+$accent3: #c9d44c;
+$accent4: #cc4523;
+$accent5: #09687C;
+$accent6: #378eda;
+$accent7: #DFA86A;
+
+$body-bg: #2B2B2B !default;
+$body-color: #bbbbbb !default;
+$section-bg: #3C3F41 !default;
+$section-highlight: darken($section-bg, 5%) !default;
+$section-content-bg: lighten($section-bg, 3%);
+$section-content-highlight: lighten($section-bg, 1%);
+$header-bg: #2e4460 !default;
+
+$text-muted: #909090 !default;
+
+$pagination-bg: #63676c !default;
+$pagination-color: #b4bcc1 !default;
+
+$thread-sticky: #2d3d49;
+$thread-locked: #4b4c4e;
+
+$link-color: $accent6 !default;
+$link-decoration: none !default;
+$link-hover-color: #44a7ff !default;
+$link-hover-decoration: none !default;
+
+$scrollbar-track-bg: darken($section-bg, 5%);
+$scrollbar-drag-bg: darken($section-bg, 15%);
+$scrollbar-drag-hover-bg: $accent7;
+
+.prettyprint {
+  .lit {
+    color: #cdcf1b;
+  }
+
+  .kwd {
+    font-weight: bold;
+    color: #ea8b3e;
+  }
+
+  .pun {
+    color: #e3bc5b;
+  }
+
+  .com {
+    color: #888888;
+  }
+}

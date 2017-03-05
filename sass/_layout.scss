@@ -1,0 +1,422 @@
+/*
+ Basic layout shared across all Forge sites.
+ Allows for easy and consistent looks everywhere.
+ */
+
+// Basic wrapper around all content areas, specifies a centered, fixed width area on desktops
+.wrapper {
+  position: relative;
+  width: 1720px;
+  margin: 0 auto;
+  box-sizing: border-box;
+  padding: 0 1rem;
+}
+
+// Header area, contains things such as the logo, links, a search area and the user panel
+header {
+  color: #f9f7f7;
+  background: $header-bg;
+  margin-bottom: 1rem;
+
+  .wrapper {
+    display: flex;
+    align-items: center;
+    padding: 1.5rem 1rem;
+  }
+
+  // Generic search field that stretches the header
+  .search {
+    margin-left: 3rem;
+    background: lighten($header-bg, 10%);
+    height: 40px;
+    flex-grow: 2;
+
+    .search-field {
+      position: relative;
+      height: 100%;
+      overflow: hidden;
+      flex-grow: 2;
+    }
+
+    form {
+      height: 100%;
+      display: flex;
+      align-items: center;
+    }
+
+    input[type=search] {
+      box-sizing: border-box;
+      color: #f9f7f7;
+      width: 100%;
+      height: 100%;
+      background: none;
+      outline: none;
+      border: none;
+      padding: 0 0 0 1rem;
+      max-width: 100%;
+      border-radius: 0;
+
+      &:focus {
+        border-radius: 0;
+        box-shadow: none;
+        outline: none;
+        background: rgba(255, 255, 255, 0.1);
+      }
+    }
+
+    input[type=submit], button[type=submit] {
+      position: relative;
+      float: right;
+      box-sizing: border-box;
+      padding: 0 1rem;
+      max-width: 52px;
+      height: 100%;
+      background: none;
+      outline: none;
+      border: none;
+      color: $accent2;
+      display: block;
+      font-family: FontAwesome, sans-serif;
+      font-size: 1.45rem;
+      transition: color 0.1s ease-in-out;
+
+      &:hover, &:active {
+        color: darken($accent2, 5%);
+        cursor: pointer;
+      }
+    }
+  }
+
+  // Container for user-related data
+  .user-panel {
+    display: flex;
+    align-items: center;
+    margin-left: auto;
+    padding-left: 1rem;
+  }
+
+  a {
+    color: #f9f7f7;
+    text-decoration: none;
+    transition: color 0.1s ease-in-out;
+
+    &:hover, &:active, &:focus {
+      color: darken(#f9f7f7, 10%);
+    }
+  }
+}
+
+// The main navigation uses the semantic 'nav' tag around a list of links in order to use the full potential of HTML5
+nav {
+  font-size: 1.2rem;
+  margin-left: 1rem;
+
+  // Link list is simple and horizontally aligned
+  .links {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+
+    li {
+      float: left;
+      padding: 0 0.4rem;
+
+      &:first-child {
+        padding-left: 0;
+      }
+
+      &:last-child {
+        padding-right: 0;
+      }
+    }
+  }
+}
+
+// Sections are individual blocks separated from each other and the background
+section, table {
+  background: $section-bg;
+  border-radius: 3px;
+  box-shadow: 0 1px 2px $section-highlight;
+  margin-bottom: 1rem;
+  width: 100%;
+
+  h2, thead, .heading {
+    font-size: 1.2rem;
+    color: $pagination-color;
+    margin: 0;
+    border-radius: 3px 3px 0 0;
+    font-weight: normal;
+  }
+
+  h2, .heading {
+    background: $accent1;
+    padding: 0.5rem 1rem;
+  }
+
+  .section-content {
+    padding: 0.5rem 1rem;
+    border-radius: 0 0 3px 3px;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    word-break: break-all;
+    word-break: break-word;
+    hyphens: auto;
+
+    & > *:last-child {
+      margin-bottom: 0;
+    }
+  }
+}
+
+footer {
+  text-align: center;
+  margin-top: 2rem;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+  padding: 1.5rem 0;
+}
+
+/*
+ Several basic controls follow...
+ */
+
+// List sections are vertical listings of entries
+.list-section {
+  padding: 0 !important;
+
+  .row {
+    position: relative;
+    display: flex;
+    flex-flow: row;
+    align-items: stretch;
+    height: auto;
+    border-bottom: 1px solid $section-highlight;
+
+    &:last-child {
+      border-bottom: none;
+    }
+
+    .row-entry {
+      padding: 0.5rem 1rem;
+    }
+  }
+}
+
+// Generic table styles, should work everywhere
+table {
+  thead {
+    th {
+      background: $accent1;
+      padding: 0.5rem 1rem;
+      font-weight: normal;
+
+      &:first-child {
+        border-top-left-radius: 3px;
+      }
+
+      &:last-child {
+        border-top-right-radius: 3px;
+      }
+    }
+  }
+
+  tbody {
+    background: $section-bg;
+
+    tr:nth-child(2n + 1) td {
+      background: rgba(0, 0, 0, 0.05);
+    }
+
+    tr:last-child {
+      td:first-child {
+        border-bottom-left-radius: 3px;
+      }
+
+      td:last-child {
+        border-bottom-right-radius: 3px;
+      }
+    }
+
+    td {
+      padding: 0.5rem 1rem;
+      font-weight: normal;
+    }
+  }
+}
+
+// Paragraphs receive a slight bottom margin to not stretch content areas too much vertically
+p {
+  margin-bottom: 0.1rem;
+}
+
+// Buttons
+.btn {
+  display: inline-block;
+  border: none;
+  padding: 0.5rem 0.7rem;
+  transition: background 0.2s ease-in-out;
+  outline: none;
+  border-radius: 0;
+  background: $accent2;
+  color: #fafafa;
+
+  &:hover, &:active, &:focus {
+    border: none;
+    color: #fafafa;
+    background: lighten($accent2, 10%);
+  }
+}
+
+.btn-large {
+  padding: 0.7rem 0.9rem;
+  font-size: 1.2rem;
+}
+
+// General purpose pagination control
+.pagination {
+  display: flex;
+  align-items: center;
+  padding: 0;
+  list-style-type: none;
+  margin: 0 0 1rem;
+
+  &.pagination-center {
+    justify-content: center;
+  }
+
+  li {
+    display: block;
+    margin-left: 0.25rem;
+
+    a {
+      display: block;
+      padding: 0.2rem 0.5rem;
+      background: $pagination-bg;
+      color: $pagination-color;
+      border-radius: 3px;
+      transition: background 0.2s ease-in-out;
+
+      &:hover, &:focus, &:active {
+        color: $pagination-color;
+        background: darken($pagination-bg, 10%) !important;
+      }
+    }
+
+    &.pagination-active {
+      display: block;
+      padding: 0.2rem 0.5rem;
+      background: $pagination-color;
+      border-radius: 3px;
+      font-weight: bold;
+      color: $body-color !important;
+      box-shadow: 0 2px 2px darken($pagination-color, 10%);
+    }
+
+    &.pagination-ellipsis {
+      font-size: 0.9em;
+    }
+
+    &.pagination-disabled {
+      display: block;
+      padding: 0.2rem 0.5rem;
+      border-radius: 3px;
+      background: $pagination-bg;
+      color: $pagination-color;
+    }
+
+    &.pagination-first, &.pagination-last, &.pagination-next, &.pagination-prev {
+      a {
+        background: none;
+        color: $pagination-bg;
+        transition: color 0.2s ease-in-out;
+
+        &:hover, &:active, &:focus {
+          background: none !important;
+          color: darken($pagination-bg, 5%) !important;;
+        }
+      }
+
+      &.pagination-disabled {
+        background: none;
+        padding: 0.2rem 0.5rem;
+        color: $pagination-bg;
+      }
+    }
+
+    &:first-child {
+      padding-left: 0;
+      margin-left: 0;
+
+      a {
+        padding-left: 0;
+      }
+    }
+
+    &:last-child {
+      padding-right: 0;
+
+      a {
+        padding-right: 0;
+      }
+    }
+  }
+}
+
+
+// Generic code styles
+.codeheader {
+  margin-bottom: 0.5rem;
+}
+
+pre, .ipsCode, code {
+  font-family: "Source Code Pro", Consolas, monospace;
+  margin: 0;
+  white-space: pre;
+  overflow-wrap: normal;
+  word-wrap: normal;
+  font-size: 0.8rem;
+  background: $section-content-bg;
+  border: 1px solid darken($section-content-bg, 5%) !important;
+  border-radius: 3px;
+  max-width: 100%;
+}
+
+code {
+  color: lighten($accent4, 5%);
+  padding: 0.02rem 0.2rem;
+  overflow: auto;
+}
+
+pre, .ipsCode {
+  padding: 0.5rem;
+  color: $body-color;
+
+  code {
+    display: block;
+    color: $body-color;
+    background: none;
+    padding: 0;
+    border-radius: 0;
+    border: none;
+  }
+}
+
+// Block quotes for quoting people
+blockquote {
+  border: none;
+  border-left: 5px solid darken($body-bg, 3%);
+  background: lighten($body-bg, 3%);
+  padding: 0.5rem;
+
+  footer {
+    text-align: left;
+    padding: 0;
+    font-size: 0.8rem;
+
+    &:before {
+      content: '- ';
+    }
+  }
+}
+
+// Import adjustments for non-desktop devices
+@import "layout_screens";

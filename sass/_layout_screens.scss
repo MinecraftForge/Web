@@ -1,0 +1,58 @@
+/*
+ Style adjustments required to make the generic layout look good on any system.
+ */
+// Mobile only elements
+.mobile-only {
+  display: none;
+}
+
+@media screen and (max-width: 1720px) {
+  .wrapper {
+    width: 100%;
+  }
+}
+
+@media screen and (max-width: 1080px) {
+  header {
+    .wrapper {
+      flex-direction: column;
+    }
+
+    nav, .search, .user-panel {
+      margin-left: 0;
+    }
+
+    .user-panel {
+      padding-left: 0;
+    }
+
+    nav {
+      margin-top: 0.2rem;
+    }
+
+    .search, .user-panel {
+      margin-top: 0.7rem;
+    }
+
+    .search {
+      flex-grow: 1;
+      align-self: stretch;
+    }
+  }
+}
+
+@media screen and (max-width: 679px) {
+  .mobile-only {
+    display: block;
+  }
+
+  header {
+    .user-panel {
+      flex-direction: column;
+
+      .user-panel-links {
+        margin-left: 0;
+      }
+    }
+  }
+}

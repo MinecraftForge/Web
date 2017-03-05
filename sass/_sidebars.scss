@@ -1,0 +1,226 @@
+.sidebar-wrapper {
+  position: relative;
+  box-sizing: border-box;
+  display: flex;
+
+  .sidebar-left {
+    margin-right: 1rem;
+  }
+
+  .sidebar-right {
+    margin-left: 1rem;
+  }
+
+  .sidebar-left, .sidebar-right, aside {
+    min-width: 300px;
+    max-width: 300px;
+  }
+
+  .sidebar-sticky, .sidebar-sticky aside {
+    min-width: 300px;
+    max-width: 300px;
+    max-height: calc(100vh - (90px + 2rem));
+  }
+
+  &-content {
+    flex-grow: 1;
+    min-height: calc(100vh - (90px + 2rem));
+    max-width: calc(100% - 300px - 1rem);
+  }
+}
+
+.open-sidebar, .close-sidebar {
+  display: none;
+}
+
+section.sidebar-nav h2 {
+  border-bottom: none;
+}
+
+section.sidebar-nav {
+  background: none;
+  box-shadow: none;
+}
+
+.collapsible-icon {
+  font-size: 0.8rem !important;
+  margin-right: 0.25rem;
+}
+
+section.sidebar-nav > ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  max-height: calc(100vh - (90px + 42px + 2rem));
+  overflow-y: scroll;
+
+  .elem-text {
+    display: block;
+  }
+
+  .elem-active {
+    font-weight: bold;
+
+    & > * {
+      font-weight: normal;
+    }
+
+    & > .elem-text {
+      font-weight: bold;
+    }
+  }
+
+  .jspPane {
+    background: $section-bg;
+    border-radius: 0 0 3px 3px;
+    box-shadow: 0 1px 2px $section-highlight;
+  }
+
+  & > li, .jspPane > li {
+    & > .elem-text {
+      display: block;
+      line-height: 1rem;
+      color: $pagination-color;
+      background: lighten($accent1, 5%);
+      padding: 0.5rem;
+    }
+
+    & > a.elem-text {
+      transition: background 0.2s ease-in-out;
+
+      &:hover, &:active, &:focus {
+        background: lighten($accent1, 10%);
+      }
+    }
+
+    ul {
+      list-style-type: none;
+      background: $section-bg;
+      margin: 0;
+      padding: 0;
+
+      li {
+        padding: 0.2rem 0.5rem;
+      }
+    }
+  }
+
+  a {
+    display: block;
+  }
+}
+
+@media screen and (max-width: 1080px) {
+  .logo {
+    width: 100%;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    img {
+      margin: 0 auto;
+    }
+  }
+
+  body.sidebar-active {
+    position: fixed;
+    width: 100%;
+  }
+
+  .open-sidebar {
+    display: block;
+    font-size: 2rem;
+  }
+
+  .close-sidebar {
+    display: inline;
+    color: $pagination-color;
+    font-size: 1.5rem;
+    margin-right: 0.5rem;
+
+    &:hover, &:active {
+      color: darken($pagination-color, 5%);
+    }
+  }
+
+  .sidebar-wrapper {
+    flex-direction: column;
+
+    &-content {
+      max-width: 100%;
+      min-height: 0;
+    }
+
+    .sidebar-left.sidebar-sticky {
+      transform: translateX(-100%);
+    }
+
+    .sidebar-right.sidebar-sticky {
+      transform: translateX(100%);
+    }
+
+    .sidebar-left, .sidebar-right, aside {
+      width: 100%;
+      max-width: 100%;
+      display: flex;
+      align-items: center;
+      flex-direction: column;
+    }
+
+    .sidebar-left {
+      margin-right: 0;
+    }
+
+    .sidebar-right {
+      margin-left: 0;
+    }
+
+    .sidebar-sticky {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 10000;
+      width: 100%;
+      height: 100%;
+      transition: transform 0.75s ease-in-out;
+      max-width: 100%;
+      max-height: 100%;
+
+      &.active-sidebar {
+        transform: translateX(0);
+      }
+
+      aside, section {
+        height: 100%;
+        box-shadow: none;
+        max-width: 100%;
+        max-height: 100%;
+      }
+
+      section.sidebar-nav {
+        background: $section-bg;
+      }
+
+      section.sidebar-nav > ul {
+        max-height: calc(100% - 42px);
+
+        .jspPane {
+          border-radius: 0;
+          box-shadow: none;
+        }
+      }
+
+      section {
+        &, h2, .heading {
+          border-radius: 0;
+        }
+
+        h2, .heading {
+          display: flex;
+          align-items: center;
+        }
+      }
+    }
+  }
+}

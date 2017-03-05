@@ -1,0 +1,652 @@
+/*
+ Styles dedicated to the forums.
+ This includes both custom-added elements as well as fixes for IPS default styles.
+ */
+
+// Adjust search field to fit our needs
+header .search {
+  // Use custom CSS animations, since the default ones are horrible
+  @keyframes expand {
+    from {
+      max-width: 0;
+    }
+    to {
+      max-width: 150px;
+    }
+  }
+
+  @keyframes shrink {
+    from {
+      max-width: 150px;
+    }
+    to {
+      max-width: 0;
+    }
+  }
+
+  #elSearchFilter {
+    padding: 0 1rem;
+    transition: transform 0.2s ease-in-out;
+    overflow: hidden;
+    white-space: nowrap;
+
+    &.ipsAnim_fade.ipsAnim_in {
+      transform-origin: 0 0;
+      animation-name: expand;
+      animation-duration: 0.2s;
+      overflow: hidden;
+    }
+
+    &.ipsAnim_fade.ipsAnim_out {
+      transform-origin: 0 0;
+      animation-name: shrink;
+      animation-duration: 0.2s;
+      overflow: hidden;
+    }
+  }
+
+  .ipsMenu a {
+    &:hover, &:focus, &:active {
+      color: $body-color;
+    }
+  }
+}
+
+// Generic IPS styles for controls
+.ipsApp .ipsButton {
+  @extend .btn
+}
+
+.ipsSideMenu_itemActive a, a.ipsSideMenu_itemActive, .ipsSideMenu_withChecks .ipsSideMenu_item > input[type="checkbox"]:checked ~ a, .ipsSideMenu_withRadios .ipsSideMenu_item > input[type="radio"]:checked ~ a {
+  &:hover, &:active, &:focus {
+    background: #151515;
+    color: #fff;
+  }
+}
+
+.ipsApp .ipsButton_verySmall {
+  padding: 0 0.5rem;
+}
+
+.ipsApp .ipsButton.ipsButton_primary {
+  @extend .btn
+}
+
+.ipsApp .ipsButton_medium {
+  line-height: 1.4;
+}
+
+html[dir="rtl"] #elMessageViewer, html[dir="ltr"] #elMessageViewer {
+  border-radius: 3px;
+  background: $section-bg;
+  box-shadow: 0 1px 2px $section-highlight;
+  padding: 1rem;
+}
+
+.ipsQuote, .ipsSpoiler {
+  border: none;
+  background: $section-content-bg;
+  padding: 0;
+  margin-bottom: 0.5rem;
+
+  .ipsQuote_citation, .ipsSpoiler_header {
+    padding: 0.5rem 1rem;
+    margin: 0;
+    color: $body-color;
+    background: $section-content-highlight;
+
+    a {
+      color: darken($body-color, 6%);
+    }
+  }
+
+  .ipsQuote_open, .ipsQuote_closed, .ipsSpoiler_open, .ipsSpoiler_closed {
+    a[data-action="toggleQuote"]:before {
+      color: $body-color;
+    }
+  }
+
+  .ipsQuote_citation + div, .ipsSpoiler_header + div {
+    padding: 0.5rem 1rem;
+  }
+}
+
+.ipsQuote .ipsQuote_citation + div {
+  border-left: 5px solid $section-content-highlight;
+}
+
+iframe[data-embedContent] {
+  background: $section-content-bg;
+  min-height: 0;
+}
+
+.ipsEmbedded_headerArea {
+  background: $section-content-highlight;
+}
+
+.ipsEmbedded_content {
+  background: none;
+}
+
+// Boxes and widgets employed in IPS basically are sections
+.ipsBox, .ipsWidget.ipsWidget_vertical {
+  @extend section;
+}
+
+// Very specific hacks for headlines in boxes
+.ipsBox:not(.cProfileSidebarBlock):not(.cTopicPostArea), .ipsWidget.ipsWidget_vertical {
+  h2:not(.ipsType_minorHeading):not(.ipsStreamItem_title), h2.ipsType_sectionTitle, h2.ipsWidget_title {
+    font-size: 1.2rem;
+    color: $pagination-color;
+    margin: 0;
+    border-radius: 3px 3px 0 0;
+    font-weight: normal;
+  }
+
+  h2:not(.ipsType_minorHeading):not(.ipsStreamItem_title), h2.ipsType_sectionTitle, h2.ipsWidget_title {
+    background: $accent1;
+    padding: 0.5rem 1rem;
+  }
+}
+
+// IPS does not use its variables for everything, unfortunately
+.ipsTabs, .ipsButtonBar {
+  background: lighten($accent1, 5%);
+}
+
+// Forum listings are sections dedicated to lists of (sub)forums
+.forum-list {
+  padding: 0 !important;
+}
+
+.forum-header {
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+
+  &-follow {
+    margin-left: auto;
+  }
+}
+
+.forum-row {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  height: auto;
+  border-bottom: 1px solid $section-highlight;
+
+  &:last-child {
+    border-bottom: none;
+    border-bottom-right-radius: 3px;
+    border-bottom-left-radius: 3px;
+
+    .forum-icon-wrapper {
+      border-bottom-left-radius: 3px;
+    }
+  }
+
+  // The forum icon signifies its type and read/unread status
+  .forum-icon-wrapper, .forum-icon-mobile {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-basis: 0;
+    font-size: 1.2rem;
+    padding: 1rem 0 1rem 1rem;
+
+    a.forum-icon, .forum-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: $section-highlight;
+      border-radius: 100%;
+      width: 40px;
+      height: 40px;
+      color: $section-bg;
+    }
+
+    &.unread .forum-icon {
+      background: $accent2;
+    }
+
+    &.unread a.forum-icon {
+      background: $accent2;
+
+      &:hover, &:active, &:focus {
+        background: darken($accent2, 5%);
+      }
+    }
+  }
+
+  .forum-icon-mobile {
+    display: none;
+    font-size: 0.9rem;
+    padding: 0 0.25rem 0 0;
+
+    a.forum-icon, .forum-icon {
+      width: 30px;
+      height: 30px;
+    }
+  }
+
+  // The forum info contains all important details about a forum
+  .forum-info {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    flex-grow: 15;
+    flex-basis: 0;
+
+    .forum-details {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: center;
+      padding: 0.4rem 0.7rem;
+      flex-grow: 2;
+    }
+
+    .forum-title {
+      display: block;
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: $body-color;
+    }
+
+    .forum-link {
+      color: $body-color;
+      transition: color 0.2s ease-in-out;
+
+      &:hover, &:focus, &:active {
+        color: lighten($body-color, 10%);
+      }
+    }
+
+    .forum-description {
+      color: $text-muted;
+    }
+
+    .forum-children {
+      display: flex;
+
+      .forum-children-label {
+        margin-right: 0.3rem;
+        flex-grow: 0;
+        flex-shrink: 0;
+      }
+
+      .forum-children-list {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        flex-grow: 2;
+        flex-basis: 0;
+        margin: 0;
+        padding: 0;
+
+        li {
+          display: flex;
+          flex-direction: row;
+          align-items: center;
+          list-style-type: none;
+          margin-right: 0.5rem;
+
+          &:after {
+            content: ",";
+          }
+
+          &:last-child:after {
+            content: "";
+          }
+        }
+
+        .forum-child > * {
+          display: flex;
+          align-items: center;
+
+          .unread-marker {
+            margin-right: 5px;
+          }
+        }
+      }
+    }
+  }
+
+  .fa.unread-marker {
+    color: $accent2;
+    font-size: 0.7rem;
+    display: table-cell;
+    vertical-align: middle;
+    height: 100%;
+  }
+
+  // The forum statistics show several interesting facts to users as well as moderation informations
+  .forum-statistics {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 2;
+    flex-basis: 0;
+    border-left: 1px solid $section-highlight;
+    background: rgba(0, 0, 0, 0.02);
+
+    a.warning-link, .warning-link {
+      color: $accent4;
+    }
+
+    a.warning-link {
+      &:hover, &:active, &:focus {
+        color: darken($accent4, 5%);
+      }
+    }
+
+    .forum-statistics-fact {
+      flex-grow: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.4rem;
+      border-bottom: 1px solid $section-highlight;
+      color: $text-muted;
+      text-align: center;
+
+      &:last-child {
+        border-bottom: none;
+      }
+    }
+  }
+
+
+  // The last post overview shows the most important information about the last edited thread
+  .forum-last-post {
+    display: flex;
+    flex-direction: column;
+    flex-basis: 0;
+    flex-grow: 3.5;
+    border-left: 1px solid $section-highlight;
+
+    .forum-last-post-fact {
+      flex-grow: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.4rem;
+      border-bottom: 1px solid $section-highlight;
+      color: $text-muted;
+
+      &:last-child {
+        border-bottom: none;
+      }
+    }
+  }
+}
+
+// Analogous to forum listings, thread listings display information about threads
+.thread-list {
+  padding: 0 !important;
+
+  h2 {
+    border-bottom: none;
+  }
+}
+
+.thread-row {
+  position: relative;
+  display: flex;
+  flex-flow: row;
+  align-items: stretch;
+  height: auto;
+  border-bottom: 1px solid $section-highlight;
+
+  &:last-child {
+    border-bottom: none;
+    border-bottom-left-radius: 3px;
+    border-bottom-right-radius: 3px;
+
+    .thread-icon {
+      border-bottom-left-radius: 3px;
+    }
+
+    .thread-last-post-goto {
+      border-bottom-right-radius: 3px;
+    }
+  }
+
+  &-sticky {
+    background: $thread-sticky !important;
+  }
+
+  &-locked {
+    background: $thread-locked !important;
+    font-style: italic;
+  }
+
+  .thread-icon-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-basis: 0;
+    font-size: 1rem;
+    padding: 1rem 0 1rem 1rem;
+
+    a.thread-icon, .thread-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: $section-highlight;
+      border-radius: 100%;
+      width: 30px;
+      height: 30px;
+      color: $section-bg;
+    }
+
+    &.unread .thread-icon {
+      background: $accent2;
+    }
+
+    &.unread a.thread-icon {
+      background: $accent2;
+
+      &:hover, &:active, &:focus {
+        background: darken($accent2, 5%);
+      }
+    }
+  }
+
+  .thread-icon-mobile {
+    display: none;
+  }
+
+  .forum-icon-mobile {
+    &.unread {
+      color: $accent2;
+    }
+  }
+
+  .thread-info {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    flex-grow: 15;
+    flex-basis: 0;
+
+    .thread-details {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: center;
+      padding: 0.4rem 0.7rem;
+      flex-grow: 2;
+    }
+
+    .pagination {
+      margin-bottom: 0;
+    }
+
+    .pagination .pagination-first a {
+      padding-right: 0.2rem;
+    }
+
+    .pagination .pagination-last a {
+      padding-left: 0.2rem;
+    }
+
+    .thread-heading {
+      font-size: 1.2rem;
+      color: $body-color;
+      font-weight: bold;
+    }
+
+    .thread-new-marker {
+      color: $accent2;
+    }
+
+    .thread-link {
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: $body-color;
+      transition: color 0.2s ease-in-out;
+
+      &:hover, &:focus, &:active {
+        color: darken($body-color, 10%) !important;;
+      }
+    }
+
+    .thread-description {
+      color: $text-muted;
+    }
+
+    .thread-children {
+      display: flex;
+      border-top: 1px solid $section-highlight;
+      padding: 0.4rem 0.7rem;
+
+      .thread-children-label {
+        min-width: 100px;
+        margin-right: 0.3rem;
+      }
+
+      .thread-children-list {
+        flex-grow: 2;
+      }
+    }
+  }
+
+  .thread-statistics {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 2;
+    flex-basis: 0;
+    border-left: 1px solid $section-highlight;
+    background: rgba(0, 0, 0, 0.02);;
+
+    .thread-statistics-fact {
+      flex-grow: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.4rem;
+      border-bottom: 1px solid $section-highlight;
+      color: $text-muted;
+      text-align: center;
+
+      &:last-child {
+        border-bottom: none;
+      }
+    }
+  }
+
+  .thread-last-post {
+    display: flex;
+    align-items: stretch;
+    flex-grow: 3.5;
+    flex-basis: 0;
+    border-left: 1px solid $section-highlight;
+
+    .thread-last-post-facts {
+      display: flex;
+      flex-grow: 2;
+      flex-direction: column;
+    }
+
+    .thread-last-post-fact {
+      flex-grow: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.4rem;
+      border-bottom: 1px solid $section-highlight;
+      color: $text-muted;
+
+      &:last-child {
+        border-bottom: none;
+      }
+    }
+  }
+
+  .thread-last-post-goto {
+    display: flex;
+    align-items: center;
+    font-size: 1.5rem;
+    border-left: 1px solid $section-highlight;
+    padding: 0.5rem;
+    color: $text-muted;
+    background: rgba(0, 0, 0, 0.02);
+    transition: color 0.2s ease-in-out;
+
+    &:hover, &:focus, &:active {
+      color: darken($text-muted, 10%) !important;
+    }
+
+    .fa {
+      display: block;
+    }
+  }
+
+  // Checkbox for moderators to edit threads in the listing
+  .ipsDataItem_modCheck {
+    display: flex;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.02);
+    border-left: 1px solid $section-highlight;
+  }
+}
+
+// List of actions that can be applied to threads in a listing
+.thread-list-actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .thread-list-buttons {
+    display: flex;
+    justify-content: left;
+    margin-left: auto;
+    list-style-type: none;
+    padding: 0;
+
+    li {
+      margin-left: 0.5rem;
+
+      &:first-child {
+        margin-left: 0;
+      }
+    }
+
+    a {
+      display: block;
+      background: $accent2;
+      color: #fafafa;
+      padding: 0.5rem 2rem;
+      transition: background 0.2s ease-in-out;
+
+      &:hover, &:active, &:focus {
+        background: lighten($accent2, 10%);
+      }
+    }
+  }
+}
+
+// Import adjustments for non-desktop devices
+@import "layout_screens";

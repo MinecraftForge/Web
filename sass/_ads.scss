@@ -1,0 +1,59 @@
+/*
+ Advertisement stylesheets applicable everywhere.
+ They respond to the display size and hence support responsive ads from Google.
+ */
+.ad {
+  position: relative;
+  margin-bottom: 1rem !important;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #fafafa;
+}
+
+.ad-desktop-300x600 {
+  min-width: 300px;
+  width: 300px;
+  max-width: 300px;
+  height: 600px;
+}
+
+.ad-desktop-728x90 {
+  min-width: 728px;
+  width: 728px;
+  max-width: 728px;
+  height: 90px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+@media screen and (max-width: 1080px) {
+  .ad-desktop-300x600 {
+    min-width: 728px;
+    width: 728px;
+    max-width: 728px;
+    height: 90px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .ad-desktop-300x600 {
+    min-width: 300px;
+    width: 300px;
+    max-width: 300px;
+    height: 250px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .ad-desktop-728x90 {
+    min-width: 320px;
+    width: 320px;
+    max-width: 320px;
+    height: 100px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}

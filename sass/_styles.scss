@@ -1,0 +1,20 @@
+/*
+ Generic stylesheet shared across all platforms
+ */
+@import "base";
+@import url(https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300);
+@import url('https://fonts.googleapis.com/css?family=Source+Code+Pro:300,400,700&subset=latin-ext');
+
+@import "layout";
+// All sites may contain ads
+@import "ads";
+
+.clearfix {
+  &:after {
+    content: ".";
+    clear: both;
+    display: block;
+    visibility: hidden;
+    height: 0;
+  }
+}
