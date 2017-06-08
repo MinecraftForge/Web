@@ -57,6 +57,11 @@ header .search {
   @extend .btn
 }
 
+// "Very small" button isn't particularly small with our default theming
+.ipsApp .ipsButton_verySmall {
+  line-height: 12px;
+}
+
 .ipsSideMenu_itemActive a, a.ipsSideMenu_itemActive, .ipsSideMenu_withChecks .ipsSideMenu_item > input[type="checkbox"]:checked ~ a, .ipsSideMenu_withRadios .ipsSideMenu_item > input[type="radio"]:checked ~ a {
   &:hover, &:active, &:focus {
     background: #151515;
@@ -152,6 +157,11 @@ iframe[data-embedContent] {
 // IPS does not use its variables for everything, unfortunately
 .ipsTabs, .ipsButtonBar {
   background: lighten($accent1, 5%);
+}
+
+// Thread entries etc. need to be
+.ipsComment {
+  display: table;
 }
 
 // Forum listings are sections dedicated to lists of (sub)forums
@@ -649,4 +659,4 @@ iframe[data-embedContent] {
 }
 
 // Import adjustments for non-desktop devices
-@import "layout_screens";
+@import "forum_screens";
