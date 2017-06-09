@@ -1,0 +1,235 @@
+@import url("https://fonts.googleapis.com/css?family=Roboto+Slab:300,400,700");
+
+.docs-entry {
+  background: $section-bg;
+  box-shadow: 0 1px 2px $section-highlight;
+  border-radius: 3px;
+  padding: 1rem;
+  overflow-x: auto;
+  width: 100%;
+  max-width: 100%;
+
+  h1, h2, h3, h4, h5, h6 {
+    margin: 0 0 0.5rem;
+    font-family: "Roboto Slab", serif;
+
+    code {
+      background: none;
+      border: none;
+      padding: 0;
+      font-size: inherit;
+      font-weight: normal;
+      color: inherit;
+    }
+  }
+
+  h1, h2 {
+    border-bottom: 1px solid $section-highlight;
+    padding-bottom: 0.625rem;
+  }
+
+  h1 {
+    font-size: 1.6rem;
+  }
+
+  h2 {
+    font-size: 1.4rem;
+    margin: 1rem 0 0.5rem;
+  }
+
+  h3 {
+    color: $accent2;
+    font-weight: normal;
+  }
+
+  ul, ol, dl {
+    padding-left: 1.4rem;
+  }
+
+  p, pre, table {
+    margin-bottom: 0.625rem;
+  }
+  p, ul, ol, dl {
+    text-align: justify;
+
+    code {
+      white-space: pre;
+      word-wrap: normal;
+    }
+  }
+}
+
+.docs-entry-footer-buttons {
+  margin-top: 1rem;
+}
+
+section.sidebar-nav > ul {
+  .elem-toc {
+    background: rgba(0, 0, 0, 0.05);
+    padding: 0 !important;
+
+    & > .elem-text {
+      padding: 0.2rem 0.5rem;
+    }
+  }
+
+  .table-of-contents {
+    background: none !important;
+    font-size: 0.9rem !important;
+
+    .toc-item, .toc-subitem {
+      padding-left: 1rem;
+    }
+  }
+}
+
+.float-right {
+  float: right;
+}
+
+.float-left {
+  float: left;
+}
+
+.admonition {
+  border-radius: 3px;
+  box-shadow: 0 1px 2px $section-highlight;
+  margin-bottom: 0.625rem;
+  background: #c8e7fa;
+
+  p {
+    padding: 0 1rem;
+  }
+
+  pre {
+    margin-left: 1rem;
+    margin-right: 1rem;
+  }
+
+  .admonition-title {
+    background: #79c2f2;
+    font-size: 1.2rem;
+    color: $pagination-color;
+    margin: 0;
+    border-radius: 3px 3px 0 0;
+    font-weight: normal;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  }
+
+  & > *:nth-child(2) {
+    margin-top: 0.5rem;
+  }
+
+  & > *:not(pre):last-child {
+    padding-bottom: 0.5rem;
+  }
+
+  &.note {
+    background: #c8e7fa;
+
+    .admonition-title {
+      background: #79c2f2;
+    }
+  }
+
+  &.important {
+    background: #c8fae1;
+
+    .admonition-title {
+      background: #78f0b4;
+    }
+  }
+
+  &.warning, &.attention {
+    background: #fae1c8;
+
+    .admonition-title {
+      background: #f0b478;
+    }
+  }
+}
+
+.injected {
+  display: none;
+}
+
+// Highlight JS
+.hljs {
+  display: block;
+  overflow-x: auto;
+  -webkit-text-size-adjust: none
+}
+
+.hljs-comment, .diff .hljs-header, .hljs-javadoc {
+  color: #998;
+  font-style: italic
+}
+
+.hljs-keyword, .css .rule .hljs-keyword, .hljs-winutils, .nginx .hljs-title, .hljs-subst, .hljs-request, .hljs-status {
+  color: #333;
+  font-weight: bold
+}
+
+.hljs-number, .hljs-hexcolor, .ruby .hljs-constant {
+  color: #008080
+}
+
+.hljs-string, .hljs-tag .hljs-value, .hljs-phpdoc, .hljs-dartdoc, .tex .hljs-formula {
+  color: #d14
+}
+
+.hljs-title, .hljs-id, .scss .hljs-preprocessor {
+  color: #900;
+  font-weight: bold
+}
+
+.hljs-list .hljs-keyword, .hljs-subst {
+  font-weight: normal
+}
+
+.hljs-class .hljs-title, .hljs-type, .vhdl .hljs-literal, .tex .hljs-command {
+  color: #458;
+  font-weight: bold
+}
+
+.hljs-tag, .hljs-tag .hljs-title, .hljs-rule .hljs-property, .django .hljs-tag .hljs-keyword {
+  color: #000080;
+  font-weight: normal
+}
+
+.hljs-attribute, .hljs-variable, .lisp .hljs-body, .hljs-name {
+  color: #008080
+}
+
+.hljs-regexp {
+  color: #009926
+}
+
+.hljs-symbol, .ruby .hljs-symbol .hljs-string, .lisp .hljs-keyword, .clojure .hljs-keyword, .scheme .hljs-keyword, .tex .hljs-special, .hljs-prompt {
+  color: #990073
+}
+
+.hljs-built_in {
+  color: #0086b3
+}
+
+.hljs-preprocessor, .hljs-pragma, .hljs-pi, .hljs-doctype, .hljs-shebang, .hljs-cdata {
+  color: #999;
+  font-weight: bold
+}
+
+.hljs-deletion {
+  background: #fdd
+}
+
+.hljs-addition {
+  background: #dfd
+}
+
+.diff .hljs-change {
+  background: #0086b3
+}
+
+.hljs-chunk {
+  color: #aaa
+}
