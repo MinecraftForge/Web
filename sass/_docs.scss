@@ -49,6 +49,12 @@
   p, pre, table {
     margin-bottom: 0.625rem;
   }
+
+  table {
+    display: block;
+    overflow-x: auto;
+  }
+
   p, ul, ol, dl {
     text-align: justify;
 
