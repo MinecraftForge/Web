@@ -11,10 +11,21 @@
   background: #fafafa;
 }
 
+.ad-container {
+  text-align: center;
+}
+
 .ad-desktop-300x600 {
   min-width: 300px;
   width: 300px;
   max-width: 300px;
+  height: 600px;
+}
+
+.ad-desktop-160x600 {
+  min-width: 160px;
+  width: 160px;
+  max-width: 160px;
   height: 600px;
 }
 
@@ -41,8 +52,8 @@
   }
 }
 
-@media screen and (max-width: 1080px) {
-  .ad-desktop-300x600 {
+@media screen and (max-width: $mobile-break) {
+  .ad-desktop-300x600, .ad-desktop-160x600 {
     min-width: 728px;
     width: 728px;
     max-width: 728px;
@@ -53,7 +64,7 @@
 }
 
 @media screen and (max-width: 767px) {
-  .ad-desktop-300x600 {
+  .ad-desktop-300x600, .ad-desktop-160x600 {
     min-width: 300px;
     width: 300px;
     max-width: 300px;

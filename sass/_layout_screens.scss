@@ -12,7 +12,7 @@
   }
 }
 
-@media screen and (max-width: 1080px) {
+@media screen and (max-width: $mobile-break) {
   header {
     .wrapper {
       flex-direction: column;

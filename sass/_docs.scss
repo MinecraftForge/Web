@@ -113,12 +113,12 @@ section.sidebar-nav > ul {
   }
 
   .admonition-title {
-    background: #79c2f2;
+    font-weight: bold;
+    padding: 0.2rem 1rem;
     font-size: 1.2rem;
     color: $pagination-color;
     margin: 0;
     border-radius: 3px 3px 0 0;
-    font-weight: normal;
     border-bottom: 1px solid rgba(0, 0, 0, 0.1);
   }
 
@@ -131,26 +131,26 @@ section.sidebar-nav > ul {
   }
 
   &.note {
-    background: #c8e7fa;
+    background: #dcedfa;
 
     .admonition-title {
-      background: #79c2f2;
+      background: #5caae6;
     }
   }
 
   &.important {
-    background: #c8fae1;
+    background: #dbfaf4;
 
     .admonition-title {
-      background: #78f0b4;
+      background: #38BE8F;
     }
   }
 
   &.warning, &.attention {
-    background: #fae1c8;
+    background: #faebdc;
 
     .admonition-title {
-      background: #f0b478;
+      background: #f0a860;
     }
   }
 }
