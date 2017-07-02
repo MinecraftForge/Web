@@ -373,7 +373,7 @@ pre, .ipsCode, code {
   white-space: pre;
   overflow-wrap: normal;
   word-wrap: normal;
-  font-size: 0.8rem;
+  font-size: $font-size-code;
   background: $section-content-bg;
   border: 1px solid darken($section-content-bg, 5%) !important;
   border-radius: 3px;
@@ -398,6 +398,10 @@ pre, .ipsCode {
     border-radius: 0;
     border: none !important;
   }
+}
+
+a pre, a code {
+  color: inherit;
 }
 
 // Block quotes for quoting people
