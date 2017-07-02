@@ -70,7 +70,7 @@ header .search {
 }
 
 .ipsApp .ipsButton_verySmall {
-  padding: 0 0.5rem;
+  padding: 0.5rem;
 }
 
 .ipsApp .ipsButton.ipsButton_primary {
@@ -79,6 +79,10 @@ header .search {
 
 .ipsApp .ipsButton_medium {
   line-height: 1.4;
+}
+
+.ipsApp .ipsButton_split li a {
+  padding: 0.5rem;
 }
 
 html[dir="rtl"] #elMessageViewer, html[dir="ltr"] #elMessageViewer {
@@ -131,6 +135,19 @@ iframe[data-embedContent] {
 
 .ipsEmbedded_content {
   background: none;
+}
+
+// Editor fixes
+.cke_top {
+  background: #f9f9f9 !important;
+}
+
+.cke_inner, .cke_contents, .cke_wysiwyg_frame, .cke_wysiwyg_div {
+  background: $section-bg !important;
+}
+
+.ipsComposeArea_editor {
+  background: $section-highlight;
 }
 
 // Boxes and widgets employed in IPS basically are sections
@@ -366,7 +383,6 @@ iframe[data-embedContent] {
       }
     }
   }
-
 
   // The last post overview shows the most important information about the last edited thread
   .forum-last-post {
