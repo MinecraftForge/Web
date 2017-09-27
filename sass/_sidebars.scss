@@ -12,8 +12,8 @@
   }
 
   .sidebar-left, .sidebar-right, aside {
-    min-width: 300px;
-    max-width: 300px;
+    min-width: 330px;
+    max-width: 330px;
   }
 
   .sidebar-sticky {
@@ -22,8 +22,8 @@
   }
 
   .sidebar-sticky, .sidebar-sticky aside {
-    min-width: 300px;
-    max-width: 300px;
+    min-width: 330px;
+    max-width: 330px;
     max-height: calc(100vh - (90px + 2rem));
   }
 
@@ -33,7 +33,7 @@
 
   .sidebar-sticky-wrapper-content {
     min-height: calc(100vh - (90px + 2rem));
-    max-width: calc(100% - 300px - 1rem);
+    max-width: calc(100% - 330px - 1rem);
   }
 }
 

@@ -15,9 +15,9 @@
   &-framed {
     padding: 1rem;
     box-sizing: content-box;
-    background: #fff;
+    background: $section-bg;
     border-radius: 3px;
-    border: 1px solid #dbdbdb;
+    border: 1px solid $section-highlight;
 
     &:before {
       content: 'ADVERTISEMENT';
@@ -27,6 +27,10 @@
       font-size: 1.1rem;
       display: block;
       text-align: left;
+    }
+
+    .ad {
+      margin-bottom: 0 !important;
     }
   }
 }
