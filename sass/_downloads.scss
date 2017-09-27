@@ -274,16 +274,16 @@
   content: "\f0c1";
 }
 
-.promo-latest:before { /* full star */
-  content: "\f123";
+.promo-latest:before {
+  content: "\f188"; // Bug
 }
 
-.promo-recommended:before { /* half-star */
-  content: "\f005";
+.promo-recommended:before {
+  content: "\f005"; // Full Star
 }
 
-.marker-branch:before { /* bug */
-  content: "\f188";
+.marker-branch:before {
+  content: "\f126"; // Fork
 }
 
 .ad-downloads-top {
