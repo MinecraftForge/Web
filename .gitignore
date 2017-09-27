@@ -8,3 +8,5 @@
 !/*.md
 !/LICENSE
 !/.gitignore
+!/gulpfile.js
+!/package.json
