@@ -12,7 +12,23 @@
 }
 
 .ad-container {
-  text-align: center;
+  &-framed {
+    padding: 1rem;
+    box-sizing: content-box;
+    background: #fff;
+    border-radius: 3px;
+    border: 1px solid #dbdbdb;
+
+    &:before {
+      content: 'ADVERTISEMENT';
+      padding-bottom: 0.25rem;
+      position: relative;
+      font-weight: bold;
+      font-size: 1.1rem;
+      display: block;
+      text-align: left;
+    }
+  }
 }
 
 .ad-desktop-300x600 {
