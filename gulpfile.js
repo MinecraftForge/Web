@@ -1,8 +1,7 @@
 var gulp = require('gulp');
 var sass = require('gulp-sass');
 var minifyCSS = require('gulp-csso');
-var concat = require('gulp-concat');
-var rename = require('gulp-rename');
+var concat = require('gulp-concat-multi');
 var minifyJS = require('gulp-uglify');
 
 gulp.task('css', function () {
@@ -13,15 +12,15 @@ gulp.task('css', function () {
 });
 
 gulp.task('js', function () {
-    return gulp.src('./js/**/*.js')
-        .pipe(concat('merged.js'))
-        .pipe(gulp.dest('./dist/js'))
-        .pipe(rename('merged.min.js'))
+    return concat({
+        'files.js': ['js/shared/**/*.js', 'js/files.js'],
+        'docs.js': ['js/shared/**/*.js', 'js/docs.js']
+    })
         .pipe(minifyJS())
         .pipe(gulp.dest('./dist/js'))
 });
 
-gulp.task('watch', function() {
+gulp.task('watch', function () {
     gulp.watch('./sass/**/*.scss', ['css']);
     gulp.watch('./js/**/*.js', ['js']);
 });

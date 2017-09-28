@@ -241,6 +241,11 @@ table {
       font-weight: normal;
     }
   }
+
+  td:last-child {
+    // Make last column fill full width
+    width: 100%;
+  }
 }
 
 // Paragraphs receive a slight bottom margin to not stretch content areas too much vertically

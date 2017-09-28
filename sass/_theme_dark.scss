@@ -28,7 +28,7 @@ $link-hover-color: #44a7ff !default;
 $link-hover-decoration: none !default;
 
 $scrollbar-track-bg: darken($section-bg, 5%);
-$scrollbar-drag-bg: darken($section-bg, 15%);
+$scrollbar-drag-bg: #222425;
 $scrollbar-drag-hover-bg: $accent7;
 
 .prettyprint {
