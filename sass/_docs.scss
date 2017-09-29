@@ -50,11 +50,6 @@
     margin-bottom: 0.625rem;
   }
 
-  table {
-    display: block;
-    overflow-x: auto;
-  }
-
   p, ul, ol, dl {
     text-align: justify;
 
@@ -170,4 +165,11 @@ section.sidebar-nav > ul {
   display: block;
   overflow-x: auto;
   -webkit-text-size-adjust: none
+}
+
+@media screen and (max-width: $mobile-break) {
+  table {
+    display: block;
+    overflow-x: auto;
+  }
 }
