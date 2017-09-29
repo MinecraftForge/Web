@@ -1,6 +1,12 @@
 /*
  Styles specific to the downloads page
  */
+.downloads-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
 .downloads {
   position: relative;
   display: flex;
@@ -287,11 +293,12 @@
 }
 
 .ad-downloads-top {
-  margin: 3rem auto !important;
+  margin-bottom: 5rem !important;
 }
 
 .ad-downloads-bottom {
   margin-top: 5rem !important;
+  margin-bottom: 3rem !important;
 }
 
 .info-tooltip {
@@ -306,8 +313,8 @@
     }
 
     .sidebar-right {
-      min-width: 160px;
-      max-width: 160px;
+      min-width: 190px;
+      max-width: 190px;
     }
   }
 
@@ -315,7 +322,7 @@
     max-width: calc(100% - 160px - 1rem);
   }
 
-  .ad-downloads-right {
+  .ad-downloads-right .ad {
     min-width: 160px;
     width: 160px;
     max-width: 160px;
@@ -323,13 +330,12 @@
   }
 }
 
-@media screen and (max-width: 1120px) {
+@media screen and (max-width: 1170px) {
   .downloads {
     flex-direction: column;
     align-items: center;
 
     div.download {
-      min-width: 0;
       margin: 0 0 1rem;
 
       &:last-child {
@@ -338,7 +344,7 @@
     }
   }
 
-  .ad-downloads-top, .ad-downloads-bottom {
+  .ad-downloads-top .ad, .ad-downloads-bottom .ad {
     min-width: 320px;
     width: 320px;
     max-width: 320px;
@@ -353,6 +359,14 @@
 }
 
 @media screen and (max-width: $mobile-break) {
+  .downloads-wrapper {
+    flex-direction: column-reverse;
+
+    .ad-downloads-top {
+      margin: 3rem auto !important;
+    }
+  }
+
   .sidebar-wrapper {
     .sidebar-left.sidebar-sticky, .sidebar-sticky aside {
       min-width: 0;
@@ -445,11 +459,13 @@
 
 @media screen and (max-width: 767px) {
   .ad-downloads-right {
-    min-width: 300px;
-    width: 300px;
-    max-width: 300px;
-    height: 250px;
-    margin-left: auto;
-    margin-right: auto;
+    .ad {
+      min-width: 300px;
+      width: 300px;
+      max-width: 300px;
+      height: 250px;
+      margin-left: auto;
+      margin-right: auto;
+    }
   }
 }
