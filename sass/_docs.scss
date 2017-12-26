@@ -167,6 +167,20 @@ section.sidebar-nav > ul {
   -webkit-text-size-adjust: none
 }
 
+.headerlink {
+  display: inline-block;
+  margin-left: 0.5rem;
+  font: normal normal normal 14px/1 FontAwesome;
+  font-size: inherit;
+  text-rendering: auto;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  &:before {
+    content: "\f0c1";
+  }
+}
+
 @media screen and (max-width: $mobile-break) {
   table {
     display: block;

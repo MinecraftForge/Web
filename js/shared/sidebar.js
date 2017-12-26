@@ -19,27 +19,53 @@ $(document).ready(function () {
         e.preventDefault();
     });
     // Collapsible elements implementation
-    $('.nav-collapsible:not(.nav-collapsible-open)').css('display', 'none');
-    var icons = $('.nav-collapsible-open').siblings('.toggle-collapsible').children('.collapsible-icon');
-    var texts = $('.nav-collapsible-open').siblings('.toggle-collapsible').children('.collapsible-text');
-    icons.removeClass('fa-plus');
-    icons.addClass('fa-minus');
-    texts.html('Show');
-    $('.toggle-collapsible').click(function (e) {
-        var collapsible = $(this).siblings('.nav-collapsible');
-        var icon = $(this).children('.collapsible-icon');
-        var text= $(this).children('.collapsible-text');
-        if (collapsible.css('display') == 'none') {
-            collapsible.css('display', 'block');
-            icon.addClass('fa-minus');
-            icon.removeClass('fa-plus');
-            text.html('Hide');
+    $('.collapsible,.nav-collapsible').each(function () {
+        var item = $(this);
+        var toggle = item.parent().find('.toggle-collapsible');
+        var showText = item.data('show-text') ? item.data('show-text') : 'Show';
+        var hideText = item.data('hide-text') ? item.data('hide-text') : 'Hide';
+        var toggleStyle = item.data('toggle-style') ? item.data('toggle-style') : 'display';
+        var isCollapsed = function() {
+            return toggleStyle == 'class' ? item.hasClass('collapsed') : item.css('display') == 'none';
+        };
+        var changeState = function(state) {
+            if (toggleStyle == 'class') {
+                if (state) {
+                    item.removeClass('collapsed');
+                    item.addClass('expanded');
+                } else {
+                    item.removeClass('expanded');
+                    item.addClass('collapsed');
+                }
+            } else {
+                item.css('display', state ? 'block' : 'none');
+            }
+        };
+        if (!item.hasClass('nav-collapsible-open')) {
+            changeState(false);
         } else {
-            collapsible.css('display', 'none');
-            icon.addClass('fa-plus');
-            icon.removeClass('fa-minus');
-            text.html('Show');
+            changeState(true);
+            var icons = toggle.find('.collapsible-icon');
+            var texts = toggle.find('.collapsible-text');
+            icons.removeClass('fa-plus');
+            icons.addClass('fa-minus');
+            texts.html(showText);
         }
-        e.preventDefault();
+        toggle.click(function (e) {
+            var icon = toggle.find('.collapsible-icon');
+            var text = toggle.find('.collapsible-text');
+            if (isCollapsed()) {
+                changeState(true);
+                icon.addClass('fa-minus');
+                icon.removeClass('fa-plus');
+                text.html(hideText);
+            } else {
+                changeState(false);
+                icon.addClass('fa-plus');
+                icon.removeClass('fa-minus');
+                text.html(showText);
+            }
+            e.preventDefault();
+        });
     });
 });
