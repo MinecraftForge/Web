@@ -5,6 +5,8 @@
 !/images/*
 !/js/
 !/js/*
+!/templates/
+!/templates/*
 !/*.md
 !/LICENSE
 !/.gitignore
