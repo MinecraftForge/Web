@@ -1,0 +1,32 @@
+<main class="wrapper">
+    <div>
+        <h1>Directory Listing - {{ name }}</h1>
+        <table class="directory-listing">
+            <thead>
+            <tr>
+                <th width="200px">Directory</th>
+                <th width="190px">Time</th>
+                <th>Children</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% if name != "maven" %}
+                <tr class="directory-listing-back">
+                    <td colspan="3">
+                        <a href=".."><i class="fa fa-arrow-left" aria-hidden="true"></i> Go Back</a>
+                    </td>
+                </tr>
+            {% endif %}
+            {% for path in paths|reverse %}
+                <tr>
+                    <td><a href="./{{ path.path }}/">{{ path.path }}</a></td>
+                    <td>{{ path.timestamp }}</td>
+                    <td>
+                        {% for child in path.children %}{% if not loop.first %}, {% endif %}<a href="./{{ path.path }}/{{ child }}/">{{ child }}</a>{% endfor %}
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</main>
