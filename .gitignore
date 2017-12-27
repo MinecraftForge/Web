@@ -7,8 +7,10 @@
 !/js/*
 !/templates/
 !/templates/*
+!/gradle/
+!/gradle/**
 !/*.md
 !/LICENSE
-!/.gitignore
-!/gulpfile.js
-!/package.json
+!/gradlew
+!/gradlew.bat
+!/build.gradle
