@@ -1,42 +1,42 @@
 plugins {
-  id "io.freefair.jsass-base" version "1.0.0"
-  id "com.eriwen.gradle.js" version "2.14.1"
+    id "io.freefair.jsass-base" version "1.0.0"
+    id "com.eriwen.gradle.js" version "2.14.1"
 }
 
 task css(type: io.freefair.gradle.plugins.jsass.SassCompile) {
-	sassPath = "${projectDir}/sass"
-	cssPath = "${buildDir}/css"
-	sourceMapEnabled = false
-	outputStyle = io.bit3.jsass.OutputStyle.COMPRESSED
+    sassPath = "${projectDir}/sass"
+    cssPath = "${buildDir}/css"
+    sourceMapEnabled = false
+    outputStyle = io.bit3.jsass.OutputStyle.COMPRESSED
 }
 
 def createJsTask(name, unique) {
-	def combineTask = tasks.create("combine${name.capitalize()}Js", com.eriwen.gradle.js.tasks.CombineJsTask) {
-	    source = fileTree("${projectDir}/js/shared").include('**/*.js').filter { it.isFile() }.files.path + unique
-	    dest = file("${buildDir}/js/${name}.js")
-	}
-	def minifyTask = tasks.create("minify${name.capitalize()}Js", com.eriwen.gradle.js.tasks.MinifyJsTask) {
-	    source = combineTask
-	    dest = file("${buildDir}/js/${name}.js")
-	}
+    def combineTask = tasks.create("combine${name.capitalize()}Js", com.eriwen.gradle.js.tasks.CombineJsTask) {
+        source = fileTree("${projectDir}/js/shared").include('**/*.js').filter { it.isFile() }.files.path + unique
+        dest = file("${buildDir}/js/${name}.js")
+    }
+    def minifyTask = tasks.create("minify${name.capitalize()}Js", com.eriwen.gradle.js.tasks.MinifyJsTask) {
+        source = combineTask
+        dest = file("${buildDir}/js/${name}.js")
+    }
 }
 
 createJsTask('files', ["${projectDir}/js/files.js"])
 createJsTask('docs', ["${projectDir}/js/docs.js"])
 
 task bundleFiles(type: Zip) {
-	baseName = 'files-bundle'
-	destinationDir = file("${buildDir}/distributions")
+    baseName = 'files-bundle'
+    destinationDir = file("${buildDir}/distributions")
     from(minifyFilesJs) {
-	    into 'js'
-	}
+        into 'js'
+    }
     from(css) {
-    	include 'website_*.css'
-	    into 'css'
-	    rename ~/website_([A-Za-z]+)/, 'styles_$1'
+        include 'website_*.css'
+        into 'css'
+        rename ~/website_([A-Za-z]+)/, 'styles_$1'
     }
     from("${projectDir}/templates") {
-    	include '**/*.html'
-	    into 'templates'
+        include '**/*.html'
+        into 'templates'
     }
 }
