@@ -147,7 +147,7 @@
                             <td class="download-version">
                                 {{ version.version }}
                                 {%- if version.marker %}
-                                    <i class="fa fa-star promo-{{ version.marker|lower }}"></i>
+                                    <i class="fa promo-{{ version.marker|lower }}"></i>
                                 {%- endif %}
                                 {%- set branch = version.branch %}
                                 {%- if md.mcver and branch == md.mcver %}
