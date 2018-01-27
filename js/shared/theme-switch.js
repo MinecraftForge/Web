@@ -17,9 +17,9 @@
     if (!localStorage.theme) {
         localStorage.theme = THEME_LIGHT;
     }
-    swapThemeCSS(localStorage.theme);
 
     $(document).ready(function () {
+        swapThemeCSS(localStorage.theme);
         var toggle = $('.theme-switch input');
         toggle.prop('checked', localStorage.theme === THEME_DARK);
         toggle.change(function () {
