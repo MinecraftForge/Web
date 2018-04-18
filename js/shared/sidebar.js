@@ -21,7 +21,7 @@ $(document).ready(function () {
     // Collapsible elements implementation
     $('.collapsible,.nav-collapsible').each(function () {
         var item = $(this);
-        var toggle = item.parent().find('.toggle-collapsible');
+        var toggle = item.parent().find('> .toggle-collapsible');
         var showText = item.data('show-text') ? item.data('show-text') : 'Show';
         var hideText = item.data('hide-text') ? item.data('hide-text') : 'Hide';
         var toggleStyle = item.data('toggle-style') ? item.data('toggle-style') : 'display';
@@ -45,15 +45,15 @@ $(document).ready(function () {
             changeState(false);
         } else {
             changeState(true);
-            var icons = toggle.find('.collapsible-icon');
-            var texts = toggle.find('.collapsible-text');
+            var icons = toggle.find('> .collapsible-icon');
+            var texts = toggle.find('> .collapsible-text');
             icons.removeClass('fa-plus');
             icons.addClass('fa-minus');
             texts.html(showText);
         }
         toggle.click(function (e) {
-            var icon = toggle.find('.collapsible-icon');
-            var text = toggle.find('.collapsible-text');
+            var icon = toggle.find('> .collapsible-icon');
+            var text = toggle.find('> .collapsible-text');
             if (isCollapsed()) {
                 changeState(true);
                 icon.addClass('fa-minus');
