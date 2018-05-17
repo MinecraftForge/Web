@@ -29,6 +29,7 @@ task bundleFiles(type: Zip) {
     destinationDir = file("${buildDir}/distributions")
     from(minifyFilesJs) {
         into 'js'
+        rename ~/files/, 'merged'
     }
     from(css) {
         include 'website_*.css'

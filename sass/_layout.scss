@@ -93,6 +93,21 @@ header {
     align-items: center;
     margin-left: auto;
     padding-left: 1rem;
+
+    ul.user-panel-links {
+      display: flex;
+      list-style-type: none;
+      align-items: center;
+      margin-bottom: 0;
+
+      li {
+        margin-right: 1rem;
+
+        &:last-child {
+          margin-right: 0;
+        }
+      }
+    }
   }
 
   a {
