@@ -13,11 +13,11 @@
 
   z-index: 1000000;
 
-  background: lighten($accent1, 5%);
+  background: #2f2f2f;
   color: #eeeeee;
 
   .wrapper {
-    padding: 1rem;
+    padding: 2rem 1rem;
     display: flex;
     flex-wrap: wrap;
     align-items: center;
