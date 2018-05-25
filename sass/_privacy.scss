@@ -1,0 +1,79 @@
+/*
+ Styles related to privacy-related settings.
+ */
+
+// Bar under the navigation for privacy disclaimer
+.privacy-disclaimer {
+  position: sticky;
+  display: none;
+  top: 0;
+  width: 100%;
+  margin-top: -1rem;
+  margin-bottom: 1rem;
+
+  z-index: 1000000;
+
+  background: lighten($accent1, 5%);
+  color: #eeeeee;
+
+  .wrapper {
+    padding: 1rem;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  &-text a {
+    color: lighten($accent6, 30%);
+
+    &:hover, &:active, &:focus {
+      color: lighten($accent6, 35%);
+    }
+  }
+
+  &-links {
+    margin-left: auto;
+
+    a {
+      margin-left: 0.5rem;
+    }
+
+    a.btn-cookie-disclaimer-decline {
+      color: #eeeeee;
+
+      &:hover, &:active, &:focus {
+        color: #fafafa;
+      }
+    }
+  }
+}
+
+.privacy-policy {
+  display: flex;
+  flex-direction: column;
+
+  .privacy-settings {
+    margin-top: 1rem;
+
+    a.btn-privacy-settings-decline {
+      margin-left: 0.5rem;
+    }
+  }
+
+  .donation-links {
+    margin: 1rem 0;
+    list-style-type: none;
+    padding-left: 0.5rem;
+
+    li {
+      margin-bottom: 0.25rem;
+    }
+
+    i {
+      text-align: center;
+      width: 1rem;
+      margin-right: 0.5rem;
+      font-size: 1.1rem;
+    }
+  }
+}

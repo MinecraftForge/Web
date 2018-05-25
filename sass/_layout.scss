@@ -12,6 +12,11 @@
   padding: 0 1rem;
 }
 
+// Simple class to hide any element
+.hidden {
+  display: none !important;
+}
+
 // Header area, contains things such as the logo, links, a search area and the user panel
 header {
   color: #f9f7f7;

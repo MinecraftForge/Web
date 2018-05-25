@@ -40,4 +40,7 @@ task bundleFiles(type: Zip) {
         include '**/*.html'
         into 'templates'
     }
+    from("${projectDir}/docs") {
+        include '**/*.html'
+    }
 }

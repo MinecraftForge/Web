@@ -25,10 +25,10 @@ $(document).ready(function () {
         var showText = item.data('show-text') ? item.data('show-text') : 'Show';
         var hideText = item.data('hide-text') ? item.data('hide-text') : 'Hide';
         var toggleStyle = item.data('toggle-style') ? item.data('toggle-style') : 'display';
-        var isCollapsed = function() {
+        var isCollapsed = function () {
             return toggleStyle == 'class' ? item.hasClass('collapsed') : item.css('display') == 'none';
         };
-        var changeState = function(state) {
+        var changeState = function (state) {
             if (toggleStyle == 'class') {
                 if (state) {
                     item.removeClass('collapsed');

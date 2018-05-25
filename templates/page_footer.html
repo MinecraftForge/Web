@@ -1,6 +1,6 @@
 <div class="wrapper">
     <footer>
-        Copyright © 2017 by Forge Development LLC<br>
+        Copyright © 2018 by Forge Development LLC &middot; <a href="/maven/manage/static/privacy.html">Privacy Settings</a> <br>
         Layout is designed by and used with permission from PaleoCrafter
         <div class="theme-switch-wrapper">
             Enable Dark Theme
@@ -20,24 +20,5 @@
 <script type="text/javascript" src="https://files.minecraftforge.net/maven/manage/static/js/merged.js"></script>
 {% if md.analytics %}{{ md.analytics }}{% endif %}
 
-<script language="JavaScript">
-    function geoplugin(json)
-    {
-        disablePersonalizedForUK(json.geoplugin_countryCode.toLowerCase())
-    }
-    function disablePersonalizedForUK(country)
-    {
-        //Attempt to be compatible with GDPR by disabeling personalized ads for users in the EU.
-        //TODO: Ask for consent, and find multiple/better ways to lookup the country. Perferably one that doesn't require external services.
-        //EU members acording to https://europa.eu/european-union/about-eu/countries_en and thus part of the GDPR:
-        //        Austria, Belgium, Bulgaria, Croatia, Cyprus, Czech Republic, Denmark, Estonia, Finland, France, Germany, Greece, Hungary, Ireland, Italy, Latvia, Lithuania, Luxembourg, Malta, Netherlands, Poland, Portugal, Romania, Slovakia, Slovenia, Spain, Sweden, United Kingdom
-        var EU = ["at",    "be",    "bg",     "hr",    "cy",   "cz",           "dk",    "ee",    "fi",    "fr",   "de",    "gr",   "hu",    "ie",    "it",  "lv",   "lt",      "lu",       "mt",  "nl",        "pl",   "pt",     "ro",    "sk",     "si",     "es",  "se",   "gb"]; 
-        if (EU.includes(country))
-        {
-            (adsbygoogle = window.adsbygoogle || []).requestNonPersonalizedAds=1;
-        }
-    }
-</script>
-<script language="JavaScript" src="http://www.geoplugin.net/json.gp?jsoncallback=geoplugin" type="text/javascript"></script>
 </body>
 </html>
