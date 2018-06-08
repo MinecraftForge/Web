@@ -72,6 +72,31 @@
   }
 }
 
+// Warning message for enabled ad blockers
+.ad-container .block-note {
+  font-size: 1.4rem;
+  display: none;
+  color: #f64627;
+  padding: 0.5rem;
+  align-items: center;
+
+  .block-note-icon {
+    font-size: 4rem;
+    margin-right: 1rem;
+  }
+}
+
+// Ad block detection
+.loading-done .ad-container {
+  // This generally detects various methods of ad blocking, such as simply hiding an element, blocking loading and removing it
+  .block-note:only-child,
+  .adsbygoogle:not([data-adsbygoogle-status]) + .block-note,
+  .adsbygoogle[hidden] + .block-note,
+  *:not(.adsbygoogle) + .block-note {
+    display: flex !important;
+  }
+}
+
 @media screen and (max-width: $mobile-break) {
   .ad-desktop-300x600, .ad-desktop-160x600 {
     min-width: 728px;
@@ -80,6 +105,15 @@
     height: 90px;
     margin-left: auto;
     margin-right: auto;
+  }
+
+  .ad-container .block-note {
+    flex-direction: column;
+
+    .block-note-icon {
+      margin-right: 0;
+      margin-bottom: 1rem;
+    }
   }
 }
 

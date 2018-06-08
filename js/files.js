@@ -25,6 +25,7 @@ $('.adsbygoogle').each(function () {
 });
 
 $(document).ready(function () {
+    $('body').addClass('loading-done');
     var consent = localStorage.consent;
 
     if (consent !== undefined) {

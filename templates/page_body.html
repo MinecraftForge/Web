@@ -45,7 +45,18 @@
         {%- endif %}
         <div class="promos-wrapper">
             {%- if md.ad_left %}
-                <div class="ad-container ad-container-framed ad-downloads-top">{{ md.ad_left }}</div>
+                <div class="ad-container ad-container-framed ad-downloads-top">
+                    {{ md.ad_left }}
+                    <div class="block-note">
+                        <div class="block-note-icon"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i></div>
+                        <div class="block-note-text">
+                            It appears that you're using an ad blocker. Ads are Forge's main source of income, so please
+                            consider adding an exception for this site.<br>
+                            If you'd like to support Forge while keeping ads blocked, please consider supporting
+                            <a href="https://www.patreon.com/LexManos" target="_blank">LexManos on Patreon</a>.
+                        </div>
+                    </div>
+                </div>
             {%- endif %}
             <div class="promos-content">
                 <h1>Downloads for {{ md.name }} - MC {{ md.mcver }}</h1>
@@ -201,14 +212,36 @@
                 </table>
             </div>
             {%- if md.ad_middle %}
-                <div class="ad-container-framed ad-downloads-bottom">{{ md.ad_middle }}</div>
+                <div class="ad-container-framed ad-downloads-bottom">
+                    {{ md.ad_middle }}
+                    <div class="block-note">
+                        <div class="block-note-icon"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i></div>
+                        <div class="block-note-text">
+                            It appears that you're using an ad blocker. Ads are Forge's main source of income, so please
+                            consider adding an exception for this site.<br>
+                            If you'd like to support Forge while keeping ads blocked, please consider supporting
+                            <a href="https://www.patreon.com/LexManos" target="_blank">LexManos on Patreon</a>.
+                        </div>
+                    </div>
+                </div>
             {%- endif %}
         </div>
     </div>
 
     {%- if md.ad_right %}
         <aside class="sidebar-right">
-            <div class="ad-container-framed ad-downloads-right">{{ md.ad_right }}</div>
+            <div class="ad-container-framed ad-downloads-right">
+                {{ md.ad_right }}
+                <div class="block-note">
+                    <div class="block-note-icon"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i></div>
+                    <div class="block-note-text">
+                        It appears that you're using an ad blocker. Ads are Forge's main source of income, so please
+                        consider adding an exception for this site.<br>
+                        If you'd like to support Forge while keeping ads blocked, please consider supporting
+                        <a href="https://www.patreon.com/LexManos" target="_blank">LexManos on Patreon</a>.
+                    </div>
+                </div>
+            </div>
         </aside>
     {%- endif %}
 </main>
