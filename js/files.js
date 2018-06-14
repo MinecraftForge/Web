@@ -13,7 +13,7 @@ function giveConsent() {
 
 function revokeConsent() {
     localStorage.consent = 'declined';
-    localStorage.removeItem('theme');
+    //localStorage.removeItem('theme');
     $('.privacy-disclaimer').remove();
     (adsbygoogle = window.adsbygoogle || []).requestNonPersonalizedAds = 1;
     (adsbygoogle = window.adsbygoogle || []).pauseAdRequests = 0;
@@ -28,15 +28,11 @@ $(document).ready(function () {
     $('body').addClass('loading-done');
     var consent = localStorage.consent;
 
-    if (consent !== undefined) {
-        $('.privacy-disclaimer').remove();
-        (adsbygoogle = window.adsbygoogle || []).pauseAdRequests = 0;
-    }
-
     if (consent === 'accepted') {
-        $.themeSwitch();
+        giveConsent();
     } else if (consent === 'declined') {
-        $('.theme-switch-wrapper').remove();
+        //$('.theme-switch-wrapper').remove();
+        revokeConsent();
     } else if (localStorage.consent === undefined) {
         // Display the disclaimer by default, in case the request fails completely
         $('.privacy-disclaimer').css('display', 'block');
