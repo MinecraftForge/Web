@@ -152,6 +152,16 @@ nav {
   }
 }
 
+.hero {
+  margin-top: -1rem;
+  color: #f9f7f7;
+  background: darken($header-bg, 5%);
+
+  .wrapper {
+    padding: 2rem;
+  }
+}
+
 // Sections are individual blocks separated from each other and the background
 section, table {
   background: $section-bg;

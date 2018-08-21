@@ -168,7 +168,7 @@ section.sidebar-nav > ul {
       transform: translateX(100%);
     }
 
-    .sidebar-left, .sidebar-right, aside {
+    & > .sidebar-left, & > .sidebar-right, & > aside, & > .sidebar-left > aside, & > .sidebar-right > aside {
       width: 100%;
       max-width: 100%;
       display: flex;

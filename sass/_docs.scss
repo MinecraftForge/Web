@@ -96,7 +96,7 @@ section.sidebar-nav > ul {
   border-radius: 3px;
   box-shadow: 0 1px 2px $section-highlight;
   margin-bottom: 0.625rem;
-  background: #c8e7fa;
+  overflow-y: auto; // Allow child margin to affect admonition height
 
   p {
     padding: 0 1rem;
@@ -121,10 +121,6 @@ section.sidebar-nav > ul {
     margin-top: 0.5rem;
   }
 
-  & > *:not(pre):last-child {
-    padding-bottom: 0.5rem;
-  }
-
   // Admonition colors are constructed using the base theme colors
   @function admonition-bg($hue) {
     @return hsl($hue, saturation($accent5), lightness($scrollbar-track-bg));
@@ -143,7 +139,7 @@ section.sidebar-nav > ul {
     }
   }
 
-  &.note {
+  &, &.note {
     @include admonition(206);
   }
 

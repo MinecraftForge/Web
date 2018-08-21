@@ -4,7 +4,7 @@
 
 function giveConsent() {
     localStorage.consent = 'accepted';
-    $.themeSwitch();
+    window.themeSwitchToggle();
     $('.theme-switch-wrapper').removeClass('hidden');
     $('.privacy-disclaimer').remove();
     (adsbygoogle = window.adsbygoogle || []).requestNonPersonalizedAds = 0;

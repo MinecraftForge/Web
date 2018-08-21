@@ -10,19 +10,23 @@ task css(type: io.freefair.gradle.plugins.jsass.SassCompile) {
     outputStyle = io.bit3.jsass.OutputStyle.COMPRESSED
 }
 
-def createJsTask(name, unique) {
-    def combineTask = tasks.create("combine${name.capitalize()}Js", com.eriwen.gradle.js.tasks.CombineJsTask) {
-        source = fileTree("${projectDir}/js/shared").include('**/*.js').filter { it.isFile() }.files.path + unique
-        dest = file("${buildDir}/js/${name}.js")
+def createJsTask(name, unique, includeShared = true) {
+    def combineTask = null
+    if (includeShared) {
+        combineTask = tasks.create("combine${name.capitalize()}Js", com.eriwen.gradle.js.tasks.CombineJsTask) {
+            source = fileTree("${projectDir}/js/shared").include('**/*.js').filter { it.isFile() }.files.path + unique
+            dest = file("${buildDir}/js/${name}.js")
+        }
     }
     def minifyTask = tasks.create("minify${name.capitalize()}Js", com.eriwen.gradle.js.tasks.MinifyJsTask) {
-        source = combineTask
+        source = includeShared ? combineTask : unique[0]
         dest = file("${buildDir}/js/${name}.js")
     }
 }
 
 createJsTask('files', ["${projectDir}/js/files.js"])
 createJsTask('docs', ["${projectDir}/js/docs.js"])
+createJsTask('themeSwitch', ["${projectDir}/js/theme-switch.js"], false)
 
 task bundleFiles(type: Zip) {
     baseName = 'files-bundle'
