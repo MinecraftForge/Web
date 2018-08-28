@@ -19,10 +19,10 @@
             {% endif %}
             {% for path in paths|reverse %}
                 <tr>
-                    <td><a href="./{{ path.path }}/">{{ path.path }}</a></td>
+                    <td><a href="{{ path.path_full }}">{{ path.path }}</a></td>
                     <td>{{ path.timestamp }}</td>
                     <td>
-                        {% for child in path.children %}{% if not loop.first %}, {% endif %}<a href="./{{ path.path }}/{{ child }}/">{{ child }}</a>{% endfor %}
+                        {% for child in path.children %}{% if not loop.first %}, {% endif %}<a href="{{ path.path_full }}{{ child }}/">{{ child }}</a>{% endfor %}
                     </td>
                 </tr>
             {% endfor %}

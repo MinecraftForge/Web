@@ -35,6 +35,10 @@ task bundleFiles(type: Zip) {
         into 'static/js'
         rename ~/files/, 'merged'
     }
+    from(minifyThemeSwitchJs) {
+        into 'static/js'
+        rename ~/themeSwitch/, 'theme-switch'
+    }
     from(css) {
         include 'website_*.css'
         into 'static/css'
