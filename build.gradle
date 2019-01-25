@@ -10,30 +10,47 @@ task css(type: io.freefair.gradle.plugins.jsass.SassCompile) {
     outputStyle = io.bit3.jsass.OutputStyle.COMPRESSED
 }
 
-def createJsTask(name, unique, includeShared = true) {
+def createJsTask(name, files) {
     def combineTask = null
-    if (includeShared) {
-        combineTask = tasks.create("combine${name.capitalize()}Js", com.eriwen.gradle.js.tasks.CombineJsTask) {
-            source = fileTree("${projectDir}/js/shared").include('**/*.js').filter { it.isFile() }.files.path + unique
-            dest = file("${buildDir}/js/${name}.js")
-        }
+    combineTask = tasks.create("combine${name.capitalize()}Js", com.eriwen.gradle.js.tasks.CombineJsTask) {
+        source = files
+        dest = file("${buildDir}/js/${name}.js")
     }
     def minifyTask = tasks.create("minify${name.capitalize()}Js", com.eriwen.gradle.js.tasks.MinifyJsTask) {
-        source = includeShared ? combineTask : unique[0]
+        source = combineTask
         dest = file("${buildDir}/js/${name}.js")
     }
 }
 
-createJsTask('files', ["${projectDir}/js/files.js"])
-createJsTask('docs', ["${projectDir}/js/docs.js"])
-createJsTask('themeSwitch', ["${projectDir}/js/theme-switch.js"], false)
+createJsTask('filesCurse', [
+    "${projectDir}/js/sidebar.js",
+    "${projectDir}/js/theme-switch-toggle.js",
+    "${projectDir}/js/curse-ads.js",
+    "${projectDir}/js/files.js"
+])
+createJsTask('filesGoogle', [
+    "${projectDir}/js/sidebar.js",
+    "${projectDir}/js/theme-switch-toggle.js",
+    "${projectDir}/js/google-ads.js",
+    "${projectDir}/js/files.js"
+])
+createJsTask('docs', [
+    "${projectDir}/js/sidebar.js",
+    "${projectDir}/js/theme-switch-toggle.js",
+    "${projectDir}/js/docs.js"
+])
+createJsTask('themeSwitch', ["${projectDir}/js/theme-switch.js"])
 
 task bundleFiles(type: Zip) {
     baseName = 'files-bundle'
     destinationDir = file("${buildDir}/distributions")
-    from(minifyFilesJs) {
+    from(minifyFilesCurseJs) {
         into 'static/js'
-        rename ~/files/, 'merged'
+        rename ~/filesCurse/, 'merged-curse'
+    }
+    from(minifyFilesGoogleJs) {
+        into 'static/js'
+        rename ~/filesGoogle/, 'merged-google'
     }
     from(minifyThemeSwitchJs) {
         into 'static/js'

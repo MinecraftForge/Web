@@ -296,11 +296,11 @@
   content: "\f126"; // Fork
 }
 
-.ad-downloads-top {
+.promo-downloads-top, .ad-downloads-top {
   margin-bottom: 5rem !important;
 }
 
-.ad-downloads-bottom {
+.promo-downloads-bottom, .ad-downloads-bottom {
   margin-top: 5rem !important;
   margin-bottom: 3rem !important;
 }
@@ -330,7 +330,7 @@
     max-width: calc(100% - 160px - 1rem);
   }
 
-  .ad-downloads-right .ad {
+  .promo-downloads-right .promo, .ad-downloads-right .ad {
     min-width: 160px;
     width: 160px;
     max-width: 160px;
@@ -352,6 +352,7 @@
     }
   }
 
+  .promo-downloads-top .promo, .promo-downloads-bottom .promo,
   .ad-downloads-top .ad, .ad-downloads-bottom .ad {
     min-width: 320px;
     width: 320px;
@@ -370,7 +371,7 @@
   .promos-wrapper {
     flex-direction: column-reverse;
 
-    .ad-downloads-top {
+    .promo-downloads-top, .ad-downloads-top {
       margin: 3rem auto !important;
     }
   }
@@ -380,6 +381,7 @@
       min-width: 0;
       max-width: 100%;
     }
+
     .sidebar-sticky-wrapper-content, .sidebar-wrapper-content {
       max-width: 100%;
     }
@@ -466,14 +468,12 @@
 }
 
 @media screen and (max-width: 767px) {
-  .ad-downloads-right {
-    .ad {
-      min-width: 300px;
-      width: 300px;
-      max-width: 300px;
-      height: 250px;
-      margin-left: auto;
-      margin-right: auto;
-    }
+  .promo-downloads-right .promo, .ad-downloads-right .ad {
+    min-width: 300px;
+    width: 300px;
+    max-width: 300px;
+    height: 250px;
+    margin-left: auto;
+    margin-right: auto;
   }
 }

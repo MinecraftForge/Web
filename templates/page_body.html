@@ -1,3 +1,8 @@
+{%- if md.enable_adsense %}
+    {%- set ad_class_prefix = 'ad' %}
+{%- else %}
+    {%- set ad_class_prefix = 'promo' %}
+{%- endif %}
 <main class="wrapper sidebar-wrapper">
     <div class="sidebar-left {% if mcversions %}sidebar-sticky{% endif %}">
         <aside>
@@ -14,7 +19,9 @@
                             {%- if version_prefix != current_prefix %}
                                 {%- set version_prefix = current_prefix %}
                                 <li class="li-version-list">
-                                    <a href="#" class="elem-text toggle-collapsible"><span class="fa fa-plus collapsible-icon" aria-hidden="true"></span> {{ current_prefix }}</a>
+                                    <a href="#" class="elem-text toggle-collapsible">
+                                        <span class="fa fa-plus collapsible-icon" aria-hidden="true"></span> {{ current_prefix }}
+                                    </a>
                                     <ul class="nav-collapsible {% if md.mcver and current_prefix == active_prefix %}nav-collapsible-open{% endif %}">
                                         {%- for subversion in mcversions %}
                                             {%- set current_prefix = subversion.split('.')[0] ~ "." ~ subversion.split('.')[1] %}
@@ -22,7 +29,9 @@
                                                 {%- if md.mcver and subversion == md.mcver %}
                                                     <li class="elem-active">{{ subversion }}</li>
                                                 {%- else %}
-                                                    <li><a href="{{ path }}index_{{ subversion }}.html">{{ subversion }}</a></li>
+                                                    <li>
+                                                        <a href="{{ path }}index_{{ subversion }}.html">{{ subversion }}</a>
+                                                    </li>
                                                 {%- endif %}
                                             {%- endif %}
                                         {%- endfor %}
@@ -45,7 +54,7 @@
         {%- endif %}
         <div class="promos-wrapper">
             {%- if md.ad_left %}
-                <div class="ad-container ad-container-framed ad-downloads-top">
+                <div class="{{ ad_class_prefix }}-container {{ ad_class_prefix }}-container-framed {{ ad_class_prefix }}-downloads-top">
                     {{ md.ad_left }}
                     <div class="block-note">
                         <div class="block-note-icon"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i></div>
@@ -82,7 +91,7 @@
                                                 <div class="links-right">
                                             {%- endif %}
                                             {% for class, info in version.classifiers|dictsort %}
-                                                {%- if class != "installer-win" or not has_windows_installer %}
+                                                {%- if (class != "installer-win" or not has_windows_installer) and not (md.filter and class in md.filter) %}
                                                     {%- set url_prefix_cls = url_prefix %}
                                                     {%- if class == "changelog" %}
                                                         {% set url_prefix_cls = "" %}
@@ -115,12 +124,14 @@
                                     {%- for class, info in version.classifiers|dictsort %}
                                         {%- set url_prefix_cls = url_prefix %}
                                         {%- if class == "changelog" %}{% set url_prefix_cls = "" %}{% endif %}
-                                        <div class="link">
-                                            <a href="{{ url_prefix_cls }}{{ path }}{{ info.path }}" title="{{ class|default('Mod', true)|capitalize }}">
-                                                <i class="fa classifier-{{ class }}"></i>
-                                                <span class="promo-label">{{ class|default('Mod', true)|capitalize }}</span>
-                                            </a>
-                                        </div>
+                                        {%- if not md.filter or not class in md.filter %}
+                                            <div class="link">
+                                                <a href="{{ url_prefix_cls }}{{ path }}{{ info.path }}" title="{{ class|default('Mod', true)|capitalize }}">
+                                                    <i class="fa classifier-{{ class }}"></i>
+                                                    <span class="promo-label">{{ class|default('Mod', true)|capitalize }}</span>
+                                                </a>
+                                            </div>
+                                        {%- endif %}
                                     {%- endfor %}
                                 </div>
                             </div>
@@ -179,30 +190,32 @@
                                     {% for class, info in version.classifiers|dictsort %}
                                         {%- set url_prefix_cls = url_prefix %}
                                         {%- if class == "changelog" %}{% set url_prefix_cls = "" %}{% endif %}
-                                        <li>
-                                            <a href="{{ url_prefix_cls }}{{ path }}{{ info.path }}">
-                                                <i class="fa download-classifier classifier-{{ class }}"></i> {{ class|default("Mod", true)|capitalize }}
-                                            </a>&nbsp;
-                                            <a class="info-link" data-toggle="popup" {% if url_prefix_cls %}href="{{ path }}{{ info.path }}" title="Direct Download"{% endif %}>
-                                                <i class="fa fa-info-circle" aria-hidden="true"></i>
-                                            </a>
-                                            <div class="info-tooltip">
-                                                <strong>MD5:</strong> {{ info.md5 }}<br>
-                                                <strong>SHA1:</strong> {{ info.sha1 }}
-                                                {%- if class == 'dev' or class == 'deobf' %}
-                                                    <br><strong>Gradle:</strong> "{{ md.groupId }}:{{ md.artifactId }}:{{ version.version }}:dev"
-                                                {%- endif %}
-                                                {%- if (class == 'src' or class == 'mdk') and md.groupId == 'net.minecraftforge' and md.artifactId == 'forge' %}
-                                                    <br><strong>Gradle:</strong> '{{ md.mcver }}-{{ version.version }}{% if version.branch %}-{{ version.branch }}{% endif %}'
-                                                {%- endif %}
-                                                {%- if url_prefix_cls %}
-                                                    <br><a href="{{ path }}{{ info.path }}">(Direct Download)</a>
-                                                {%- endif %}
-                                                {%- if md.blurbs and md.blurbs[class] %}
-                                                    {{ md.blurbs[class] }}
-                                                {%- endif %}
-                                            </div>
-                                        </li>
+                                        {%- if not md.filter or not class in md.filter %}
+                                            <li>
+                                                <a href="{{ url_prefix_cls }}{{ path }}{{ info.path }}">
+                                                    <i class="fa download-classifier classifier-{{ class }}"></i> {{ class|default("Mod", true)|capitalize }}
+                                                </a>&nbsp;
+                                                <a class="info-link" data-toggle="popup" {% if url_prefix_cls %}href="{{ path }}{{ info.path }}" title="Direct Download"{% endif %}>
+                                                    <i class="fa fa-info-circle" aria-hidden="true"></i>
+                                                </a>
+                                                <div class="info-tooltip">
+                                                    <strong>MD5:</strong> {{ info.md5 }}<br>
+                                                    <strong>SHA1:</strong> {{ info.sha1 }}
+                                                    {%- if class == 'dev' or class == 'deobf' %}
+                                                        <br><strong>Gradle:</strong> "{{ md.groupId }}:{{ md.artifactId }}:{{ version.version }}:dev"
+                                                    {%- endif %}
+                                                    {%- if (class == 'src' or class == 'mdk') and md.groupId == 'net.minecraftforge' and md.artifactId == 'forge' %}
+                                                        <br><strong>Gradle:</strong> '{{ md.mcver }}-{{ version.version }}{% if version.branch %}-{{ version.branch }}{% endif %}'
+                                                    {%- endif %}
+                                                    {%- if url_prefix_cls %}
+                                                        <br><a href="{{ path }}{{ info.path }}">(Direct Download)</a>
+                                                    {%- endif %}
+                                                    {%- if md.blurbs and md.blurbs[class] %}
+                                                        {{ md.blurbs[class] }}
+                                                    {%- endif %}
+                                                </div>
+                                            </li>
+                                        {%- endif %}
                                     {% endfor %}
                                 </ul>
                             </td>
@@ -212,7 +225,7 @@
                 </table>
             </div>
             {%- if md.ad_middle %}
-                <div class="ad-container ad-container-framed ad-downloads-bottom">
+                <div class="{{ ad_class_prefix }}-container {{ ad_class_prefix }}-container-framed {{ ad_class_prefix }}-downloads-bottom">
                     {{ md.ad_middle }}
                 </div>
             {%- endif %}
@@ -221,7 +234,7 @@
 
     {%- if md.ad_right %}
         <aside class="sidebar-right">
-            <div class="ad-container ad-container-framed ad-downloads-right">
+            <div class="{{ ad_class_prefix }}-container {{ ad_class_prefix }}-container-framed {{ ad_class_prefix }}-downloads-right">
                 {{ md.ad_right }}
             </div>
         </aside>
