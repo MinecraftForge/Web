@@ -80,15 +80,14 @@
                                             <small>{{ version.mcversion }} - {{version.version}}<!-- built on {{version.timestamp}} --></small>
                                         </div>
                                         {%- set has_windows_installer = 'installer-win' in version.classifiers.keys() %}
-                                        <div class="links {% if has_windows_installer %}links-split{% endif %}">
+                                        <div class="links">
                                             {%- if has_windows_installer %}
-                                                <div class="link-left">
+                                                <div class="link link-boosted">
                                                     <a href="{{ url_prefix }}{{ path }}{{ version.classifiers['installer-win'].path }}" title="Windows Installer">
                                                         <i class="fa classifier-installer-win"></i>
                                                         <span class="promo-label">Windows Installer</span>
                                                     </a>
                                                 </div>
-                                                <div class="links-right">
                                             {%- endif %}
                                             {% for class, info in version.classifiers|dictsort %}
                                                 {%- if (class != "installer-win" or not has_windows_installer) and not (md.filter and class in md.filter) %}
@@ -104,9 +103,6 @@
                                                     </div>
                                                 {%- endif %}
                                             {%- endfor %}
-                                            {%- if has_windows_installer %}
-                                                </div>
-                                            {%- endif %}
                                         </div>
                                     </div>
                                 {%- endif %}
@@ -148,7 +144,9 @@
                     Unless you need this, prefer the links to latest and recommended builds above instead.
                 </p>
             </div>
-            <a class="toggle-collapsible btn btn-large" href="#"><span class="fa fa-plus collapsible-icon" aria-hidden="true"></span> <span class="collapsible-text">Show all Versions</span></a>
+            <a class="toggle-collapsible btn btn-large" href="#">
+                <span class="fa fa-plus collapsible-icon" aria-hidden="true"></span> <span class="collapsible-text">Show all Versions</span>
+            </a>
             <div class="download-list-wrapper collapsible" data-show-text="Show all Versions" data-hide-text="Hide all Versions">
                 <table class="download-list">
                     <thead>
