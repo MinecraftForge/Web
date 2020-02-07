@@ -1,0 +1,33 @@
+<div class="wrapper">
+    <footer>
+        Copyright © 2018 by Forge Development LLC &middot; Ads by Curse &middot; <a href="{{ static_root }}privacy.html">Privacy Information</a> <br>
+        Layout is designed by and used with permission from PaleoCrafter
+        <div class="theme-switch-wrapper">
+            Enable Dark Theme
+            <label class="theme-switch">
+                <input type="checkbox">
+                <span class="slider round"></span>
+            </label>
+        </div>
+    </footer>
+</div>
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+<script type="text/javascript" src="https://use.fontawesome.com/a1f20be65b.js"></script>
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery-mousewheel/3.1.13/jquery.mousewheel.min.js"></script>
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jScrollPane/2.0.23/script/jquery.jscrollpane.min.js"></script>
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/stickyfill/1.1.4/stickyfill.min.js"></script>
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/tooltipster/3.3.0/js/jquery.tooltipster.min.js"></script>
+{%- if md.enable_adsense %}
+    <script type="text/javascript" src="{{ static_root }}js/merged-google.js?{{ time_now_seconds }}"></script>
+{%- else %}
+    <script type="text/javascript" src="{{ static_root }}js/merged-curse.js?{{ time_now_seconds }}"></script>
+{%- endif %}
+{% if md.analytics %}{{ md.analytics }}{% endif %}
+
+{%- if md.body_end %}
+    {%- for line in md.body_end %}
+        {{ line }}
+    {%- endfor %}
+{%- endif %}
+</body>
+</html>

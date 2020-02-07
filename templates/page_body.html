@@ -1,0 +1,247 @@
+{%- if md.enable_adsense %}
+    {%- set ad_class_prefix = 'ad' %}
+{%- else %}
+    {%- set ad_class_prefix = 'promo' %}
+{%- endif %}
+<main class="wrapper sidebar-wrapper">
+    <div class="sidebar-left {% if mcversions %}sidebar-sticky{% endif %}">
+        <aside>
+            {%- if mcversions %}
+                <section class="sidebar-nav">
+                    <h2><a href="#" class="close-sidebar"><i class="fa fa-bars" aria-hidden="true"></i></a> Minecraft Version</h2>
+                    <ul class="section-content scroll-pane">
+                        {%- set ns = namespace(version_prefix = '') %}
+                        {%- if md.mcver %}
+                            {%- set active_prefix = md.mcver.split('.')[0] ~ "." ~ md.mcver.split('.')[1] %}
+                        {%- endif %}
+                        {%- for version in mcversions %}
+                            {%- set current_prefix = version.split('.')[0] ~ "." ~ version.split('.')[1] %}
+                            {%- if ns.version_prefix != current_prefix %}
+                                {%- set ns.version_prefix = current_prefix %}
+                                <li class="li-version-list">
+                                    <a href="#" class="elem-text toggle-collapsible">
+                                        <span class="fa fa-plus collapsible-icon" aria-hidden="true"></span> {{ current_prefix }}
+                                    </a>
+                                    <ul class="nav-collapsible {% if md.mcver and current_prefix == active_prefix %}nav-collapsible-open{% endif %}">
+                                        {%- for subversion in mcversions %}
+                                            {%- set current_prefix = subversion.split('.')[0] ~ "." ~ subversion.split('.')[1] %}
+                                            {%- if ns.version_prefix == current_prefix %}
+                                                {%- if md.mcver and subversion == md.mcver %}
+                                                    <li class="elem-active">{{ subversion }}</li>
+                                                {%- else %}
+                                                    <li>
+                                                        <a href="{{ path }}index_{{ subversion }}.html">{{ subversion }}</a>
+                                                    </li>
+                                                {%- endif %}
+                                            {%- endif %}
+                                        {%- endfor %}
+                                    </ul>
+                                </li>
+                            {%- endif %}
+                        {%- endfor %}
+                    </ul>
+                </section>
+            {%- endif %}
+        </aside>
+    </div>
+
+    <div class="sidebar-{%- if mcversions %}sticky-{% endif %}wrapper-content">
+        {%- if md.adfly %}
+            {%- set url_prefix = "https://adf.ly/" + md.adfly + "/" %}
+        {%- endif %}
+        {%- if md.adfocus %}
+            {%- set url_prefix = "https://adfoc.us/serve/sitelinks/?id=" + md.adfocus + "&url=" %}
+        {%- endif %}
+        {%- if 'link_forge' in md %}
+            {%- if md.link_forge == true %}
+                {%- set link_forge = True %}
+            {%- endif %}
+        {%- endif %}
+        <div class="promos-wrapper">
+            {%- if md.ad_left %}
+                <div class="{{ ad_class_prefix }}-container {{ ad_class_prefix }}-container-framed {{ ad_class_prefix }}-downloads-top">
+                    {{ md.ad_left }}
+                    <div class="block-note">
+                        <div class="block-note-icon"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i></div>
+                        <div class="block-note-text">
+                            It appears that you're using an ad blocker. Ads are Forge's main source of income, so please
+                            consider adding an exception for this site.<br>
+                            If you'd like to support Forge while keeping ads blocked, please consider supporting
+                            <a href="https://www.patreon.com/LexManos" target="_blank">LexManos on Patreon</a>.
+                        </div>
+                    </div>
+                </div>
+            {%- endif %}
+            <div class="promos-content">
+                <h1>Downloads for {{ md.name }} - MC {{ md.mcver }}</h1>
+                <div class="downloads">
+                    {%- if md.versions and md.mcver and md.promos and md.promos[md.mcver] %}
+                        {%- for name,promoversion in md.promos[md.mcver]|dictsort %}
+                            {%- for version in md.versions %}
+                                {%- if version.version == promoversion %}
+                                    <div class="download">
+                                        <div class="title">
+                                            <i class="fa promo-{{ name|lower }}"></i>Download {{ name|capitalize }}<br>
+                                            <small>{{ version.mcversion }} - {{version.version}}<!-- built on {{version.timestamp}} --></small>
+                                        </div>
+                                        {%- set has_windows_installer = 'installer-win' in version.classifiers.keys() %}
+                                        <div class="links">
+                                            {%- if has_windows_installer %}
+                                                <div class="link link-boosted">
+                                                    <a href="{{ url_prefix }}{{ version.classifiers['installer-win'].url }}" title="Windows Installer">
+                                                        <i class="fa classifier-installer-win"></i>
+                                                        <span class="promo-label">Windows Installer</span>
+                                                    </a>
+                                                </div>
+                                            {%- endif %}
+                                            {% for class, info in version.classifiers|dictsort %}
+                                                {%- if (class != "installer-win" or not has_windows_installer) and not (md.filter and class in md.filter) %}
+                                                    {%- set url_prefix_cls = url_prefix %}
+                                                    {%- if class == "changelog" %}
+                                                        {% set url_prefix_cls = "" %}
+                                                    {%- endif %}
+                                                    <div class="link">
+                                                        <a href="{{ url_prefix_cls }}{{ info.url }}" title="{{ class|default('Mod', true)|capitalize }}">
+                                                            <i class="fa classifier-{{ class }}"></i>
+                                                            <span class="promo-label">{{ class|default('Mod', true)|capitalize }}</span>
+                                                        </a>
+                                                    </div>
+                                                {%- endif %}
+                                            {%- endfor %}
+                                        </div>
+                                    </div>
+                                {%- endif %}
+                            {%- endfor %}
+                        {%- endfor %}
+                    {%- else %}
+                        {%- if md.versions %}
+                            <div class="download">
+                                {%- set version = md.versions[-1] %}
+                                <div class="title">
+                                    <i class="fa promo-latest"></i>Download Latest<br>
+                                    <small>{{version.version}}<!-- built on {{version.timestamp}} --></small>
+                                </div>
+                                <div class="links">
+                                    {%- for class, info in version.classifiers|dictsort %}
+                                        {%- set url_prefix_cls = url_prefix %}
+                                        {%- if class == "changelog" %}{% set url_prefix_cls = "" %}{% endif %}
+                                        {%- if not md.filter or not class in md.filter %}
+                                            <div class="link">
+                                                <a href="{{ url_prefix_cls }}{{ info.url }}" title="{{ class|default('Mod', true)|capitalize }}">
+                                                    <i class="fa classifier-{{ class }}"></i>
+                                                    <span class="promo-label">{{ class|default('Mod', true)|capitalize }}</span>
+                                                </a>
+                                            </div>
+                                        {%- endif %}
+                                    {%- endfor %}
+                                </div>
+                            </div>
+                        {%- endif %}
+                    {%- endif %}
+                </div>
+            </div>
+        </div>
+        <div class="download-container">
+            <div class="download-disclaimer">
+                <h2>All Versions</h2>
+                <p>
+                    <strong>Note</strong> that the downloads in the list below are for getting a <em>specific</em> version of {{name}}.
+                    Unless you need this, prefer the links to latest and recommended builds above instead.
+                </p>
+            </div>
+            <a class="toggle-collapsible btn btn-large" href="#">
+                <span class="fa fa-plus collapsible-icon" aria-hidden="true"></span> <span class="collapsible-text">Show all Versions</span>
+            </a>
+            <div class="download-list-wrapper collapsible" data-show-text="Show all Versions" data-hide-text="Hide all Versions">
+                <table class="download-list">
+                    <thead>
+                    <tr>
+                        <th>Version</th>
+                        {%- if link_forge %}<th>Forge</th>{%- endif %}
+                        <th>Time</th>
+                        <th>Downloads</th>
+                    </tr>
+                    </thead>
+                    <thead class="mobile-only">
+                    <tr>
+                        <th>Downloads</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for version in md.versions|reverse %}
+                        <tr>
+                            <td class="download-version">
+                                {{ version.version }}
+                                {%- if version.marker %}
+                                    <i class="fa promo-{{ version.marker|lower }}"></i>
+                                {%- endif %}
+                                {%- set branch = version.branch %}
+                                {%- if md.mcver and branch == md.mcver %}
+                                    {%- set branch = None %}
+                                {%- endif %}
+                                {%- if branch %}
+                                    <a class="info-link" data-toggle="popup" title="{{ branch }}">
+                                        <i class="fa fa-bug marker-branch" aria-hidden="true"></i>
+                                    </a>
+                                    <div class="info-tooltip">
+                                        <strong>Branch:</strong> {{ branch }}
+                                    </div>
+                                {%- endif %}
+                            </td>
+                            {%- if link_forge %}<td><a href="https://files.minecraftforge.net/maven/net/minecraftforge/forge/index_{{version.mcversion}}.html">{{version.forge}}</a></td>{%- endif %}
+                            <td class="download-time">{{ version.timestamp }}</td>
+                            <td class="download-files">
+                                <ul class="download-links">
+                                    {% for class, info in version.classifiers|dictsort %}
+                                        {%- set url_prefix_cls = url_prefix %}
+                                        {%- if class == "changelog" %}{% set url_prefix_cls = "" %}{% endif %}
+                                        {%- if not md.filter or not class in md.filter %}
+                                            <li>
+                                                <a href="{{ url_prefix_cls }}{{ info.url }}">
+                                                    <i class="fa download-classifier classifier-{{ class }}"></i> {{ class|default("Mod", true)|capitalize }}
+                                                </a>&nbsp;
+                                                <a class="info-link" data-toggle="popup" {% if url_prefix_cls %}href="{{ info.url }}" title="Direct Download"{% endif %}>
+                                                    <i class="fa fa-info-circle" aria-hidden="true"></i>
+                                                </a>
+                                                <div class="info-tooltip">
+                                                    <strong>MD5:</strong> {{ info.md5 }}<br>
+                                                    <strong>SHA1:</strong> {{ info.sha1 }}
+                                                    {%- if class == 'dev' or class == 'deobf' %}
+                                                        <br><strong>Gradle:</strong> "{{ md.group }}:{{ md.artifact }}:{{ version.version }}:dev"
+                                                    {%- endif %}
+                                                    {%- if (class == 'src' or class == 'mdk') and md.group == 'net.minecraftforge' and md.artifact == 'forge' %}
+                                                        <br><strong>Gradle:</strong> '{{ md.mcver }}-{{ version.version }}{% if version.branch %}-{{ version.branch }}{% endif %}'
+                                                    {%- endif %}
+                                                    {%- if url_prefix_cls %}
+                                                        <br><a href="{{ info.url }}">(Direct Download)</a>
+                                                    {%- endif %}
+                                                    {%- if md.blurbs and md.blurbs[class] %}
+                                                        {{ md.blurbs[class] }}
+                                                    {%- endif %}
+                                                </div>
+                                            </li>
+                                        {%- endif %}
+                                    {% endfor %}
+                                </ul>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {%- if md.ad_middle %}
+                <div class="{{ ad_class_prefix }}-container {{ ad_class_prefix }}-container-framed {{ ad_class_prefix }}-downloads-bottom">
+                    {{ md.ad_middle }}
+                </div>
+            {%- endif %}
+        </div>
+    </div>
+
+    {%- if md.ad_right %}
+        <aside class="sidebar-right">
+            <div class="{{ ad_class_prefix }}-container {{ ad_class_prefix }}-container-framed {{ ad_class_prefix }}-downloads-right">
+                {{ md.ad_right }}
+            </div>
+        </aside>
+    {%- endif %}
+</main>

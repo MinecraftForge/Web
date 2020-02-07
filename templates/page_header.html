@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#2E4460">
+    <meta property="og:title" content="{{ name }}"/>
+    <meta property="og:url" content="{{ path }}"/>
+    <meta property="og:description" content="{{ name }}"/>
+    <title>{{ name }}</title>
+
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ static_root }}images/apple-touch-icon.png">
+    <link rel="icon" type="image/png" href="{{ static_root }}images/favicon-32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="{{ static_root }}images/favicon-16x16.png" sizes="16x16">
+    <link rel="manifest" href="{{ static_root }}images/manifest.json">
+    <link rel="mask-icon" href="{{ static_root }}images/safari-pinned-tab.svg" color="#5bbad5">
+    <link rel="shortcut icon" href="{{ static_root }}images/favicon.ico">
+    <meta name="apple-mobile-web-app-title" content="Forge Files">
+    <meta name="application-name" content="Forge Files">
+    <meta name="msapplication-config" content="{{ static_root }}images/browserconfig.xml">
+    <meta name="theme-color" content="#ffffff">
+
+    <link type="text/css" rel="stylesheet" href="{{ static_root }}css/tooltipster.css">
+    <link type="text/css" rel="stylesheet" href="{{ static_root }}css/tooltipster-shadow.css">
+    <link type="text/css" rel="stylesheet" data-theme="light" href="{{ static_root }}css/styles_light.css?{{ time_now_seconds }}">
+    <link type="text/css" rel="stylesheet" data-theme="dark" href="{{ static_root }}css/styles_dark.css?{{ time_now_seconds }}">
+    <script type="text/javascript" src="{{ static_root }}js/theme-switch.js?{{ time_now_seconds }}"></script>
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+<body>
+{%- if md.body_start %}
+    {%- for line in md.body_start %}
+        {{ line }}
+    {%- endfor %}
+{%- endif %}
+<header>
+    <div class="wrapper">
+        <div class="logo">
+            {%- if mcversions %}<a href="#" class="open-sidebar"><i class="fa fa-bars"></i></a>{% endif %}
+            <a href="/" class="logo-image" title="Forge Files"><img src="{{ static_root }}images/logo.svg" width="200"></a>
+        </div>
+        <nav>
+            <ul class="links clearfix">
+                <li><a href="http://minecraftforge.net">Forums</a></li>
+                <li><a href="https://files.minecraftforge.net">Files</a></li>
+                <li><a href="http://mcforge.readthedocs.io">Documentation</a></li>
+            </ul>
+        </nav>
+    </div>
+</header>
+
+{%- if md.enable_adsense %}
+    <div class="privacy-disclaimer">
+        <div class="wrapper">
+            <div class="privacy-disclaimer-text">
+                This site uses cookies and local storage to enable ads relevant to you and for switching to a dark theme.
+                Unless you give us your consent, you can't use these features. Note that you can <a href="{{ static_root }}privacy.html#settings">change your choice</a> or check out <a href="{{ static_root }}privacy.html">more detailed information</a> at any time.
+            </div>
+            <div class="privacy-disclaimer-links">
+                <a class="btn btn-privacy-disclaimer-accept" href="#">Accept All</a>
+                <a class="btn-privacy-disclaimer-decline" href="#">Accept Cookies Only</a>
+            </div>
+        </div>
+    </div>
+{%- endif %}
