@@ -43,7 +43,8 @@ def loadVersions(cache):
 def updateVersionsWeb(url, auth, repo, group, name, cache):
     obj = {'repo': repo, 'group': group, 'name': name}
     data = postJson(url, '/service/rest/v1/script/listVersions/run', auth, obj)
-    Util.writeFile(os.path.join(cache, 'versions.json'), json.dumps(data, sort_keys=True, indent=2).encode('utf-8'))
+    if not data is None:
+        Util.writeFile(os.path.join(cache, 'versions.json'), json.dumps(data, sort_keys=True, indent=2).encode('utf-8'))
     return data
 
 def gatherMetadata(url, auth, repo, group, name, version, cache):
@@ -52,6 +53,9 @@ def gatherMetadata(url, auth, repo, group, name, version, cache):
     if versions is None or not 'versions' in versions or (not version is None and not version in versions['versions']):
         versions = updateVersionsWeb(url, auth, repo, group, name, root)
         #TODO: add to the version list without pulling full list?
+        
+    if versions is None:
+        raise Exception('Failed to download version list from %s for %s:%s on %s' % (url, group, name, repo))
         
     #TODO: Add spec verification
         
