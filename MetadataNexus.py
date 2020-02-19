@@ -34,6 +34,15 @@ def postJson(site, path, auth, data):
         return None
     return json.loads(json.loads(res.read())['result']) # Nexus wraps all our reply in a json header, so drill to OUR json
 
+def getString(site, path):
+    c = connect(site)
+    c.request('GET', path)
+    
+    res = c.getresponse()
+    if res.status != 200:
+        return None
+    return res.read()
+
 def loadVersions(cache):
     data = Util.readFile(os.path.join(cache, 'versions.json'))
     if data is None:
@@ -106,7 +115,7 @@ def gatherMetadata(url, auth, repo, group, name, version, cache):
         
     
     blacklist = loadConfigDefaults(metadata)
-    #loadConfigFromDirectory(pathRoot, metadata, blacklist)
+    loadConfigFromNexus(url, repo, group, name, metadata, blacklist)
         
     return metadata
     
@@ -146,3 +155,15 @@ def convertVersion(metadata, vdata):
                 
     return ret
     
+def loadConfigFromNexus(url, repo, group, name, metadata, blacklist):
+    path = '/repository/%s/%s/%s/page_config.json' % (repo, group.replace('.', '/'), name)
+    raw = getString(url, path)
+    if raw is None:
+        print('  No page_config.json found at %s%s' % (url, path))
+        return
+        
+    data = json.loads(raw)
+    print('  Loaded Config: %s%s' % (url, path))
+    for key,value in data.items():
+        if not key in blacklist:
+            metadata[key] = value

@@ -5,3 +5,5 @@
 /meta.json.md5
 /meta.json.sha1
 *.json
+/cache/
+/output_meta/
