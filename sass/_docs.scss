@@ -177,6 +177,38 @@ section.sidebar-nav > ul {
   }
 }
 
+.sidebar-heading {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.version-selection {
+  display: flex;
+  flex-direction: row;
+  margin-left: auto;
+
+  label {
+    margin-bottom: 0;
+  }
+
+  select.version-selection-dropdown {
+    color: $pagination-color;
+    background: $accent1;
+    border: none;
+    border-bottom: 2px solid $pagination-color;
+
+    &:active, &:focus {
+      border-bottom-color: $accent7;
+      outline: none;
+    }
+
+    option {
+      background: $accent1;
+    }
+  }
+}
+
 @media screen and (max-width: $mobile-break) {
   table {
     display: block;

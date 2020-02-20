@@ -259,51 +259,51 @@
   }
 }
 
-.classifier-:before {
-  content: "\f187";
-}
-
-.classifier-installer:before {
-  content: "\f187";
-}
-
-.classifier-installer-win:before {
-  content: "\f17a";
-}
-
-.classifier-dev:before {
-  content: "\f079";
-}
-
-.classifier-sources:before {
-  content: "\f121";
-}
-
-.classifier-src:before {
-  content: "\f121";
-}
-
-.classifier-changelog:before {
-  content: "\f15c";
-}
-
-.classifier-javadoc:before {
-  content: "\f0f4";
-}
-
-.classifier-universal:before {
+.fa[class*="classifier-"]:before {
   content: "\f1c6";
 }
 
-.classifier-mdk:before {
+.fa.classifier-installer:before {
+  content: "\f187";
+}
+
+.fa.classifier-installer-win:before {
+  content: "\f17a";
+}
+
+.fa.classifier-dev:before {
+  content: "\f079";
+}
+
+.fa.classifier-sources:before {
+  content: "\f121";
+}
+
+.fa.classifier-src:before {
+  content: "\f121";
+}
+
+.fa.classifier-changelog:before {
+  content: "\f15c";
+}
+
+.fa.classifier-javadoc:before {
+  content: "\f0f4";
+}
+
+.fa.classifier-universal:before, .fa.classifier-launcher:before {
+  content: "\f1c6";
+}
+
+.fa.classifier-mdk:before {
   content: "\f126";
 }
 
-.classifier-userdev:before {
+.fa.classifier-userdev:before {
   content: "\f007";
 }
 
-.classifier-link:before {
+.fa.classifier-link:before {
   content: "\f0c1";
 }
 
