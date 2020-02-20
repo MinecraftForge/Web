@@ -32,20 +32,52 @@ $scrollbar-drag-bg: darken($section-bg, 30%);
 $scrollbar-drag-hover-bg: $accent7;
 
 .prettyprint {
-  .lit {
-    color: #008040;
+  background-color: #ffffff;
+  color: #000000;
+
+  .lit { // literal
+    color: #0000ff;
   }
 
-  .kwd {
+  .kwd { // keyword
     font-weight: bold;
-    color: $accent5;
+    color: #000080;
   }
 
-  .pun {
-    color: #800000;
+  .typ { // type
+    color: #20999d;
   }
 
-  .com {
-    color: #888888;
+  .str { // string
+    color: #008000;
+  }
+
+  .pun { // punctuation
+    color: #000000;
+  }
+
+  .com { // comment
+    color: #808080;
+    font-style: italic;
+  }
+
+  .pln { // plain
+    color: #000000;
+  }
+
+  .dec { // declaration
+    color: #000080;
+  }
+
+  .tag { // html tag
+    color: #000080;
+  }
+
+  .atn { // html attribute name
+    color: #0000ff;
+  }
+
+  .atv { // html attribute value
+    color: #008000;
   }
 }
