@@ -80,6 +80,7 @@
                                             <small>{{ version.mcversion }} - {{version.version}}<!-- built on {{version.timestamp}} --></small>
                                         </div>
                                         {%- set has_windows_installer = 'installer-win' in version.classifiers.keys() %}
+                                        {%- set has_installer = 'installer' in version.classifiers.keys() and not has_windows_installer %}
                                         <div class="links">
                                             {%- if has_windows_installer %}
                                                 <div class="link link-boosted">
@@ -89,8 +90,16 @@
                                                     </a>
                                                 </div>
                                             {%- endif %}
+                                            {%- if has_installer %}
+                                                <div class="link link-boosted">
+                                                    <a href="{{ url_prefix }}{{ path }}{{ version.classifiers['installer'].path }}" title="Installer">
+                                                        <i class="fa classifier-installer"></i>
+                                                        <span class="promo-label">Installer</span>
+                                                    </a>
+                                                </div>
+                                            {%- endif %}
                                             {% for class, info in version.classifiers|dictsort %}
-                                                {%- if (class != "installer-win" or not has_windows_installer) and not (md.filter and class in md.filter) %}
+                                                {%- if not (class == "installer-win" and has_windows_installer) and not (class == "installer" and has_installer) and not (md.filter and class in md.filter) %}
                                                     {%- set url_prefix_cls = url_prefix %}
                                                     {%- if class == "changelog" %}
                                                         {% set url_prefix_cls = "" %}
