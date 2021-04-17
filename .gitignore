@@ -1,21 +1,3 @@
-/*
-!/sass/
-!/sass/*
-!/images/
-!/images/*
-!/docs/
-!/docs/*
-!/js/
-!/js/*
-!/templates/
-!/templates/*
-!/gradle/
-!/gradle/**
-!/*.md
-!/LICENSE
-!/gradlew
-!/gradlew.bat
-!/build.gradle
 /__pycache__/
 /output_web/
 *.bat
@@ -27,3 +9,5 @@
 /output_meta/
 /.venv/
 /.idea/
+/build
+/.gradle

@@ -61,10 +61,6 @@ task bundleFiles(type: Zip) {
         into 'static/css'
         rename ~/website_([A-Za-z]+)/, 'styles_$1'
     }
-    from("${projectDir}/templates") {
-        include '**/*.html'
-        into 'templates'
-    }
     from("${projectDir}/docs") {
         include '**/*.html'
         into 'static'
