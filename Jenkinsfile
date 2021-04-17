@@ -16,6 +16,7 @@ pipeline {
                     sh './gradlew ${GRADLE_ARGS} bundleFiles'
                 }
             }
+        }
         stage('docker') {
             agent any
             steps {
