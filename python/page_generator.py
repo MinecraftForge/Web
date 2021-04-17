@@ -14,15 +14,15 @@ def parse_path(f):
 
 def main():
     parser = argparse.ArgumentParser(description='Maven based download index generator')
-    parser.add_argument('--webout', dest='output_web', default='output_web', help='Base directory to output generated index pages. Will generate in sub-directories based on the maven path', type=parse_path)
-    parser.add_argument('--metaout', dest='output_meta', default='output_meta', help='Base directory to output generated metadata. Will generate in sub-directories based on the maven path', type=parse_path)
-    parser.add_argument('--downloadroot', dest='dlroot', default='https://mephartifactory.minecraftforge.net/releases/', help='Root URL for downloading artifacts')
+    parser.add_argument('--webout', dest='output_web', default='/out', help='Base directory to output generated index pages. Will generate in sub-directories based on the maven path', type=parse_path)
+    parser.add_argument('--metaout', dest='output_meta', default='/out', help='Base directory to output generated metadata. Will generate in sub-directories based on the maven path', type=parse_path)
+    parser.add_argument('--downloadroot', dest='dlroot', default='https://maven.minecraftforge.net/', help='Root URL for downloading artifacts')
     parser.add_argument('--webroot', dest='webroot', default='https://files.minecraftforge.net', help='Root URL for artifact pages')
-    parser.add_argument('--static', dest='static', default='https://files.minecraftforge.net/maven/manage/static/', help='Root URL for static assets used by the templates')
+    parser.add_argument('--static', dest='static', default='https://files.minecraftforge.net/static/', help='Root URL for static assets used by the templates')
 
-    parser.add_argument('--folder', dest='folder', required=True, help='Root directory for the maven structure to read metadata from files', type=parse_path)
-    parser.add_argument('--config', dest='config', required=True, help="Location of global_overrides.json file", type=parse_path)
-    parser.add_argument('--templates', dest='templates', required=True, type=parse_path, help="Path to templates")
+    parser.add_argument('--folder', dest='folder', default='/in/repository/releases/', help='Root directory for the maven structure to read metadata from files', type=parse_path)
+    parser.add_argument('--config', dest='config', default='/in/repository/global_overrides.config', help="Location of global_overrides.json file", type=parse_path)
+    parser.add_argument('--templates', dest='templates', default='templates', type=parse_path, help="Path to templates")
 
     commands = parser.add_subparsers(help='Command to perform', dest='command', required=True)
 
