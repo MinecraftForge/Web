@@ -137,6 +137,13 @@ iframe[data-embedContent] {
   background: none;
 }
 
+// Fix ugly text in dark mode
+#ipsLayout_footer p {
+    color: $body-color;
+}
+
+
+
 // Editor fixes
 .cke_top {
   background: #f9f9f9 !important;
@@ -154,6 +161,11 @@ iframe[data-embedContent] {
 .ipsBox, .ipsWidget.ipsWidget_vertical {
   @extend section;
 }
+// Inner boxes of widgets don't have the sections applied, but they have an ugly color
+.ipsWidget.ipsWidget_vertical .ipsWidget_inner {
+    color: $body-color;
+}
+
 
 // Very specific hacks for headlines in boxes
 .ipsBox:not(.cProfileSidebarBlock):not(.cTopicPostArea), .ipsWidget.ipsWidget_vertical {
