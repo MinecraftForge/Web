@@ -21,7 +21,7 @@ def main():
     parser.add_argument('--static', dest='static', default='https://files.minecraftforge.net/static/', help='Root URL for static assets used by the templates')
 
     parser.add_argument('--folder', dest='folder', default='/in/repositories/releases/', help='Root directory for the maven structure to read metadata from files', type=parse_path)
-    parser.add_argument('--config', dest='config', default='/in/repositories/global_overrides.config', help="Location of global_overrides.json file", type=parse_path)
+    parser.add_argument('--config', dest='config', default='/in/global_overrides.json', help="Location of global_overrides.json file", type=parse_path)
     parser.add_argument('--templates', dest='templates', default='templates', type=parse_path, help="Path to templates")
 
     commands = parser.add_subparsers(help='Command to perform', dest='command', required=True)
