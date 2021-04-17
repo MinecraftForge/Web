@@ -52,9 +52,6 @@
         {%- if 'adfocus' in artifact.config %}
             {%- set url_prefix = "https://adfoc.us/serve/sitelinks/?id=" + artifact.config.get('adfocus') + "&url=" %}
         {%- endif %}
-        {%- if md.global_config.get('link_forge', False) %}
-            {%- set link_forge = True %}
-        {%- endif %}
         <div class="promos-wrapper">
             {%- if artifact.config['ad_left'] %}
                 <div class="{{ ad_class_prefix }}-container {{ ad_class_prefix }}-container-framed {{ ad_class_prefix }}-downloads-top">
@@ -164,7 +161,6 @@
                     <thead>
                     <tr>
                         <th>Version</th>
-                        {%- if link_forge %}<th>Forge</th>{%- endif %}
                         <th>Time</th>
                         <th>Downloads</th>
                     </tr>
@@ -195,7 +191,6 @@
                                     </div>
                                 {%- endif %}
                             </td>
-                            {%- if link_forge %}<td><a href="https://files.minecraftforge.net/maven/net/minecraftforge/forge/index_{{version.minecraft_version}}.html">{{version.forge}}</a></td>{%- endif %}
                             <td class="download-time" title="{{ version.timestamp|formatdate}}">{{ version.timestamp|humanformatdate}}</td>
                             <td class="download-files">
                                 <ul class="download-links">
