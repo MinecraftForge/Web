@@ -16,7 +16,7 @@ pipeline {
                 withGradle {
                     sh './gradlew ${GRADLE_ARGS} bundleFiles'
                 }
-                unzip zipFile: 'build/distributions/files-bundle.zip', dir: '/out'
+                sh 'unzip build/distributions/files-bundle.zip -d /out'
             }
         }
         stage('docker') {
