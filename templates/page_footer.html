@@ -18,9 +18,9 @@
 <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/stickyfill/1.1.4/stickyfill.min.js"></script>
 <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/tooltipster/3.3.0/js/jquery.tooltipster.min.js"></script>
 {%- if md.global_config['enable_adsense'] %}
-    <script type="text/javascript" src="{{ static_root }}js/merged-google.js?{{ now }}"></script>
+    <script type="text/javascript" src="{{ static_root }}js/merged-google.js?{{ now.timestamp() }}"></script>
 {%- else %}
-    <script type="text/javascript" src="{{ static_root }}js/merged-curse.js?{{ now }}"></script>
+    <script type="text/javascript" src="{{ static_root }}js/merged-curse.js?{{ now.timestamp() }}"></script>
 {%- endif %}
 {% if artifact.config['analytics'] %}{{ artifact.config['analytics'] }}{% endif %}
 

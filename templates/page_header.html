@@ -5,9 +5,9 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="theme-color" content="#2E4460">
-    <meta property="og:title" content="{{ artifact.fullname() }}"/>
-    <meta property="og:description" content="Downloads for {{ artifact.fullname() }}{%- if mc_version %} - Minecraft {{ mc_version }}{%- endif %}"/>
-    <title>{{ artifact.fullname() }}</title>
+    <meta property="og:title" content="{{ artifact.fullname() }} downloads"/>
+    <meta property="og:description" content="Downloads for {{ artifact.fullname() }}{%- if mc_version %} for Minecraft {{ mc_version }}{%- endif %}"/>
+    <title>Downloads for {{ artifact.fullname() }}{%- if mc_version %} for Minecraft {{ mc_version }}{%- endif %}</title>
 
     <link rel="apple-touch-icon" sizes="180x180" href="{{ static_root }}images/apple-touch-icon.png">
     <link rel="icon" type="image/png" href="{{ static_root }}images/favicon-32x32.png" sizes="32x32">
@@ -22,9 +22,9 @@
 
     <link type="text/css" rel="stylesheet" href="{{ static_root }}css/tooltipster.css">
     <link type="text/css" rel="stylesheet" href="{{ static_root }}css/tooltipster-shadow.css">
-    <link type="text/css" rel="stylesheet" data-theme="light" href="{{ static_root }}css/styles_light.css?{{ now }}">
-    <link type="text/css" rel="stylesheet" data-theme="dark" href="{{ static_root }}css/styles_dark.css?{{ now }}">
-    <script type="text/javascript" src="{{ static_root }}js/theme-switch.js?{{ now }}"></script>
+    <link type="text/css" rel="stylesheet" data-theme="light" href="{{ static_root }}css/styles_light.css?{{ now.timestamp() }}">
+    <link type="text/css" rel="stylesheet" data-theme="dark" href="{{ static_root }}css/styles_dark.css?{{ now.timestamp() }}">
+    <script type="text/javascript" src="{{ static_root }}js/theme-switch.js?{{ now.timestamp() }}"></script>
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
