@@ -15,8 +15,10 @@ pipeline {
                 withGradle {
                     sh './gradlew ${GRADLE_ARGS} bundleFiles'
                 }
-                pagegen = docker.build("pagegen")
-                pagegen.push("latest")
+                script {
+                    pagegen = docker.build("pagegen")
+                    pagegen.push("latest")
+                }
             }
         }
     }
