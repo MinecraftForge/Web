@@ -1,5 +1,5 @@
 pipeline {
-    agent any
+    agent none
     environment {
         GRADLE_ARGS = '-Dorg.gradle.daemon.idletimeout=5000'
     }
@@ -24,6 +24,17 @@ pipeline {
                 script {
                     docker.build("pagegen")
                 }
+            }
+        }
+        stage('deploystaticfiles') {
+            agent {
+                docker {
+                    image 'alpine:latest'
+                    args '-v files_staticfiles:/out'
+                }
+            }
+            steps {
+                sh 'unzip build/distributions/files-bundle.zip /out/'
             }
         }
     }
