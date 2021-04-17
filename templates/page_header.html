@@ -35,8 +35,8 @@
     <![endif]-->
 </head>
 <body>
-{%- if md.body_start %}
-    {%- for line in md.body_start %}
+{%- if artifact.config['body_start'] %}
+    {%- for line in artifact.config['body_start'] %}
         {{ line }}
     {%- endfor %}
 {%- endif %}
@@ -56,7 +56,7 @@
     </div>
 </header>
 
-{%- if md.enable_adsense %}
+{%- if md.global_config['enable_adsense'] %}
     <div class="privacy-disclaimer">
         <div class="wrapper">
             <div class="privacy-disclaimer-text">

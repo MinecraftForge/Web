@@ -7,3 +7,5 @@
 *.json
 /cache/
 /output_meta/
+/.venv/
+/.idea/
