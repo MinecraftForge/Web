@@ -22,8 +22,7 @@ pipeline {
             agent any
             steps {
                 script {
-                    pagegen = docker.build("pagegen")
-                    pagegen.push("latest")
+                    docker.build("pagegen")
                 }
             }
         }
