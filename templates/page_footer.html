@@ -18,14 +18,14 @@
 <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/stickyfill/1.1.4/stickyfill.min.js"></script>
 <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/tooltipster/3.3.0/js/jquery.tooltipster.min.js"></script>
 {%- if md.enable_adsense %}
-    <script type="text/javascript" src="{{ static_root }}js/merged-google.js?{{ time_now_seconds }}"></script>
+    <script type="text/javascript" src="{{ static_root }}js/merged-google.js?{{ now }}"></script>
 {%- else %}
-    <script type="text/javascript" src="{{ static_root }}js/merged-curse.js?{{ time_now_seconds }}"></script>
+    <script type="text/javascript" src="{{ static_root }}js/merged-curse.js?{{ now }}"></script>
 {%- endif %}
-{% if md.analytics %}{{ md.analytics }}{% endif %}
+{% if artifact.config['analytics'] %}{{ artifact.config['analytics'] }}{% endif %}
 
-{%- if md.body_end %}
-    {%- for line in md.body_end %}
+{%- if artifact.config['body_end'] %}
+    {%- for line in artifact.config['body_end'] %}
         {{ line }}
     {%- endfor %}
 {%- endif %}
