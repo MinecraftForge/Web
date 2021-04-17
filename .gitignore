@@ -16,3 +16,14 @@
 !/gradlew
 !/gradlew.bat
 !/build.gradle
+/__pycache__/
+/output_web/
+*.bat
+/meta.json
+/meta.json.md5
+/meta.json.sha1
+*.json
+/cache/
+/output_meta/
+/.venv/
+/.idea/

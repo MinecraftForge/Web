@@ -10,25 +10,22 @@
     <meta property="og:description" content="{{ name }}"/>
     <title>{{ name }}</title>
 
-    <link rel="apple-touch-icon" sizes="180x180" href="https://files.minecraftforge.net/maven/manage/static/images/apple-touch-icon.png">
-    <link rel="icon" type="image/png" href="https://files.minecraftforge.net/maven/manage/static/images/favicon-32x32.png" sizes="32x32">
-    <link rel="icon" type="image/png" href="https://files.minecraftforge.net/maven/manage/static/images/favicon-16x16.png" sizes="16x16">
-    <link rel="manifest" href="https://files.minecraftforge.net/maven/manage/static/images/manifest.json">
-    <link rel="mask-icon" href="https://files.minecraftforge.net/maven/manage/static/images/safari-pinned-tab.svg" color="#5bbad5">
-    <link rel="shortcut icon" href="https://files.minecraftforge.net/maven/manage/static/images/favicon.ico">
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ static_root }}images/apple-touch-icon.png">
+    <link rel="icon" type="image/png" href="{{ static_root }}images/favicon-32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="{{ static_root }}images/favicon-16x16.png" sizes="16x16">
+    <link rel="manifest" href="{{ static_root }}images/manifest.json">
+    <link rel="mask-icon" href="{{ static_root }}images/safari-pinned-tab.svg" color="#5bbad5">
+    <link rel="shortcut icon" href="{{ static_root }}images/favicon.ico">
     <meta name="apple-mobile-web-app-title" content="Forge Files">
     <meta name="application-name" content="Forge Files">
-    <meta name="msapplication-config" content="https://files.minecraftforge.net/maven/manage/static/images/browserconfig.xml">
+    <meta name="msapplication-config" content="{{ static_root }}images/browserconfig.xml">
     <meta name="theme-color" content="#ffffff">
 
-    <link type="text/css" rel="stylesheet" href="https://files.minecraftforge.net/maven/manage/static/css/tooltipster.css">
-    <link type="text/css" rel="stylesheet" href="https://files.minecraftforge.net/maven/manage/static/css/tooltipster-shadow.css">
-    <link type="text/css" rel="stylesheet" data-theme="light" href="https://files.minecraftforge.net/maven/manage/static/css/styles_light.css?{{ time_now_seconds }}">
-    <link type="text/css" rel="stylesheet" data-theme="dark" href="https://files.minecraftforge.net/maven/manage/static/css/styles_dark.css?{{ time_now_seconds }}">
-    <script type="text/javascript" src="https://files.minecraftforge.net/maven/manage/static/js/theme-switch.js?{{ time_now_seconds }}"></script>
-    {%- if custom_style %}
-        <link type="text/css" rel="stylesheet" href="{{ path }}{{ custom_style }}">
-    {%- endif %}
+    <link type="text/css" rel="stylesheet" href="{{ static_root }}css/tooltipster.css">
+    <link type="text/css" rel="stylesheet" href="{{ static_root }}css/tooltipster-shadow.css">
+    <link type="text/css" rel="stylesheet" data-theme="light" href="{{ static_root }}css/styles_light.css?{{ time_now_seconds }}">
+    <link type="text/css" rel="stylesheet" data-theme="dark" href="{{ static_root }}css/styles_dark.css?{{ time_now_seconds }}">
+    <script type="text/javascript" src="{{ static_root }}js/theme-switch.js?{{ time_now_seconds }}"></script>
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -38,8 +35,8 @@
     <![endif]-->
 </head>
 <body>
-{%- if md.body_start %}
-    {%- for line in md.body_start %}
+{%- if artifact.config['body_start'] %}
+    {%- for line in artifact.config['body_start'] %}
         {{ line }}
     {%- endfor %}
 {%- endif %}
@@ -47,7 +44,7 @@
     <div class="wrapper">
         <div class="logo">
             {%- if mcversions %}<a href="#" class="open-sidebar"><i class="fa fa-bars"></i></a>{% endif %}
-            <a href="/" class="logo-image" title="Forge Files"><img src="https://files.minecraftforge.net/maven/manage/static/images/logo.svg" width="200"></a>
+            <a href="/" class="logo-image" title="Forge Files"><img src="{{ static_root }}images/logo.svg" width="200"></a>
         </div>
         <nav>
             <ul class="links clearfix">
@@ -59,12 +56,12 @@
     </div>
 </header>
 
-{%- if md.enable_adsense %}
+{%- if md.global_config['enable_adsense'] %}
     <div class="privacy-disclaimer">
         <div class="wrapper">
             <div class="privacy-disclaimer-text">
                 This site uses cookies and local storage to enable ads relevant to you and for switching to a dark theme.
-                Unless you give us your consent, you can't use these features. Note that you can <a href="https://files.minecraftforge.net/maven/manage/static/privacy.html#settings">change your choice</a> or check out <a href="https://files.minecraftforge.net/maven/manage/static/privacy.html">more detailed information</a> at any time.
+                Unless you give us your consent, you can't use these features. Note that you can <a href="{{ static_root }}privacy.html#settings">change your choice</a> or check out <a href="{{ static_root }}privacy.html">more detailed information</a> at any time.
             </div>
             <div class="privacy-disclaimer-links">
                 <a class="btn btn-privacy-disclaimer-accept" href="#">Accept All</a>
