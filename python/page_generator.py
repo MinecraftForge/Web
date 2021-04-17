@@ -24,7 +24,8 @@ def main():
     parser.add_argument('--config', dest='config', required=True, help="Location of global_overrides.json file", type=parse_path)
     parser.add_argument('--templates', dest='templates', required=True, type=parse_path, help="Path to templates")
 
-    commands = parser.add_subparsers(help='Specific task help', dest='command')
+    commands = parser.add_subparsers(help='Command to perform', dest='command', required=True)
+
     gen_command = commands.add_parser('gen', help='Indexes generator subcommand')
     gen_command.add_argument('artifact', help='Maven Artifact - net.minecraftforge:forge')
 
@@ -45,9 +46,10 @@ def main():
     print(f'Static:   {args.static}')
     print(f'Templates:{args.templates}')
     print(f'Command:  {args.command}')
-    print(f'Artifact: {args.artifact}')
+    print(f'Artifact: {args.artifact if "artifact" in args else None}')
     print(f'Version:  {args.version if "version" in args else None}')
     print(f'Type:     {args.type if "type" in args else None}')
+
     metadata = Metadata(args.folder, args.output_meta, args.output_web, args.webroot, args.dlroot, args.static, args.config)
     artifact = Artifact.load_maven_xml(metadata, args.artifact)
     templates = Templates(args.templates, args.static, args.webroot, args.dlroot)
