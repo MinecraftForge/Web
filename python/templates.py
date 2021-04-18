@@ -23,6 +23,6 @@ class Templates:
         self.env.globals['repository_base'] = repository_base
         self.env.globals['now'] = datetime.datetime.utcnow()
         self.env.globals['show_classifier'] = show_classifier
-        self.env.filters['humanformatdate'] = lambda dt: f'{humanize.naturaltime(dt, months=True, minimum_unit="days")}'
+        self.env.filters['humanformatdate'] = lambda dt: f'{humanize.naturaltime(dt.date, months=True)}'
         self.env.filters['formatdate'] = lambda dt: f'{dt:%Y-%m-%d %H:%M:%S}'
 
