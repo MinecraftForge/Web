@@ -10,7 +10,7 @@
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="Forge Files"/>
     <meta property="og:title" content="{{ artifact.fullname() }} downloads"/>
-    <meta property="og:description" content="Downloads for {{ artifact.fullname() }}{%- if mc_version %} for Minecraft {{ mc_version }}{%- endif %}"/>
+    <meta property="og:description" content="{{ get_artifact_description(artifact, mc_version or None) }}"/>
     <meta property="og:image" content="{{ static_root }}images/embed_logo.png" />
     <meta property="og:image:alt" content="FORGE LOGO" />
     <title>Downloads for {{ artifact.fullname() }}{%- if mc_version %} for Minecraft {{ mc_version }}{%- endif %}</title>
