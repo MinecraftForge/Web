@@ -197,7 +197,7 @@
                                     {% for class, info in version.item_by_cls|dictsort %}
                                         {%- set url_prefix_cls = url_prefix %}
                                         {%- if class == "changelog" %}{% set url_prefix_cls = "" %}{% endif %}
-                                        {%- if show_classifier(mc_version, class) %}
+                                        {%- if show_classifier(mc_version or 'default', class) %}
                                             <li>
                                                 <a href="{{ url_prefix_cls }}{{ repository_base }}{{ info.relative_path }}">
                                                     <i class="fa download-classifier classifier-{{ class }}"></i> {{ class|default("Mod", true)|capitalize }}
