@@ -11,3 +11,6 @@
 /.idea/
 /build
 /.gradle
+/tstin/
+/tstout/
+/js/relativeTime.min.js

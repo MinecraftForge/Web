@@ -15,28 +15,7 @@ def show_classifier(context, mc_version, classifier):
 
 
 def humanformatdate(dt: datetime.datetime):
-    now = datetime.datetime.now()
-    delta = dt - now
-    days = abs(delta.days)
-    years = days // 365
-    days = days % 365
-    months = int(days // 30.5)
-
-    if years > 1:
-        return f'{years} years ago'
-    elif years == 1:
-        return f'{months+12} months ago'
-    else:
-        if days < 2:
-            return 'today'
-        elif days < 3:
-            return 'yesterday'
-        elif days < 31:
-            return f'{days} days ago'
-        elif months < 2:
-            return 'a month ago'
-        else:
-            return f'{months} months ago'
+    return jinja2.Markup(f'<script>document.write(dayjs.unix({dt.timestamp()}).fromNow())</script>')
 
 
 class Templates:
