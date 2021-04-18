@@ -140,13 +140,14 @@ class Artifact:
         return v
 
     def promote(self, version, tag):
+        (mc_vers, ver, branch) = parse_version(version)
         tag = tag.upper()
-        v = self.find_version(version)
+        v = self.find_version(ver)
 
         if existing := self.promotions[v.minecraft_version][tag]:
             self.find_version(existing).promotion_tags.remove(tag)
 
-        self.promotions[v.minecraft_version][tag] = version
+        self.promotions[v.minecraft_version][tag] = ver
         v.promotion_tags.append(tag)
 
     def attach_config(self, config):
