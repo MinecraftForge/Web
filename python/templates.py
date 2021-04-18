@@ -14,6 +14,29 @@ def show_classifier(context, mc_version, classifier):
     filter = next(reversed([f['filter'] for f in filters if mc_vers >= f['mc']]), [])
     return classifier not in filter
 
+def humanformatdate(dt: datetime.datetime):
+    now = datetime.datetime.now()
+    delta = dt - now
+    days = abs(delta.days)
+    years = days // 365
+    days = days % 365
+    months = int(days // 30.5)
+
+    if years > 1:
+        return f'{years} years ago'
+    elif years == 1:
+        return f'{months+12} months ago'
+    else:
+        if days < 1:
+            return 'today'
+        elif days < 2:
+            return 'yesterday'
+        elif days < 31:
+            return f'{days} days ago'
+        elif months < 2:
+            return 'a month ago'
+        else:
+            return f'{months} months ago'
 
 class Templates:
     def __init__(self, template_path: pathlib.Path, static_base, web_base, repository_base):
@@ -23,6 +46,7 @@ class Templates:
         self.env.globals['repository_base'] = repository_base
         self.env.globals['now'] = datetime.datetime.utcnow()
         self.env.globals['show_classifier'] = show_classifier
-        self.env.filters['humanformatdate'] = lambda dt: f'{humanize.naturaltime(dt.date(), months=True)}'
+
+        self.env.filters['humanformatdate'] = humanformatdate
         self.env.filters['formatdate'] = lambda dt: f'{dt:%Y-%m-%d %H:%M:%S}'
 
