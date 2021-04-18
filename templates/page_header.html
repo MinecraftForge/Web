@@ -5,8 +5,12 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="theme-color" content="#2E4460">
+    <meta property="og:type" content="website" />
+    <meta property="og:site" content="Forge Files"/>
     <meta property="og:title" content="{{ artifact.fullname() }} downloads"/>
     <meta property="og:description" content="Downloads for {{ artifact.fullname() }}{%- if mc_version %} for Minecraft {{ mc_version }}{%- endif %}"/>
+    <meta property="og:image" content="{{ static_root }}images/embed_logo.png" />
+    <meta property="og:image:alt" content="FORGE LOGO" />
     <title>Downloads for {{ artifact.fullname() }}{%- if mc_version %} for Minecraft {{ mc_version }}{%- endif %}</title>
 
     <link rel="apple-touch-icon" sizes="180x180" href="{{ static_root }}images/apple-touch-icon.png">
