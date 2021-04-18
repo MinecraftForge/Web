@@ -1,6 +1,5 @@
 import datetime
 import pathlib
-import humanize
 
 import jinja2
 
