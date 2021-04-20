@@ -67,8 +67,37 @@ class PromoteGenerator(Generator):
         out.joinpath('promotions_slim.json').write_text(json.dumps(slimpromos, indent=2), 'utf-8')
 
 
+class TrackingGenerator(Generator):
+    def generate(self, md: metadata.Metadata, artifact: metadata.Artifact, tpl: templates.Templates, args: argparse.Namespace):
+        output = md.path(root='output_meta').joinpath('tracked_promotions.json')
+        print(f'Adding {artifact.name} to tracked list at {output}')
+        tracked_promos = json.loads(output.read_text('utf-8')) if output.exists() else {}
+        meta = {
+            "name": artifact.fullname(),
+            "last": {
+                "version": artifact.all_versions[-1].version,
+                "mc": artifact.all_versions[-1].minecraft_version,
+                "timestamp": artifact.all_versions[-1].timestamp.timestamp()
+            }
+        }
+        tracked_promos[artifact.mavenname()] = meta
+        output.write_text(json.dumps(tracked_promos), 'utf-8')
+
+
+class PromotionIndexGenerator(Generator):
+    def generate(self, md: metadata.Metadata, artifact: metadata.Artifact, tpl: templates.Templates, args: argparse.Namespace):
+        output = md.path(root='output_web').joinpath('project_index.html')
+        print(f'Generating project index at {output}')
+        promos = md.path(root='output_meta').joinpath('tracked_promotions.json')
+        tracked_promos = json.loads(promos.read_text('utf-8')) if promos.exists() else {}
+        tpl.env.filters['maventopath'] = lambda p: metadata.mvn_to_path(md, p, root='empty_root')
+        template = tpl.env.get_template('project_index.html')
+        output.write_text(template.render(md=md, promos=tracked_promos), 'utf-8')
+
+
 basegens = [MetaJsonGenerator(), MavenJsonGenerator(), IndexGenerator()]
 Generators: dict[str, list[Generator]] = {
     'gen': basegens,
-    'promote': [PromoteGenerator(), *basegens]
+    'promote': [PromoteGenerator(), TrackingGenerator(), *basegens],
+    'index': [PromotionIndexGenerator()]
 }

@@ -9,11 +9,18 @@
     <meta name="twitter:card" content="summary">
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="Forge Files"/>
+    {% if artifact %}
     <meta property="og:title" content="{{ artifact.fullname() }} downloads"/>
     <meta property="og:description" content="{{ get_artifact_description(artifact, mc_version or None) }}"/>
+    <title>Downloads for {{ artifact.fullname() }}{%- if mc_version %} for Minecraft {{ mc_version }}{%- endif %}</title>
+    {% else %}
+    <meta property="og:title" content="Project Index"/>
+    <meta property="og:description" content="Index of projects hosts at forge files"/>
+    <title>Project index</title>
+    {% endif %}
+
     <meta property="og:image" content="{{ static_root }}images/embed_logo.png" />
     <meta property="og:image:alt" content="FORGE LOGO" />
-    <title>Downloads for {{ artifact.fullname() }}{%- if mc_version %} for Minecraft {{ mc_version }}{%- endif %}</title>
 
     <link rel="apple-touch-icon" sizes="180x180" href="{{ static_root }}images/apple-touch-icon.png">
     <link rel="icon" type="image/png" href="{{ static_root }}images/favicon-32x32.png" sizes="32x32">
@@ -43,7 +50,7 @@
     <![endif]-->
 </head>
 <body>
-{%- if artifact.config['body_start'] %}
+{%- if artifact and artifact.config['body_start'] %}
     {%- for line in artifact.config['body_start'] %}
         {{ line }}
     {%- endfor %}

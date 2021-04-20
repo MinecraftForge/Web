@@ -1,0 +1,25 @@
+<main class="wrapper">
+    <div>
+        <h1>Tracked project index</h1>
+        <table class="directory-listing">
+            <thead>
+            <tr>
+                <th width="200px">Project</th>
+                <th width="200px">Maven</th>
+                <th width="190px">Time</th>
+                <th>Last version</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for mvn, info in promos|dictsort %}
+                <tr>
+                    <td><a href="{{ mvn | maventopath }}">{{ info.name }}</a></td>
+                    <td>{{ mvn }}</td>
+                    <td title="{{ info.last.timestamp | todatetime | formatdate }}">{{ info.last.timestamp | todatetime | humanformatdate }}</td>
+                    <td>{{ info.last.version }}{% if info.last.mc and info.last.mc != 'default' %} for Minecraft {{ info.last.mc }}{% endif %}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</main>

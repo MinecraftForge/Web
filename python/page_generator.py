@@ -29,6 +29,8 @@ def main():
     gen_command = commands.add_parser('gen', help='Indexes generator subcommand')
     gen_command.add_argument('artifact', help='Maven Artifact - net.minecraftforge:forge')
 
+    index_command = commands.add_parser('index', help='Generate tracked project index')
+
     promote_command = commands.add_parser('promote', help='Promote subcommand')
     promote_command.add_argument('artifact',  help='Maven Artifact - net.minecraftforge:forge')
     promote_command.add_argument('version', help='Maven Version')
@@ -51,7 +53,7 @@ def main():
     print(f'Type:     {args.type if "type" in args else None}')
 
     metadata = Metadata(args.folder, args.output_meta, args.output_web, args.webroot, args.dlroot, args.static, args.config)
-    artifact = Artifact.load_maven_xml(metadata, args.artifact)
+    artifact = Artifact.load_maven_xml(metadata, args.artifact) if 'artifact' in args else None
     templates = Templates(args.templates, args.static, args.webroot, args.dlroot)
 
     for gen in Generators[args.command]:

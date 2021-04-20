@@ -3,7 +3,6 @@ from __future__ import annotations
 import datetime
 import json
 import pathlib
-import pprint
 import re
 from collections import defaultdict
 from dataclasses import dataclass, field, InitVar
@@ -20,6 +19,10 @@ def parse_version(version):
 
 def parse_artifact(artifact: str):
     return artifact.rsplit(":")
+
+
+def mvn_to_path(md: Metadata, mvnname: str, root='path_root'):
+    return md.path(root, *re.split(r"[:.]", mvnname))
 
 
 SKIP_SUFFIXES = {'.pom', '.sha1', '.md5', '.url', '.asc', '.sha256', '.sha512', '.module'}
@@ -121,6 +124,9 @@ class Artifact:
     def fullname(self):
         return self.config.get('name', self.name)
 
+    def mavenname(self):
+        return f'{self.group}:{self.name}'
+
     def path(self, root='path_root') -> pathlib.Path:
         return self.metadata.path(root, self.group.replace('.', '/'), self.name)
 
@@ -162,7 +168,6 @@ class Artifact:
                 yield f'index_{mc_version}.html', global_context | {'mc_version': mc_version, 'mcversions': sorted_mc_versions}
         else:
             yield 'index.html', global_context
-
 
     @classmethod
     def load_maven_xml(cls, metadata: Metadata, artifact):

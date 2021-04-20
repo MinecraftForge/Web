@@ -42,4 +42,5 @@ class Templates:
 
         self.env.filters['humanformatdate'] = humanformatdate
         self.env.filters['formatdate'] = lambda dt: f'{dt:%Y-%m-%d %H:%M:%S}'
+        self.env.filters['todatetime'] = lambda f: datetime.datetime.fromtimestamp(f)
 

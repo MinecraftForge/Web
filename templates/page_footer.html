@@ -22,9 +22,9 @@
 {%- else %}
     <script type="text/javascript" src="{{ static_root }}js/merged-curse.js?{{ now.timestamp() }}"></script>
 {%- endif %}
-{% if artifact.config['analytics'] %}{{ artifact.config['analytics'] }}{% endif %}
+{% if artifact and artifact.config['analytics'] %}{{ artifact.config['analytics'] }}{% endif %}
 
-{%- if artifact.config['body_end'] %}
+{%- if artifact and artifact.config['body_end'] %}
     {%- for line in artifact.config['body_end'] %}
         {{ line }}
     {%- endfor %}
