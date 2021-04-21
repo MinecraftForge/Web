@@ -4,17 +4,19 @@ import datetime
 import json
 import pathlib
 import re
+import os
+from pprint import pprint
 from collections import defaultdict
 from dataclasses import dataclass, field, InitVar
 from mc_version import MCVer
 import xml.etree.ElementTree as elementtree
 
-MINECRAFT_REG = re.compile(r'^(?P<mcversion>1(?:\.\d+){1,2}?(?:_pre\d+)?)-(?P<rest>[\w]+)$')
-VERSION_REG = re.compile(r'^(?P<mcversion>1(?:\.\d+){1,2}?(?:_pre\d+)?)-?(?P<version>(?:\d+(?:\.|\+))*[\d]+)-?(?P<branch>[\w\.\-]+)?$')
-
+MINECRAFT_FORMAT = '(?P<mcversion>1(?:\.\d+){1,2}?(?:_pre\d+)?)'
+PROMOTION_REG = re.compile(r'^' + MINECRAFT_FORMAT + '-(?P<tag>[\w]+)$')
+VERSION_REG = re.compile(r'^(?:' + MINECRAFT_FORMAT + '-)?(?P<version>(?:\d+(?:\.|\+))*[\d]+)-?(?P<branch>[\w\.\-]+)?$')
 
 def parse_version(version):
-    return (versmatch.groupdict().get('mcversion', 'default'), versmatch.group('version'), versmatch.group('branch')) if (versmatch := VERSION_REG.match(version)) else ('default', version, None)
+    return (versmatch.groupdict().get('mcversion') or 'default', versmatch.group('version'), versmatch.group('branch')) if (versmatch := VERSION_REG.match(version)) else ('default', version, None)
 
 
 def parse_artifact(artifact: str):
@@ -90,12 +92,14 @@ class ArtifactVersion:
     @classmethod
     def load(cls, artifact, version):
         (mcvers, vers, branch) = parse_version(version)
-        if vers.endswith('-SNAPSHOT'):
+        if vers.endswith('-SNAPSHOT') or branch == 'SNAPSHOT':
             return
         if not (d := artifact.path().joinpath(version)).exists():
             return
         av = ArtifactVersion(artifact, version, vers, mcvers, branch)
         av.items = [ai for file in d.iterdir()  if (ai := ArtifactItem.load(av, file)) is not None]
+        if not av.items:
+            return
         av.item_by_cls = {ai.classifier: ai for ai in av.items}
         av.timestamp = min(ai.timestamp for ai in av.items)
         return av
@@ -132,11 +136,18 @@ class Artifact:
 
     def attach_promotions(self, promotions):
         for key, value in promotions.get('promos', {}).items():
-            if mc_match := MINECRAFT_REG.match(key):
-                mc_vers = mc_match.group('mcversion')
-                tag = mc_match.group('rest').upper()
-                if v := self.versions[mc_vers].get(value):
-                    self.promotions[mc_vers][tag] = value
+            mc_ver = 'default'
+            tag = key.lower()
+            
+            if mc_match := PROMOTION_REG.match(key):
+                mc_ver = mc_match.group('mcversion')
+                tag = mc_match.group('tag').upper()
+            
+            if mc_ver in self.versions:
+                if v := self.versions[mc_ver].get(value):
+                    if not mc_ver in self.promotions:
+                        self.promotions[mc_ver] = {}
+                    self.promotions[mc_ver][tag] = value
                     v.promotion_tags.append(tag)
 
     def find_version(self, version: str) -> ArtifactVersion:
@@ -147,7 +158,7 @@ class Artifact:
 
     def promote(self, version, tag):
         (mc_vers, ver, branch) = parse_version(version)
-        tag = tag.upper()
+        tag = tag.lower()
         v = self.find_version(ver)
 
         if existing := self.promotions[v.minecraft_version][tag]:

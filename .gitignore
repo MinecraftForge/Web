@@ -14,3 +14,6 @@
 /tstin/
 /tstout/
 /js/relativeTime.min.js
+/out/
+/python/__pycache__/
+/test.sh

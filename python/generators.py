@@ -58,8 +58,15 @@ class PromoteGenerator(Generator):
 
         slimpromos = {
             "homepage": f'{md.web_root}{artifact.path(root="empty_root")}/',
-            "promos": dict(ChainMap(*[{f'{mcv}-{tag.lower()}': v for tag, v in vers.items()} for mcv, vers in artifact.promotions.items()]))
+            "promos": {}
         }
+        for mcv, vers in artifact.promotions.items():
+            if mcv == 'default':
+                for tag, v in vers.items():
+                    slimpromos['promos'][tag] = v.lower()
+            else:
+                for tag, v in vers.items():
+                    slimpromos['promos'][tag] = f'{mcv}-{v.lower()}'
 
         out = artifact.path(root='output_meta')
         out.mkdir(parents=True, exist_ok=True)
