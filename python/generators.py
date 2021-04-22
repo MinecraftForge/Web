@@ -66,7 +66,7 @@ class PromoteGenerator(Generator):
                     slimpromos['promos'][tag] = v.lower()
             else:
                 for tag, v in vers.items():
-                    slimpromos['promos'][tag] = f'{mcv}-{v.lower()}'
+                    slimpromos['promos'][f'{mcv}-{tag}'] = v.lower()
 
         out = artifact.path(root='output_meta')
         out.mkdir(parents=True, exist_ok=True)
@@ -88,7 +88,7 @@ class TrackingGenerator(Generator):
             }
         }
         tracked_promos[artifact.mavenname()] = meta
-        output.write_text(json.dumps(tracked_promos), 'utf-8')
+        output.write_text(json.dumps(tracked_promos, indent=2), 'utf-8')
 
 
 class PromotionIndexGenerator(Generator):
