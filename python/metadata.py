@@ -141,7 +141,7 @@ class Artifact:
             
             if mc_match := PROMOTION_REG.match(key):
                 mc_ver = mc_match.group('mcversion')
-                tag = mc_match.group('tag').upper()
+                tag = mc_match.group('tag').lower()
             
             if mc_ver in self.versions:
                 if v := self.versions[mc_ver].get(value):
