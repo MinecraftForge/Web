@@ -5,6 +5,7 @@ from abc import abstractmethod
 from collections import ChainMap
 
 from markdown import markdown
+from pprint import pprint
 
 import metadata
 import templates
@@ -19,19 +20,21 @@ class Generator:
 
 class MetaJsonGenerator(Generator):
     def generate(self, md: metadata.Metadata, artifact: metadata.Artifact, tpl: templates.Templates, args: argparse.Namespace):
+        print(f'Writing meta.jsons')
         for version in artifact.all_versions:
             meta = {'classifiers': {cls or "null": {item.ext: item.md5} for cls, item in version.item_by_cls.items()}}
             out = version.path(root='output_meta')
-            print(f'Writing meta.json at {out}')
+            print(f'  Writing meta.json at {out}')
             out.mkdir(parents=True, exist_ok=True)
             out.joinpath('meta.json').write_text(json.dumps(meta, indent=2), 'utf-8')
 
 
 class MavenJsonGenerator(Generator):
     def generate(self, md: metadata.Metadata, artifact: metadata.Artifact, tpl: templates.Templates, args: argparse.Namespace):
-        meta = {mc_vers: list(vers.keys()) for mc_vers, vers in artifact.versions.items()}
+        print('Generating Maven Index')
+        meta = {mc_vers: [value.raw_version for value in vers.values()] for mc_vers, vers in artifact.versions.items()}
         out = artifact.path(root='output_meta')
-        print(f'Writing maven_metadata.json at {out}')
+        print(f'  Writing maven_metadata.json at {out}')
         out.mkdir(parents=True, exist_ok=True)
         out.joinpath('maven-metadata.json').write_text(json.dumps(meta, indent=2), 'utf-8')
 
