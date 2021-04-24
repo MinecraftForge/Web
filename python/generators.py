@@ -108,6 +108,6 @@ class PromotionIndexGenerator(Generator):
 basegens = [MetaJsonGenerator(), MavenJsonGenerator(), IndexGenerator()]
 Generators: dict[str, list[Generator]] = {
     'gen': basegens,
-    'promote': [PromoteGenerator(), TrackingGenerator(), *basegens],
+    'promote': [PromoteGenerator(), TrackingGenerator(), PromotionIndexGenerator(), *basegens],
     'index': [PromotionIndexGenerator()]
 }
