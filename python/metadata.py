@@ -185,12 +185,17 @@ class Artifact:
         (group, name) = parse_artifact(artifact)
         artifact = Artifact(metadata, group, name)
         try:
+            versions = []
             with artifact.path().joinpath('maven-metadata.xml').open('rb') as f:
-                artifact.all_versions = sorted(
-                    (av for v in elementtree.parse(f).getroot().findall("./versioning/versions/version")
-                    if (av := ArtifactVersion.load(artifact, v.text)) is not None), key=lambda v: v.timestamp)
-                mc_versions = (av.minecraft_version for av in artifact.all_versions)
-                artifact.versions = {mc_version: {av.version: av for av in artifact.all_versions if av.minecraft_version == mc_version} for mc_version in mc_versions}
+                versions = [v.text for v in elementtree.parse(f).getroot().findall("./versioning/versions/version")]
+            # Reposilite ignore the maven-metadata.xml that is uploaded and generates it's own.
+            # So for now we don't trust it and just pull the version list from the directory listing
+            # TODO: Remove in future when I fix that... This is just a quickest fix
+            versions = [name for name in os.listdir(artifact.path()) if os.path.isdir(os.path.join(artifact.path(), name))]
+            #end fix
+            artifact.all_versions = sorted((av for v in versions if (av := ArtifactVersion.load(artifact, v)) is not None), key=lambda v: v.timestamp)
+            mc_versions = (av.minecraft_version for av in artifact.all_versions)
+            artifact.versions = {mc_version: {av.version: av for av in artifact.all_versions if av.minecraft_version == mc_version} for mc_version in mc_versions}
             promotions = {}
             if (promotions_file := artifact.path().joinpath('promotions_slim.json')).exists():
                 promotions |= json.loads(promotions_file.read_bytes())
