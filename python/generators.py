@@ -1,11 +1,8 @@
 import argparse
 import json
-import time
 from abc import abstractmethod
-from collections import ChainMap
 
 from markdown import markdown
-from pprint import pprint
 
 import metadata
 import templates

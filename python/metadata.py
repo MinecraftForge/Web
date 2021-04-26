@@ -4,10 +4,11 @@ import datetime
 import json
 import pathlib
 import re
-import os
-from pprint import pprint
 from collections import defaultdict
 from dataclasses import dataclass, field, InitVar
+
+import requests
+
 from mc_version import MCVer
 import xml.etree.ElementTree as elementtree
 
@@ -185,14 +186,11 @@ class Artifact:
         (group, name) = parse_artifact(artifact)
         artifact = Artifact(metadata, group, name)
         try:
-            versions = []
-            with artifact.path().joinpath('maven-metadata.xml').open('rb') as f:
-                versions = [v.text for v in elementtree.parse(f).getroot().findall("./versioning/versions/version")]
-            # Reposilite ignore the maven-metadata.xml that is uploaded and generates it's own.
-            # So for now we don't trust it and just pull the version list from the directory listing
-            # TODO: Remove in future when I fix that... This is just a quickest fix
-            versions = [name for name in os.listdir(artifact.path()) if os.path.isdir(os.path.join(artifact.path(), name))]
-            #end fix
+            if (xmlresponse := requests.get(f'{metadata.dl_root}{artifact.path(root="empty_root")}/maven-metadata.xml')).status_code == 200:
+                versions = [v.text for v in elementtree.fromstring(xmlresponse.content).findall("./versioning/versions/version")]
+            else:
+                raise RuntimeError(f'Failed to read maven-metadata from {metadata.dl_root}{artifact.path(root="empty_root")}/maven-metadata.xml')
+
             artifact.all_versions = sorted((av for v in versions if (av := ArtifactVersion.load(artifact, v)) is not None), key=lambda v: v.timestamp)
             mc_versions = (av.minecraft_version for av in artifact.all_versions)
             artifact.versions = {mc_version: {av.version: av for av in artifact.all_versions if av.minecraft_version == mc_version} for mc_version in mc_versions}
