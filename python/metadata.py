@@ -162,7 +162,10 @@ class Artifact:
         tag = tag.lower()
         v = self.find_version(ver)
 
-        if existing := self.promotions[v.minecraft_version][tag]:
+        if not v.minecraft_version in self.promotions:
+            self.promotions[v.minecraft_version] = {}
+            
+        if existing := self.promotions[v.minecraft_version].get(tag):
             self.find_version(existing).promotion_tags.remove(tag)
 
         self.promotions[v.minecraft_version][tag] = ver
