@@ -191,10 +191,10 @@ class Artifact:
         (group, name) = parse_artifact(artifact)
         artifact = Artifact(metadata, group, name)
         try:
-            if (xmlresponse := requests.get(f'{metadata.dl_root}{artifact.path(root="empty_root")}/maven-metadata.xml')).status_code == 200:
+            if (xmlresponse := requests.get(f'{metadata.dl_root}{artifact.path(root="empty_root").as_posix()}/maven-metadata.xml')).status_code == 200:
                 versions = [v.text for v in elementtree.fromstring(xmlresponse.content).findall("./versioning/versions/version")]
             else:
-                raise RuntimeError(f'Failed to read maven-metadata from {metadata.dl_root}{artifact.path(root="empty_root")}/maven-metadata.xml')
+                raise RuntimeError(f'Failed to read maven-metadata from {metadata.dl_root}{artifact.path(root="empty_root").as_posix()}/maven-metadata.xml')
 
             artifact.all_versions = sorted((av for v in versions if (av := ArtifactVersion.load(artifact, v)) is not None), key=lambda v: v.timestamp)
             mc_versions = (av.minecraft_version for av in artifact.all_versions)
