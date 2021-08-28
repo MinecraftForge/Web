@@ -181,6 +181,8 @@ class Artifact:
             yield 'index.html', global_context | {'mc_version': first_idx, 'mcversions': sorted_mc_versions}
             for mc_version in sorted_mc_versions:
                 yield f'index_{mc_version}.html', global_context | {'mc_version': mc_version, 'mcversions': sorted_mc_versions}
+        elif len(self.versions) == 1 and not 'default' in self.versions:
+            yield 'index.html', global_context | {'mc_version': list(self.versions.keys())[0]}
         else:
             yield 'index.html', global_context
 
