@@ -1,7 +1,7 @@
 /__pycache__/
 /output_web/
 #*.bat
-/meta.json
+#/meta.json
 /meta.json.md5
 /meta.json.sha1
 #*.json
