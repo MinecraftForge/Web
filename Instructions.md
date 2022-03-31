@@ -56,7 +56,7 @@ Now, let's setup the Gradle side:
 2. Extract the contents of the zip made in `./build/distributions/files-bundle.zip` to `./static`, overwriting any existing files
     - do *not* overwrite the corresponding base directories (`js`, `sass`, etc...) as the contents of this zip are minified and may contain the same file names, while the contents of the base directories are the source files. You don't want to be overwriting source files with minified ones!
 3. Run `python .\python\page_generator.py --webout './out' --metaout './out' --folder './repo' --config './config/global_overrides.json' --static 'file://<full-path-to-this-folder>/static/' promote net.minecraftforge:forge 1.18.2-40.0.34 latest`
-    - replacing `<full-path-to-this-folder>` accordingly. For example, `--static 'file://C:/Users/oscar/Documents/GitHub/MinecraftForge-Web/static/'`
+    - replacing `<full-path-to-this-folder>` accordingly. For example, `--static 'file://C:/Users/PaintNinja/Documents/GitHub/MinecraftForge-Web/static/'`
     - note: the `--static` argument must always use forward slashes, start with `file://` and end with a trailing forward slash (a "`/`")
 4. Open the pages you want to test, they can be found in the `out` folder
     - note: many links are broken in testing - especially on Windows - this is a known issue
@@ -87,6 +87,6 @@ For the Gradle side of the build system:
 
 1. Important: Make sure you've compiled and updated the static folder.
 2. In your PR, commit any changed files inside the sass/js/templates/static/images/python folders
-    - Do *not* commit the `out` folder unless you are intending on improving the test dummy data
+    - Note: Do *not* commit the `out` or `build` folders
 
 Note: The test html files generated in Step 2 are not intended to be published to a live site, as they contain `file://` references to your machine for some static resources, which won't work for anyone else.
