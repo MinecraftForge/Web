@@ -1,0 +1,18 @@
+{
+  "net.minecraftforge:ForgeAutoRenamingTool": {
+    "name": "ForgeAutoRenamingTool",
+    "last": {
+      "version": "0.1.22",
+      "mc": "default",
+      "timestamp": 1648706729.03949
+    }
+  },
+  "net.minecraftforge:forge": {
+    "name": "forge",
+    "last": {
+      "version": "37.1.1",
+      "mc": "1.17.1",
+      "timestamp": 1648719366.0831
+    }
+  }
+}
