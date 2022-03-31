@@ -1,10 +1,10 @@
 /__pycache__/
 /output_web/
-*.bat
+#*.bat
 /meta.json
 /meta.json.md5
 /meta.json.sha1
-*.json
+#*.json
 /cache/
 /output_meta/
 /.venv/
