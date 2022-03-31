@@ -1,5 +1,5 @@
 plugins {
-    id "io.freefair.jsass-base" version "1.0.0"
+    id "io.freefair.jsass-base" version "1.0.2"
     id "com.eriwen.gradle.js" version "2.14.1"
 }
 

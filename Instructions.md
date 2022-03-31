@@ -48,7 +48,7 @@ Firstly, we need to setup the Python side:
 
 Now, let's setup the Gradle side:
 1. Import the `build.gradle` into your IDE
-    - Due to the ancient Gradle 4.4.1 in use here, you'll need to use Java 8 for it to work
+    - Due to the old Gradle 5.6.4 in use here, you'll need to use Java 8 for it to work
 
 ## Step 2: Manually setup for testing
 
