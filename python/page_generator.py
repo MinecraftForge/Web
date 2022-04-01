@@ -31,6 +31,7 @@ def main():
     gen_command.add_argument('artifact', help='Maven Artifact - net.minecraftforge:forge')
 
     index_command = commands.add_parser('index', help='Generate tracked project index')
+    regen_command = commands.add_parser('regen', help='ReGenerate all tracked projects')
 
     promote_command = commands.add_parser('promote', help='Promote subcommand')
     promote_command.add_argument('artifact',  help='Maven Artifact - net.minecraftforge:forge')
