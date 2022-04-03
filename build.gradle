@@ -114,6 +114,13 @@ def writeXml(group, name, vers) {
     file("${path}/maven-metadata.xml.md5").text = digest(data, 'MD5')
     file("${path}/maven-metadata.xml.sha1").text = digest(data, 'SHA-1')
     file("${path}/maven-metadata.xml.sha256").text = digest(data, 'SHA-256')
+    file("${path}/page_config.json").text = new groovy.json.JsonBuilder([
+            name: "Minecraft Forge",
+            comments: false,
+            downloads: true,
+            shrink_dls: false,
+            adfocus: "271228"
+    ]).toPrettyString()
 }
 
 task deleteTestData(type: Delete) {
