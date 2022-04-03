@@ -11,11 +11,11 @@ task css(type: io.freefair.gradle.plugins.jsass.SassCompile) {
 }
 
 def createJsTask(name, files) {
-    def combineTask = tasks.create("combine${name.capitalize()}Js", com.eriwen.gradle.js.tasks.CombineJsTask) {
+    def combineTask = tasks.register("combine${name.capitalize()}Js", com.eriwen.gradle.js.tasks.CombineJsTask) {
         source = files
         dest = file("${buildDir}/js/${name}.js")
     }
-    def minifyTask = tasks.create("minify${name.capitalize()}Js", com.eriwen.gradle.js.tasks.MinifyJsTask) {
+    def minifyTask = tasks.register("minify${name.capitalize()}Js", com.eriwen.gradle.js.tasks.MinifyJsTask) {
         source = combineTask
         dest = file("${buildDir}/js/${name}.js")
     }
@@ -41,8 +41,8 @@ createJsTask('docs', [
 createJsTask('themeSwitch', ["${projectDir}/js/theme-switch.js"])
 
 task bundleFiles(type: Zip) {
-    baseName = 'files-bundle'
-    destinationDir = file("${buildDir}/distributions")
+    archiveBaseName = 'files-bundle'
+    destinationDirectory = file("${buildDir}/distributions")
     from(minifyFilesCurseJs) {
         into 'static/js'
         rename ~/filesCurse/, 'merged-curse'
@@ -124,7 +124,7 @@ task generateMaven() {
     mustRunAfter deleteTestData
     doLast {
         List versions = []
-        ['1.16.5-36.0', '1.16.5-36.1', '1.18.1-39.0', '1.18.1-39.1', '1.18.2-40.0', '1.18.2-40.1'].each { ver ->
+        ['1.16.5-36.0', '1.16.5-36.1', '1.18.1-39.0', '1.18.1-39.1', '1.18.2-40.0'].each { ver ->
             def range = 0..8 // make eight builds for "beta" release period
             if (ver.endsWith('.1'))
                 range = 0..2 // make three builds for "recommended" release period
@@ -157,7 +157,7 @@ task generateGlobalConfig() {
 
 task extractBundledFiles(type: Copy, dependsOn: bundleFiles) {
     mustRunAfter deleteTestData
-    from zipTree(bundleFiles.archivePath)
+    from zipTree(bundleFiles.archiveFile)
     into file('./test/')
 }
 
