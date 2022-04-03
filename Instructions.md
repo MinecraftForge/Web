@@ -66,22 +66,26 @@ For HTML:
 For CSS:
 1. Edit the appropriate file(s) in the `./css` folder
 2. Run `gradlew setupTest`
-3. Open the pages you want to test in the `./test/out` folder
+3. Run `gradlew runTestPageGen`
+4. Open the pages you want to test in the `./test/out` folder
 
 For SCSS:
 1. Edit the appropriate file(s) in the `./sass` folder
 2. Run `gradlew setupTest`
-3. Open the pages you want to test in the `./test/out` folder
+3. Run `gradlew runTestPageGen`
+4. Open the pages you want to test in the `./test/out` folder
 
 For JS:
 1. Edit the appropriate file(s) in the `./js` folder
 2. Run `gradlew setupTest`
-3. Open the pages you want to test in the `./test/out` folder
+3. Run `gradlew runTestPageGen`
+4. Open the pages you want to test in the `./test/out` folder
 
 For images:
 1. Edit the appropriate file(s) in the `./images` folder
 2. Run `gradlew setupTest`
-3. Open the pages you want to test in the `./test/out` folder
+3. Run `gradlew runTestPageGen`
+4. Open the pages you want to test in the `./test/out` folder
 
 For the Python side of the build system:
 1. Edit the appropriate file(s) in the `./python` folder and the `requirements.txt`
