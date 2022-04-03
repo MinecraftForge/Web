@@ -61,12 +61,104 @@ task bundleFiles(type: Zip) {
         into 'static/css'
         rename ~/website_([A-Za-z]+)/, 'styles_$1'
     }
-    from ("${projectDir}/images") {
-        include "**"
-        into "static/images"
+    from("${projectDir}/css") {
+        include '*.css'
+        into 'static/css'
+    }
+    from("${projectDir}/images") {
+        include '**'
+        into 'static/images'
     }
     from("${projectDir}/docs") {
         include '**/*.html'
         into 'static'
     }
 }
+
+def digest(data, hash) {
+    return java.security.MessageDigest.getInstance('SHA-1').digest(data.bytes).encodeHex().toString()
+}
+
+def writeArtifact(group, name, version, classifier = null, ext = 'jar') {
+    def path = "${group}/${name}/${version}/${name}-${version}"
+    if (classifier != null)
+        path += '-' + classifier
+    path += '.' + ext
+    file("./test/maven/${path}").parentFile.mkdirs()
+    file("./test/maven/${path}").text = path
+    file("./test/maven/${path}.md5").text = digest(path, 'MD5')
+    file("./test/maven/${path}.sha1").text = digest(path, 'SHA-1')
+    file("./test/maven/${path}.sha256").text = digest(path, 'SHA-256')
+}
+
+def writeXml(group, name, vers) {
+    def writer = new StringWriter()
+    def xml = new groovy.xml.MarkupBuilder(writer)
+    def path = "./test/maven/${group}/${name}"
+    
+    xml.metadata() {
+        groupId(group.replace('/', '.'))
+        artifactId(name)
+        versioning() {
+            release(vers[-1])
+            latest(vers[-1])
+            lastUpdated(20220101010000)
+            versions() {
+                vers.each { ver -> xml.version(ver) }
+            }
+        }
+    }
+    def data = writer.toString()
+    file("${path}/").mkdirs()
+    file("${path}/maven-metadata.xml").text = data
+    file("${path}/maven-metadata.xml.md5").text = digest(data, 'MD5')
+    file("${path}/maven-metadata.xml.sha1").text = digest(data, 'SHA-1')
+    file("${path}/maven-metadata.xml.sha256").text = digest(data, 'SHA-256')
+}
+
+task deleteTestData(type: Delete) {
+    delete './test/'
+}
+
+task generateMaven() {
+    mustRunAfter deleteTestData
+    doLast {
+        def versions = []
+        ['1.16.5-1.0.0', '1.18.2-2.0.0'].each { ver ->
+            (0..10).each { build ->
+                versions.add("${ver}.${build}")
+                writeArtifact('net/minecraftforge', 'forge', "${ver}.${build}")
+                writeArtifact('net/minecraftforge', 'forge', "${ver}.${build}", 'userdev')
+                writeArtifact('net/minecraftforge', 'forge', "${ver}.${build}", 'changelog', 'txt')
+                writeArtifact('net/minecraftforge', 'forge', "${ver}.${build}", 'mdk', 'zip')
+                writeArtifact('net/minecraftforge', 'forge', "${ver}.${build}", 'installer')
+            }
+        }
+        writeXml('net/minecraftforge', 'forge', versions)
+    }
+}
+
+task generateGloablConfig() {
+    mustRunAfter deleteTestData
+    doLast {
+        def file = file('./test/global_overrides.json')
+        file.parentFile.mkdirs()
+        file.text = new groovy.json.JsonBuilder([
+            ad_left: '<span>Left Ad</span>',
+            ad_middle: '<span>Middle Ad</span>',
+            ad_right: '<span>Right Ad</span>'
+        ]).toPrettyString()
+    }
+}
+
+task extractBundledFiles(type: Copy, dependsOn: bundleFiles) {
+    mustRunAfter deleteTestData
+    from zipTree(bundleFiles.archivePath)
+    into file('./test/')
+}
+
+task setupTest(dependsOn:[ deleteTestData, extractBundledFiles, generateMaven, generateGloablConfig]) {
+    doLast{ file('./test/out').mkdirs() }
+}
+
+

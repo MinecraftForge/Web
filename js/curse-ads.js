@@ -53,7 +53,8 @@ var observer = new MutationObserver(function (mutations) {
 });
 
 var observerConfig = {attributes: true, childList: true, characterData: true, subtree: true};
-observer.observe(target, observerConfig);
+if (target)
+    observer.observe(target, observerConfig);
 
 window.isDoneLoading = false;
 (window.attachEvent || window.addEventListener)('message', function (e) {

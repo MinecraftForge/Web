@@ -10,6 +10,7 @@ from dataclasses import dataclass, field, InitVar
 import requests
 
 from mc_version import MCVer
+from pprint import pprint
 import xml.etree.ElementTree as elementtree
 
 MINECRAFT_FORMAT = '(?P<mcversion>1(?:\.\d+){1,2}?(?:_pre\d+)?)'
@@ -40,6 +41,7 @@ class Metadata:
     dl_root: str
     static_root: str
     config_path: InitVar[pathlib.Path] = None
+    local_data: bool = False
     global_config: dict = field(default_factory=dict)
     empty_root: pathlib.Path = pathlib.Path('/')
 
@@ -154,6 +156,7 @@ class Artifact:
     def find_version(self, version: str) -> ArtifactVersion:
         v = next((v for v in self.all_versions if v.version == version), None)
         if not v:
+            pprint(self.all_versions)
             raise ValueError(f'Failed to find {version} in {self.name}')
         return v
 
@@ -191,10 +194,13 @@ class Artifact:
         (group, name) = parse_artifact(artifact)
         artifact = Artifact(metadata, group, name)
         try:
-            if (xmlresponse := requests.get(f'{metadata.dl_root}{artifact.path(root="empty_root").as_posix()}/maven-metadata.xml')).status_code == 200:
-                versions = [v.text for v in elementtree.fromstring(xmlresponse.content).findall("./versioning/versions/version")]
+            if (metadata.local_data and (meta_file := artifact.path().joinpath('maven-metadata.xml')).exists()):
+                versions = [v.text for v in elementtree.parse(meta_file).findall("./versioning/versions/version")]
             else:
-                raise RuntimeError(f'Failed to read maven-metadata from {metadata.dl_root}{artifact.path(root="empty_root").as_posix()}/maven-metadata.xml')
+                if (xmlresponse := requests.get(f'{metadata.dl_root}{artifact.path(root="empty_root").as_posix()}/maven-metadata.xml')).status_code == 200:
+                    versions = [v.text for v in elementtree.fromstring(xmlresponse.content).findall("./versioning/versions/version")]
+                else:
+                    raise RuntimeError(f'Failed to read maven-metadata from {metadata.dl_root}{artifact.path(root="empty_root").as_posix()}/maven-metadata.xml')
 
             artifact.all_versions = sorted((av for v in versions if (av := ArtifactVersion.load(artifact, v)) is not None), key=lambda v: v.timestamp)
             mc_versions = (av.minecraft_version for av in artifact.all_versions)

@@ -23,6 +23,7 @@ def main():
     parser.add_argument('--folder', dest='folder', default='/in/repositories/releases/', help='Root directory for the maven structure to read metadata from files', type=parse_path)
     parser.add_argument('--config', dest='config', default='/in/global_overrides.json', help="Location of global_overrides.json file", type=parse_path)
     parser.add_argument('--templates', dest='templates', default='templates', type=parse_path, help="Path to templates")
+    parser.add_argument('--local-data', dest='localdata', default=False, action=argparse.BooleanOptionalAction)
 
     commands = parser.add_subparsers(help='Command to perform', dest='command', required=True)
 
@@ -30,6 +31,7 @@ def main():
     gen_command.add_argument('artifact', help='Maven Artifact - net.minecraftforge:forge')
 
     index_command = commands.add_parser('index', help='Generate tracked project index')
+    regen_command = commands.add_parser('regen', help='ReGenerate all tracked projects')
 
     promote_command = commands.add_parser('promote', help='Promote subcommand')
     promote_command.add_argument('artifact',  help='Maven Artifact - net.minecraftforge:forge')
@@ -44,6 +46,7 @@ def main():
     print(f'Web Out:  {args.output_web}')
     print(f'Meta Out: {args.output_meta}')
     print(f'WebRoot:  {args.webroot}')
+    print(f'LocalData:{args.localdata}')
     print(f'DLRoot:   {args.dlroot}')
     print(f'Static:   {args.static}')
     print(f'Templates:{args.templates}')
@@ -52,7 +55,7 @@ def main():
     print(f'Version:  {args.version if "version" in args else None}')
     print(f'Type:     {args.type if "type" in args else None}')
 
-    metadata = Metadata(args.folder, args.output_meta, args.output_web, args.webroot, args.dlroot, args.static, args.config)
+    metadata = Metadata(args.folder, args.output_meta, args.output_web, args.webroot, args.dlroot, args.static, args.config, args.localdata)
     artifact = Artifact.load_maven_xml(metadata, args.artifact) if 'artifact' in args else None
     templates = Templates(args.templates, args.static, args.webroot, args.dlroot)
 

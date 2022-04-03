@@ -101,10 +101,24 @@ class PromotionIndexGenerator(Generator):
         template = tpl.env.get_template('project_index.html')
         output.write_text(template.render(md=md, promos=tracked_promos), 'utf-8')
 
+class RegenGenerator(Generator):
+    def generate(self, md: metadata.Metadata, artifact: metadata.Artifact, tpl: templates.Templates, args: argparse.Namespace):
+        tracked = md.path(root='output_meta').joinpath('tracked_promotions.json')
+        print(f'Re-Generating all projects')
+        if (not tracked.exists()):
+            print(f'No tracked projects at {tracked}')
+            return
+        for key in json.loads(tracked.read_text('utf-8')):
+            art = metadata.Artifact.load_maven_xml(md, key)
+            for gen in Generators['gen']:
+                gen.generate(md, art, tpl, args)
+        for gen in Generators['index']:
+            gen.generate(md, None, tpl, args)
 
 basegens = [MetaJsonGenerator(), MavenJsonGenerator(), IndexGenerator()]
 Generators: dict[str, list[Generator]] = {
     'gen': basegens,
     'promote': [PromoteGenerator(), TrackingGenerator(), PromotionIndexGenerator(), *basegens],
-    'index': [PromotionIndexGenerator()]
+    'index': [PromotionIndexGenerator()],
+    'regen': [RegenGenerator()]
 }

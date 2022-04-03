@@ -21,13 +21,33 @@ $(document).ready(function () {
             $(this).children('.info-link').tooltipster('content', info.html());
         }
     });
+    $('.info-container').each(function () {
+        if ($(this).find('.info-tooltip').length > 0) {
+            var info = $(this).children('.info-tooltip');
+            var link = $(this).children('.info-link');
+            link.tooltipster('content', info.html());
+            ['delay', 'position', 'animation', 'speed'].forEach(function (key) {
+                if (link.attr('tooltipster-' + key) !== undefined)
+                    link.tooltipster('option', key, link.attr('tooltipster-' + key))
+            })
+        }
+    });
 
 });
 
 window.onload = function () {
     if (location.hostname != 'files.minecraftforge.net') {
-        var elems = document.getElementsByTagName('a');
+        var find = 'files.minecraftforge.net'
+        var replace = location.hostname
+        
+        if (location.protocol == 'file:') {
+            find = /https?:\/\/files\.minecraftforge\.net/i
+            replace = location.pathname.substring(0, location.pathname.indexOf('test/out/') + 'test/out'.length)
+        }
+        //console.log('Converting hostname from ' + find.toString() + ' to ' + replace)
+        
+        var elems = document.getElementsByTagName('a')
         for (var i = 0; i < elems.length; i++)
-            elems[i]['href'] = elems[i]['href'].replace('files.minecraftforge.net', location.hostname);
+            elems[i]['href'] = elems[i]['href'].replace(find, replace)
     }
 };
