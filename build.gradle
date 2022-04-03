@@ -11,8 +11,7 @@ task css(type: io.freefair.gradle.plugins.jsass.SassCompile) {
 }
 
 def createJsTask(name, files) {
-    def combineTask = null
-    combineTask = tasks.create("combine${name.capitalize()}Js", com.eriwen.gradle.js.tasks.CombineJsTask) {
+    def combineTask = tasks.create("combine${name.capitalize()}Js", com.eriwen.gradle.js.tasks.CombineJsTask) {
         source = files
         dest = file("${buildDir}/js/${name}.js")
     }
@@ -75,12 +74,13 @@ task bundleFiles(type: Zip) {
     }
 }
 
-def digest(data, hash) {
-    return java.security.MessageDigest.getInstance('SHA-1').digest(data.bytes).encodeHex().toString()
+@groovy.transform.CompileStatic
+static String digest(String data, String hash) {
+    return java.security.MessageDigest.getInstance(hash).digest(data.bytes).encodeHex().toString()
 }
 
-def writeArtifact(group, name, version, classifier = null, ext = 'jar') {
-    def path = "${group}/${name}/${version}/${name}-${version}"
+def writeArtifact(group, name, version, classifier = null, String ext = 'jar') {
+    String path = "${group}/${name}/${version}/${name}-${version}"
     if (classifier != null)
         path += '-' + classifier
     path += '.' + ext
@@ -108,7 +108,7 @@ def writeXml(group, name, vers) {
             }
         }
     }
-    def data = writer.toString()
+    String data = writer.toString()
     file("${path}/").mkdirs()
     file("${path}/maven-metadata.xml").text = data
     file("${path}/maven-metadata.xml.md5").text = digest(data, 'MD5')
@@ -123,9 +123,13 @@ task deleteTestData(type: Delete) {
 task generateMaven() {
     mustRunAfter deleteTestData
     doLast {
-        def versions = []
-        ['1.16.5-1.0.0', '1.18.2-2.0.0'].each { ver ->
-            (0..10).each { build ->
+        List versions = []
+        ['1.16.5-36.0', '1.16.5-36.1', '1.18.1-39.0', '1.18.1-39.1', '1.18.2-40.0', '1.18.2-40.1'].each { ver ->
+            def range = 0..8 // make eight builds for "beta" release period
+            if (ver.endsWith('.1'))
+                range = 0..2 // make three builds for "recommended" release period
+
+            range.each { build ->
                 versions.add("${ver}.${build}")
                 writeArtifact('net/minecraftforge', 'forge', "${ver}.${build}")
                 writeArtifact('net/minecraftforge', 'forge', "${ver}.${build}", 'userdev')
@@ -138,7 +142,7 @@ task generateMaven() {
     }
 }
 
-task generateGloablConfig() {
+task generateGlobalConfig() {
     mustRunAfter deleteTestData
     doLast {
         def file = file('./test/global_overrides.json')
@@ -157,8 +161,28 @@ task extractBundledFiles(type: Copy, dependsOn: bundleFiles) {
     into file('./test/')
 }
 
-task setupTest(dependsOn:[ deleteTestData, extractBundledFiles, generateMaven, generateGloablConfig]) {
-    doLast{ file('./test/out').mkdirs() }
+task runTestPageGen(type: Exec) {
+    String os = System.getProperty('os.name').toLowerCase(Locale.ROOT)
+    if (os.contains('win')) {
+        commandLine 'powershell', '-NoLogo', '-NoProfile', '-ExecutionPolicy', 'Unrestricted', './runTestPageGen.ps1'
+    } else {
+        // assume *nix
+        // todo: test the *nix command
+        commandLine 'sh', './runTestPageGen.sh'
+    }
 }
 
+task setupPageGen(type: Exec) {
+    String os = System.getProperty('os.name').toLowerCase(Locale.ROOT)
+    if (os.contains('win')) {
+        commandLine 'powershell', '-NoLogo', '-NoProfile', '-Command', 'pip install -r requirements.txt'
+    } else {
+        // assume *nix
+        // todo: test the *nix command
+        commandLine 'sh', '-c', 'pip install -r requirements.txt'
+    }
+}
 
+task setupTest(dependsOn: [deleteTestData, extractBundledFiles, generateMaven, generateGlobalConfig, setupPageGen]) {
+    doLast { file('./test/out').mkdirs() }
+}
