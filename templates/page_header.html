@@ -13,10 +13,12 @@
     <meta property="og:title" content="{{ artifact.fullname() }} downloads"/>
     <meta property="og:description" content="{{ get_artifact_description(artifact, mc_version or None) }}"/>
     <title>Downloads for {{ artifact.fullname() }}{%- if mc_version %} for Minecraft {{ mc_version }}{%- endif %}</title>
+    <meta property="og:url" content="{{ web_base }}{{ artifact.mavenname() | maventopath }}/{{ canonical_url }}" />
     {% else %}
     <meta property="og:title" content="Project Index"/>
-    <meta property="og:description" content="Index of projects hosted at forge files"/>
+    <meta property="og:description" content="Index of projects hosted at Minecraft Forge Maven"/>
     <title>Project index</title>
+    <meta property="og:url" content="{{ web_base }}project_index.html" />
     {% endif %}
 
     <meta property="og:image" content="{{ static_root }}images/embed_logo.png" />

@@ -17,7 +17,7 @@ def main():
     parser.add_argument('--webout', dest='output_web', default='/out', help='Base directory to output generated index pages. Will generate in sub-directories based on the maven path', type=parse_path)
     parser.add_argument('--metaout', dest='output_meta', default='/out', help='Base directory to output generated metadata. Will generate in sub-directories based on the maven path', type=parse_path)
     parser.add_argument('--downloadroot', dest='dlroot', default='https://maven.minecraftforge.net/', help='Root URL for downloading artifacts')
-    parser.add_argument('--webroot', dest='webroot', default='https://files.minecraftforge.net', help='Root URL for artifact pages')
+    parser.add_argument('--webroot', dest='webroot', default='https://files.minecraftforge.net/', help='Root URL for artifact pages')
     parser.add_argument('--static', dest='static', default='https://files.minecraftforge.net/static/', help='Root URL for static assets used by the templates')
 
     parser.add_argument('--folder', dest='folder', default='/in/repositories/releases/', help='Root directory for the maven structure to read metadata from files', type=parse_path)
@@ -38,6 +38,10 @@ def main():
     promote_command.add_argument('version', help='Maven Version')
     promote_command.add_argument('type', choices=['latest', 'recommended'], help='Type of promotion')
     args = parser.parse_args()
+    
+    if (args.webroot[-1] != '/'): args.webroot += '/'
+    if (args.dlroot[-1] != '/'): args.dlroot += '/'
+    if (args.static[-1] != '/'): args.static += '/'
 
     print('Page Generator:')
     print(f'PyVer:    {sys.version}')

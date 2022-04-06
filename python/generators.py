@@ -57,7 +57,7 @@ class PromoteGenerator(Generator):
         artifact.promote(args.version, args.type)
 
         slimpromos = {
-            "homepage": f'{md.web_root}{artifact.path(root="empty_root")}/',
+            "homepage": f'{md.web_root}{artifact.mvnpath()}/',
             "promos": {}
         }
         for mcv, vers in artifact.promotions.items():
@@ -97,9 +97,9 @@ class PromotionIndexGenerator(Generator):
         print(f'Generating project index at {output}')
         promos = md.path(root='output_meta').joinpath('tracked_promotions.json')
         tracked_promos = json.loads(promos.read_text('utf-8')) if promos.exists() else {}
-        tpl.env.filters['maventopath'] = lambda p: metadata.mvn_to_path(md, p, root='empty_root')
         template = tpl.env.get_template('project_index.html')
         output.write_text(template.render(md=md, promos=tracked_promos), 'utf-8')
+
 
 class RegenGenerator(Generator):
     def generate(self, md: metadata.Metadata, artifact: metadata.Artifact, tpl: templates.Templates, args: argparse.Namespace):
