@@ -1,6 +1,6 @@
 plugins {
-    id "io.freefair.jsass-base" version "1.0.0"
-    id "com.eriwen.gradle.js" version "2.14.1"
+    id "io.freefair.jsass-base" version "1.0.2"
+    id "com.magnetichq.gradle.js" version "3.0.2"
 }
 
 task css(type: io.freefair.gradle.plugins.jsass.SassCompile) {
@@ -10,9 +10,8 @@ task css(type: io.freefair.gradle.plugins.jsass.SassCompile) {
     outputStyle = io.bit3.jsass.OutputStyle.COMPRESSED
 }
 
-def createJsTask(name, files) {
-    def combineTask = null
-    combineTask = tasks.create("combine${name.capitalize()}Js", com.eriwen.gradle.js.tasks.CombineJsTask) {
+def createJsTask(String name, files) {
+    def combineTask = tasks.create("combine${name.capitalize()}Js", com.eriwen.gradle.js.tasks.CombineJsTask) {
         source = files
         dest = file("${buildDir}/js/${name}.js")
     }
@@ -42,8 +41,8 @@ createJsTask('docs', [
 createJsTask('themeSwitch', ["${projectDir}/js/theme-switch.js"])
 
 task bundleFiles(type: Zip) {
-    baseName = 'files-bundle'
-    destinationDir = file("${buildDir}/distributions")
+    archiveBaseName = 'files-bundle'
+    destinationDirectory = file("${buildDir}/distributions")
     from(minifyFilesCurseJs) {
         into 'static/js'
         rename ~/filesCurse/, 'merged-curse'
@@ -123,7 +122,7 @@ task deleteTestData(type: Delete) {
 task generateMaven() {
     mustRunAfter deleteTestData
     doLast {
-        def versions = []
+        List versions = []
         ['1.16.5-1.0.0', '1.18.2-2.0.0'].each { ver ->
             (0..10).each { build ->
                 versions.add("${ver}.${build}")
@@ -153,12 +152,12 @@ task generateGloablConfig() {
 
 task extractBundledFiles(type: Copy, dependsOn: bundleFiles) {
     mustRunAfter deleteTestData
-    from zipTree(bundleFiles.archivePath)
+    from zipTree(bundleFiles.archiveFile)
     into file('./test/')
 }
 
-task setupTest(dependsOn:[ deleteTestData, extractBundledFiles, generateMaven, generateGloablConfig]) {
-    doLast{ file('./test/out').mkdirs() }
+task setupTest(dependsOn: [deleteTestData, extractBundledFiles, generateMaven, generateGloablConfig]) {
+    doLast { file('./test/out').mkdirs() }
 }
 
 
