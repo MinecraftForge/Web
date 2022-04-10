@@ -32,7 +32,7 @@
   }
 
   .sidebar-sticky-wrapper-content {
-    min-height: calc(100vh - (90px + 2rem));
+    min-height: calc(100vh - 182px); /* 182px, a good size for the footer, Doesn't scroll on anything >= 900 */
     max-width: calc(100% - 330px - 1rem);
   }
 }

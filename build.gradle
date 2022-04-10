@@ -1,6 +1,6 @@
 plugins {
     id "io.freefair.jsass-base" version "1.0.2"
-    id "com.eriwen.gradle.js" version "2.14.1"
+    id "com.magnetichq.gradle.js" version "3.0.2"
 }
 
 task css(type: io.freefair.gradle.plugins.jsass.SassCompile) {

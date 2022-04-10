@@ -200,9 +200,9 @@ section, table {
 
 footer {
   text-align: center;
-  margin-top: 2rem;
+  /* margin-top: 2rem; We already add padding */ 
   border-top: 1px solid rgba(0, 0, 0, 0.1);
-  padding: 1.5rem 0;
+  padding: 1.5rem 0 0 0;
 }
 
 /*

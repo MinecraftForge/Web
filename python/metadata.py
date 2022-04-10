@@ -25,10 +25,6 @@ def parse_artifact(artifact: str):
     return artifact.rsplit(":")
 
 
-def mvn_to_path(md: Metadata, mvnname: str, root='path_root'):
-    return md.path(root, *re.split(r"[:.]", mvnname))
-
-
 SKIP_SUFFIXES = {'.pom', '.sha1', '.md5', '.url', '.asc', '.sha256', '.sha512', '.module'}
 
 
@@ -136,6 +132,9 @@ class Artifact:
 
     def path(self, root='path_root') -> pathlib.Path:
         return self.metadata.path(root, self.group.replace('.', '/'), self.name)
+        
+    def mvnpath(self):
+        return self.group.replace('.', '/') + '/' + self.name
 
     def attach_promotions(self, promotions):
         for key, value in promotions.get('promos', {}).items():
@@ -183,7 +182,7 @@ class Artifact:
             first_idx = next((mc for mc in sorted_mc_versions if 'RECOMMENDED' in self.promotions.get(mc, [])), sorted_mc_versions[0])
             yield 'index.html', global_context | {'mc_version': first_idx, 'mcversions': sorted_mc_versions}
             for mc_version in sorted_mc_versions:
-                yield f'index_{mc_version}.html', global_context | {'mc_version': mc_version, 'mcversions': sorted_mc_versions}
+                yield f'index_{mc_version}.html', global_context | {'mc_version': mc_version, 'mcversions': sorted_mc_versions, 'canonical_url': '' if mc_version == first_idx else f'index_{mc_version}.html'}
         elif len(self.versions) == 1 and not 'default' in self.versions:
             yield 'index.html', global_context | {'mc_version': list(self.versions.keys())[0]}
         else:
@@ -197,10 +196,10 @@ class Artifact:
             if (metadata.local_data and (meta_file := artifact.path().joinpath('maven-metadata.xml')).exists()):
                 versions = [v.text for v in elementtree.parse(meta_file).findall("./versioning/versions/version")]
             else:
-                if (xmlresponse := requests.get(f'{metadata.dl_root}{artifact.path(root="empty_root").as_posix()}/maven-metadata.xml')).status_code == 200:
+                if (xmlresponse := requests.get(f'{metadata.dl_root}{artifact.mvnpath()}/maven-metadata.xml')).status_code == 200:
                     versions = [v.text for v in elementtree.fromstring(xmlresponse.content).findall("./versioning/versions/version")]
                 else:
-                    raise RuntimeError(f'Failed to read maven-metadata from {metadata.dl_root}{artifact.path(root="empty_root").as_posix()}/maven-metadata.xml')
+                    raise RuntimeError(f'Failed to read maven-metadata from {metadata.dl_root}{artifact.mvnpath()}/maven-metadata.xml')
 
             artifact.all_versions = sorted((av for v in versions if (av := ArtifactVersion.load(artifact, v)) is not None), key=lambda v: v.timestamp)
             mc_versions = (av.minecraft_version for av in artifact.all_versions)
