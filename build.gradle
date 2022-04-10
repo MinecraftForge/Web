@@ -10,7 +10,7 @@ task css(type: io.freefair.gradle.plugins.jsass.SassCompile) {
     outputStyle = io.bit3.jsass.OutputStyle.COMPRESSED
 }
 
-def createJsTask(name, files) {
+def createJsTask(String name, files) {
     def combineTask = tasks.register("combine${name.capitalize()}Js", com.eriwen.gradle.js.tasks.CombineJsTask) {
         source = files
         dest = file("${buildDir}/js/${name}.js")
@@ -91,7 +91,7 @@ def writeArtifact(group, name, version, classifier = null, String ext = 'jar') {
     file("./test/maven/${path}.sha256").text = digest(path, 'SHA-256')
 }
 
-def writeXml(group, name, vers) {
+def writeXml(String group, String name, vers) {
     def writer = new StringWriter()
     def xml = new groovy.xml.MarkupBuilder(writer)
     def path = "./test/maven/${group}/${name}"
@@ -170,24 +170,18 @@ task extractBundledFiles(type: Copy, dependsOn: bundleFiles) {
 
 task runTestPageGen(type: Exec) {
     String os = System.getProperty('os.name').toLowerCase(Locale.ROOT)
-    if (os.contains('win')) {
+    if (os.contains('win'))
         commandLine 'powershell', '-NoLogo', '-NoProfile', '-ExecutionPolicy', 'Unrestricted', './runTestPageGen.ps1'
-    } else {
-        // assume *nix
-        // todo: test the *nix command
+    else // assume *nix
         commandLine 'sh', './runTestPageGen.sh'
-    }
 }
 
 task setupPageGen(type: Exec) {
     String os = System.getProperty('os.name').toLowerCase(Locale.ROOT)
-    if (os.contains('win')) {
+    if (os.contains('win'))
         commandLine 'powershell', '-NoLogo', '-NoProfile', '-Command', 'pip install -r requirements.txt'
-    } else {
-        // assume *nix
-        // todo: test the *nix command
+    else // assume *nix
         commandLine 'sh', '-c', 'pip install -r requirements.txt'
-    }
 }
 
 task setupTest(dependsOn: [deleteTestData, extractBundledFiles, generateMaven, generateGlobalConfig, setupPageGen]) {
