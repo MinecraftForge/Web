@@ -1,10 +1,6 @@
 /__pycache__/
 /output_web/
 *.bat
-/meta.json
-/meta.json.md5
-/meta.json.sha1
-*.json
 /cache/
 /output_meta/
 /.venv/
@@ -13,8 +9,8 @@
 /.gradle
 /tstin/
 /tstout/
-/js/relativeTime.min.js
 /out/
 /python/__pycache__/
 /test.sh
-/test/
+/test/*
+!/test/Help.txt

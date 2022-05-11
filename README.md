@@ -17,6 +17,8 @@ Hence, you will find a specific structure when looking at the stylesheets:
 
 Contribution Guidelines
 -----------------------
+You can find instructions on how to setup, develop and make contributions to this repo [here](Instructions.md).
+
 Contributions such as fixes or additions to the stylesheets are welcome, but they should adhere to the following rules:
 
   - The sites make heavy use of the flexbox model. Its capabilities should be used to the fullest rather than relying on hacks simply to work in old browsers.
