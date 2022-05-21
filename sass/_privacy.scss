@@ -4,6 +4,7 @@
 
 // Bar under the navigation for privacy disclaimer
 .privacy-disclaimer {
+  position: -webkit-sticky;
   position: sticky;
   display: none;
   top: 0;
