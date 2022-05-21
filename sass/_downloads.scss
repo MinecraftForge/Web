@@ -321,6 +321,7 @@
 
 .promo-downloads-top, .ad-downloads-top {
   margin-bottom: 2rem !important;
+  min-height: 121px; // significantly reduce the top ad making the rest of the page jump about during page load
 }
 
 .promo-downloads-bottom, .ad-downloads-bottom {
