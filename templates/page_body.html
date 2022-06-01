@@ -191,7 +191,7 @@
                                     </div>
                                 {%- endif %}
                             </td>
-                            <td class="download-time" title="{{ version.timestamp|formatdate}}">{{ version.timestamp|humanformatdate}}</td>
+                            <td class="download-time" title="{{ version.timestamp|formatdate}}">{{ version.timestamp|formatdatesimple}}</td>
                             <td class="download-files">
                                 <ul class="download-links">
                                     {% for class, info in version.item_by_cls|dictsort %}

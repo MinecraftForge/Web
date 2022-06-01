@@ -43,6 +43,7 @@ class Templates:
 
         self.env.filters['humanformatdate'] = humanformatdate
         self.env.filters['formatdate'] = lambda dt: f'{dt:%Y-%m-%d %H:%M:%S}'
+        self.env.filters['formatdatesimple'] = lambda dt: f'{dt:%Y-%m-%d}'
         self.env.filters['todatetime'] = lambda f: datetime.datetime.fromtimestamp(f)
         self.env.filters['maventopath'] = lambda p: '/'.join(re.split(r"[:.]", p))
 
