@@ -179,7 +179,7 @@ class Artifact:
     def parts(self, global_context: dict):
         if len(self.versions) > 1:
             sorted_mc_versions = sorted(self.versions.keys(), reverse=True, key=lambda a: MCVer(a))
-            first_idx = next((mc for mc in sorted_mc_versions if 'RECOMMENDED' in self.promotions.get(mc, [])), sorted_mc_versions[0])
+            first_idx = next((mc for mc in sorted_mc_versions if 'recommended' in self.promotions.get(mc, [])), sorted_mc_versions[0])
             yield 'index.html', global_context | {'mc_version': first_idx, 'mcversions': sorted_mc_versions}
             for mc_version in sorted_mc_versions:
                 yield f'index_{mc_version}.html', global_context | {'mc_version': mc_version, 'mcversions': sorted_mc_versions, 'canonical_url': '' if mc_version == first_idx else f'index_{mc_version}.html'}

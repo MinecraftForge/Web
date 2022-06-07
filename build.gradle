@@ -121,6 +121,16 @@ def writeXml(String group, String name, vers) {
             shrink_dls: false,
             adfocus: "271228"
     ]).toPrettyString()
+    file("${path}/promotions_slim.json").text = new groovy.json.JsonBuilder([
+        homepage: 'https://not_real/',
+        promos: [
+            '1.16.5-latest':      '36.1.2',
+            '1.16.5-recommended': '36.1.2',
+            '1.18.1-latest':      '39.1.2',
+            '1.18.1-recommended': '39.1.2',
+            '1.18.2-latest':      '40.0.8'
+        ]
+    ]).toPrettyString()
 }
 
 task deleteTestData(type: Delete) {
