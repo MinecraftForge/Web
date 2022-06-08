@@ -24,6 +24,7 @@ def main():
     parser.add_argument('--config', dest='config', default='/in/global_overrides.json', help="Location of global_overrides.json file", type=parse_path)
     parser.add_argument('--templates', dest='templates', default='templates', type=parse_path, help="Path to templates")
     parser.add_argument('--local-data', dest='localdata', default=False, action=argparse.BooleanOptionalAction)
+    parser.add_argument('--gzip', dest='gzip', default=True, action=argparse.BooleanOptionalAction, help='Whether or not to create gzip archives of generated files')
 
     commands = parser.add_subparsers(help='Command to perform', dest='command', required=True)
 
@@ -51,6 +52,7 @@ def main():
     print(f'Meta Out: {args.output_meta}')
     print(f'WebRoot:  {args.webroot}')
     print(f'LocalData:{args.localdata}')
+    print(f'Gzip:     {args.gzip}')
     print(f'DLRoot:   {args.dlroot}')
     print(f'Static:   {args.static}')
     print(f'Templates:{args.templates}')

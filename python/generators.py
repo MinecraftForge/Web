@@ -1,6 +1,7 @@
 import argparse
 import json
 import hashlib
+import gzip
 from abc import abstractmethod
 
 from markdown import markdown
@@ -13,7 +14,7 @@ from mc_version import MCVer
 # This prevents small file churn when generating indexes. Namely version specific meta.json
 # files will almost never change. So we don't need to rewrite them every run.
 # This helps disk io, as well as web IO as the metadata doesn't change and invalidate caches.
-def writeHashed(out, name, data):
+def writeHashed(out, name: str, data, gzip: bool = False):
     data_utf8 = data.encode('utf-8')
     md5_expected = hashlib.md5(data_utf8).hexdigest()
     file = out.joinpath(f'{name}.md5')
@@ -23,6 +24,21 @@ def writeHashed(out, name, data):
         out.mkdir(parents=True, exist_ok=True)
         out.joinpath(name).write_bytes(data_utf8)
         file.write_text(md5_expected, 'utf-8')
+        if gzip: write_gzip(out, name, True)
+
+
+def write_gzip(out, name: str, print_path: bool):
+    file = out.joinpath(name)
+    file_gz = out.joinpath(f'{name}.gz')
+    if print_path:
+        print(f'  Gzip\'ing {name} at {out}')
+    else:
+        print(f'  Gzip\'ing {name}')
+
+    with open(file, 'rb') as src, gzip.open(file_gz, 'wb', compresslevel=9) as dst:
+        for chunk in iter(lambda: src.read(4096), b""):
+            dst.write(chunk)
+
 
 class Generator:
     @abstractmethod
@@ -36,7 +52,7 @@ class MetaJsonGenerator(Generator):
         for version in artifact.all_versions:
             meta = {'classifiers': {cls or "null": {item.ext: item.md5} for cls, item in version.item_by_cls.items()}}
             out = version.path(root='output_meta')
-            writeHashed(out, 'meta.json', json.dumps(meta, indent=2))
+            writeHashed(out, 'meta.json', json.dumps(meta, indent=2), args.gzip)
 
 
 class MavenJsonGenerator(Generator):
@@ -44,7 +60,7 @@ class MavenJsonGenerator(Generator):
         print('Generating Maven Index')
         meta = {mc_vers: [value.raw_version for value in vers.values()] for mc_vers, vers in artifact.versions.items()}
         out = artifact.path(root='output_meta')
-        writeHashed(out, 'maven-metadata.json', json.dumps(meta, indent=2))
+        writeHashed(out, 'maven-metadata.json', json.dumps(meta, indent=2), args.gzip)
 
 
 class IndexGenerator(Generator):
@@ -60,6 +76,7 @@ class IndexGenerator(Generator):
         template = tpl.env.get_template('base_page.html')
         for (file, context) in artifact.parts(render_context):
             out.joinpath(file).write_text(template.render(**context), 'utf-8')
+            if args.gzip: write_gzip(out, file, False)
 
 
 class PromoteGenerator(Generator):
@@ -83,11 +100,13 @@ class PromoteGenerator(Generator):
         out.mkdir(parents=True, exist_ok=True)
         print(f'Writing promotion files at {out}')
         out.joinpath('promotions_slim.json').write_text(json.dumps(slimpromos, indent=2), 'utf-8')
+        if args.gzip: write_gzip(out, 'promotions_slim.json', False)
 
 
 class TrackingGenerator(Generator):
     def generate(self, md: metadata.Metadata, artifact: metadata.Artifact, tpl: templates.Templates, args: argparse.Namespace):
-        output = md.path(root='output_meta').joinpath('tracked_promotions.json')
+        out = md.path(root='output_meta')
+        output = out.joinpath('tracked_promotions.json')
         print(f'Adding {artifact.name} to tracked list at {output}')
         tracked_promos = json.loads(output.read_text('utf-8')) if output.exists() else {}
         meta = {
@@ -100,16 +119,19 @@ class TrackingGenerator(Generator):
         }
         tracked_promos[artifact.mavenname()] = meta
         output.write_text(json.dumps(tracked_promos, indent=2), 'utf-8')
+        if args.gzip: write_gzip(out, 'tracked_promotions.json', False)
 
 
 class PromotionIndexGenerator(Generator):
     def generate(self, md: metadata.Metadata, artifact: metadata.Artifact, tpl: templates.Templates, args: argparse.Namespace):
-        output = md.path(root='output_web').joinpath('project_index.html')
+        out = md.path(root='output_web')
+        output = out.joinpath('project_index.html')
         print(f'Generating project index at {output}')
         promos = md.path(root='output_meta').joinpath('tracked_promotions.json')
         tracked_promos = json.loads(promos.read_text('utf-8')) if promos.exists() else {}
         template = tpl.env.get_template('project_index.html')
         output.write_text(template.render(md=md, promos=tracked_promos), 'utf-8')
+        if args.gzip: write_gzip(out, 'project_index.html', False)
 
 
 class RegenGenerator(Generator):
