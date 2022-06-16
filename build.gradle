@@ -3,57 +3,38 @@ plugins {
     id "com.magnetichq.gradle.js" version "3.0.2"
 }
 
-task css(type: io.freefair.gradle.plugins.jsass.SassCompile) {
+tasks.register("css", io.freefair.gradle.plugins.jsass.SassCompile) {
     sassPath = "${projectDir}/sass"
     cssPath = "${buildDir}/css"
     sourceMapEnabled = false
     outputStyle = io.bit3.jsass.OutputStyle.COMPRESSED
 }
 
-def createJsTask(String name, files) {
-    def combineTask = tasks.register("combine${name.capitalize()}Js", com.eriwen.gradle.js.tasks.CombineJsTask) {
-        source = files
-        dest = file("${buildDir}/js/${name}.js")
-    }
-    def minifyTask = tasks.register("minify${name.capitalize()}Js", com.eriwen.gradle.js.tasks.MinifyJsTask) {
-        source = combineTask
-        dest = file("${buildDir}/js/${name}.js")
+void createJsTask(final String taskName, final String fileName) {
+    tasks.register("minify${taskName.capitalize()}Js", com.eriwen.gradle.js.tasks.MinifyJsTask) {
+        source = file("${projectDir}/js/${fileName}.js")
+        dest = file("${buildDir}/js/${fileName}.min.js")
+        outputStyle
     }
 }
 
-createJsTask('filesCurse', [
-    "${projectDir}/js/sidebar.js",
-    "${projectDir}/js/theme-switch-toggle.js",
-    "${projectDir}/js/curse-ads.js",
-    "${projectDir}/js/files.js"
-])
-createJsTask('filesGoogle', [
-    "${projectDir}/js/sidebar.js",
-    "${projectDir}/js/theme-switch-toggle.js",
-    "${projectDir}/js/google-ads.js",
-    "${projectDir}/js/files.js"
-])
-createJsTask('docs', [
-    "${projectDir}/js/sidebar.js",
-    "${projectDir}/js/theme-switch-toggle.js",
-    "${projectDir}/js/docs.js"
-])
-createJsTask('themeSwitch', ["${projectDir}/js/theme-switch.js"])
+createJsTask('themeSwitch', "theme-switch")
+createJsTask('themeSwitchToggle', "theme-switch-toggle")
+createJsTask('curseAds', "curse-ads")
+createJsTask('sidebar', "sidebar")
+createJsTask('files', "files")
 
-task bundleFiles(type: Zip) {
+tasks.register("minifyJsFiles") {
+    it.dependsOn("minifyThemeSwitchJs", "minifyThemeSwitchToggleJs", "minifyCurseAdsJs", "minifySidebarJs", "minifyFilesJs")
+}
+
+tasks.register("bundleFiles", Zip) {
+    dependsOn minifyJsFiles
     archiveBaseName = 'files-bundle'
     destinationDirectory = file("${buildDir}/distributions")
-    from(minifyFilesCurseJs) {
+    from(file("${buildDir}/js")) {
+        include '*.js'
         into 'static/js'
-        rename ~/filesCurse/, 'merged-curse'
-    }
-    from(minifyFilesGoogleJs) {
-        into 'static/js'
-        rename ~/filesGoogle/, 'merged-google'
-    }
-    from(minifyThemeSwitchJs) {
-        into 'static/js'
-        rename ~/themeSwitch/, 'theme-switch'
     }
     from(css) {
         include 'website_*.css'
@@ -79,7 +60,7 @@ static String digest(String data, String hash) {
     return java.security.MessageDigest.getInstance(hash).digest(data.bytes).encodeHex().toString()
 }
 
-def writeArtifact(group, name, version, classifier = null, String ext = 'jar') {
+void writeArtifact(group, name, version, classifier = null, String ext = 'jar') {
     String path = "${group}/${name}/${version}/${name}-${version}"
     if (classifier != null)
         path += '-' + classifier
@@ -91,10 +72,10 @@ def writeArtifact(group, name, version, classifier = null, String ext = 'jar') {
     file("./test/maven/${path}.sha256").text = digest(path, 'SHA-256')
 }
 
-def writeXml(String group, String name, vers) {
+void writeXml(String group, String name, List vers) {
     def writer = new StringWriter()
     def xml = new groovy.xml.MarkupBuilder(writer)
-    def path = "./test/maven/${group}/${name}"
+    String path = "./test/maven/${group}/${name}"
     
     xml.metadata() {
         groupId(group.replace('/', '.'))
@@ -133,11 +114,11 @@ def writeXml(String group, String name, vers) {
     ]).toPrettyString()
 }
 
-task deleteTestData(type: Delete) {
+tasks.register("deleteTestData", Delete) {
     delete './test/'
 }
 
-task generateMaven() {
+tasks.register('generateMaven') {
     mustRunAfter deleteTestData
     doLast {
         List versions = []
@@ -159,7 +140,7 @@ task generateMaven() {
     }
 }
 
-task generateGlobalConfig() {
+tasks.register('generateGlobalConfig') {
     mustRunAfter deleteTestData
     doLast {
         def file = file('./test/global_overrides.json')
@@ -172,13 +153,14 @@ task generateGlobalConfig() {
     }
 }
 
-task extractBundledFiles(type: Copy, dependsOn: bundleFiles) {
+tasks.register('extractBundledFiles', Copy) {
+    dependsOn bundleFiles
     mustRunAfter deleteTestData
     from zipTree(bundleFiles.archiveFile)
     into file('./test/')
 }
 
-task runTestPageGen(type: Exec) {
+tasks.register('runTestPageGen', Exec) {
     String os = System.getProperty('os.name').toLowerCase(Locale.ROOT)
     if (os.contains('win'))
         commandLine 'powershell', '-NoLogo', '-NoProfile', '-ExecutionPolicy', 'Unrestricted', './runTestPageGen.ps1'
@@ -186,7 +168,7 @@ task runTestPageGen(type: Exec) {
         commandLine 'sh', './runTestPageGen.sh'
 }
 
-task setupPageGen(type: Exec) {
+tasks.register('setupPageGen', Exec) {
     String os = System.getProperty('os.name').toLowerCase(Locale.ROOT)
     if (os.contains('win'))
         commandLine 'powershell', '-NoLogo', '-NoProfile', '-Command', 'pip install -r requirements.txt'
@@ -194,6 +176,7 @@ task setupPageGen(type: Exec) {
         commandLine 'sh', '-c', 'pip install -r requirements.txt'
 }
 
-task setupTest(dependsOn: [deleteTestData, extractBundledFiles, generateMaven, generateGlobalConfig, setupPageGen]) {
+tasks.register('setupTest') {
+    dependsOn = [deleteTestData, extractBundledFiles, generateMaven, generateGlobalConfig, setupPageGen]
     doLast { file('./test/out').mkdirs() }
 }

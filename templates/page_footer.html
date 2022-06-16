@@ -11,15 +11,14 @@
         </div>
     </footer>
 </div>
-<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
-<script type="text/javascript" src="https://use.fontawesome.com/a1f20be65b.js"></script>
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jScrollPane/2.0.23/script/jquery.jscrollpane.min.js"></script>
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/tooltipster/3.3.0/js/jquery.tooltipster.min.js"></script>
-{%- if md.global_config['enable_adsense'] %}
-    <script type="text/javascript" src="{{ static_root }}js/merged-google.js?{{ now.timestamp() }}"></script>
-{%- else %}
-    <script type="text/javascript" src="{{ static_root }}js/merged-curse.js?{{ now.timestamp() }}"></script>
-{%- endif %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+<script src="https://use.fontawesome.com/a1f20be65b.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jScrollPane/2.0.23/script/jquery.jscrollpane.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tooltipster/3.3.0/js/jquery.tooltipster.min.js"></script>
+<script src="{{ static_root }}js/theme-switch-toggle.min.js?{{ now.timestamp() }}"></script>
+<script src="{{ static_root }}js/curse-ads.min.js?{{ now.timestamp() }}"></script>
+<script src="{{ static_root }}js/sidebar.min.js?{{ now.timestamp() }}"></script>
+<script src="{{ static_root }}js/files.min.js?{{ now.timestamp() }}"></script>
 {% if artifact and artifact.config['analytics'] %}{{ artifact.config['analytics'] }}{% endif %}
 
 {%- if artifact and artifact.config['body_end'] %}
