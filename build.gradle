@@ -14,7 +14,6 @@ void createJsTask(final String taskName, final String fileName) {
     tasks.register("minify${taskName.capitalize()}Js", com.eriwen.gradle.js.tasks.MinifyJsTask) {
         source = file("${projectDir}/js/${fileName}.js")
         dest = file("${buildDir}/js/${fileName}.min.js")
-        outputStyle
     }
 }
 
