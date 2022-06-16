@@ -11,7 +11,7 @@ tasks.register("css", io.freefair.gradle.plugins.jsass.SassCompile) {
 }
 
 void createJsTask(final String taskName, final String fileName) {
-    tasks.register("minify${taskName.capitalize()}Js", com.eriwen.gradle.js.tasks.MinifyJsTask) {
+    tasks.register("minify${taskName.capitalize()}DotJs", com.eriwen.gradle.js.tasks.MinifyJsTask) {
         source = file("${projectDir}/js/${fileName}.js")
         dest = file("${buildDir}/js/${fileName}.min.js")
     }
@@ -24,7 +24,7 @@ createJsTask('sidebar', "sidebar")
 createJsTask('files', "files")
 
 tasks.register("minifyJsFiles") {
-    it.dependsOn("minifyThemeSwitchJs", "minifyThemeSwitchToggleJs", "minifyCurseAdsJs", "minifySidebarJs", "minifyFilesJs")
+    it.dependsOn("minifyThemeSwitchDotJs", "minifyThemeSwitchToggleDotJs", "minifyCurseAdsDotJs", "minifySidebarDotJs", "minifyFilesDotJs")
 }
 
 tasks.register("bundleFiles", Zip) {
