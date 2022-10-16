@@ -37,7 +37,9 @@ class Templates:
         self.env.globals['static_root'] = static_base
         self.env.globals['web_base'] = web_base
         self.env.globals['repository_base'] = repository_base
-        self.env.globals['now'] = datetime.datetime.utcnow()
+        now = datetime.datetime.utcnow()
+        self.env.globals['now'] = now
+        self.env.globals['currentYearAndWeek'] = str(now.year) + str(now.isocalendar().week)
         self.env.globals['show_classifier'] = show_classifier
         self.env.globals['get_artifact_description'] = get_artifact_description
 
