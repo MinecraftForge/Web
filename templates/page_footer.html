@@ -15,10 +15,10 @@
 <script src="https://use.fontawesome.com/a1f20be65b.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jScrollPane/2.0.23/script/jquery.jscrollpane.min.js" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/tooltipster/3.3.0/js/jquery.tooltipster.min.js" crossorigin="anonymous"></script>
-<script src="{{ static_root }}js/theme-switch-toggle.min.js?{{ currentYearAndWeek }}"></script>
-<script src="{{ static_root }}js/curse-ads.min.js?{{ currentYearAndWeek }}"></script>
-<script src="{{ static_root }}js/sidebar.min.js?{{ currentYearAndWeek }}"></script>
-<script src="{{ static_root }}js/files.min.js?{{ currentYearAndWeek }}"></script>
+<script src="{{ static_root }}js/theme-switch-toggle.min.js?{{ crc32(static_root + 'js/theme-switch-toggle.min.js') }}"></script>
+<script src="{{ static_root }}js/curse-ads.min.js?{{ crc32(static_root + 'js/curse-ads.min.js') }}"></script>
+<script src="{{ static_root }}js/sidebar.min.js?{{ crc32(static_root + 'js/sidebar.min.js') }}"></script>
+<script src="{{ static_root }}js/files.min.js?{{ crc32(static_root + 'js/files.min.js') }}"></script>
 {% if artifact and artifact.config['analytics'] %}{{ artifact.config['analytics'] }}{% endif %}
 
 {%- if artifact and artifact.config['body_end'] %}

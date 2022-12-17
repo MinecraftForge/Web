@@ -2,6 +2,8 @@ import datetime
 import itertools
 import pathlib
 import re
+import requests
+import zlib
 
 import jinja2
 
@@ -30,6 +32,23 @@ def get_artifact_description(artifact: Artifact, mc_version):
 
     return '\n'.join(itertools.chain(hdr, lines))
 
+def crc32(file_path: str, chunk_size: int = 4096) -> str:
+    """Computes the CRC32 checksum of the contents of the file at the given file_path"""
+    checksum = 0
+    if (file_path.startswith('https://') or file_path.startswith('http://')):
+        with requests.get(file_path, stream=True) as r:
+            r.raise_for_status()
+            for chunk in r.iter_content(chunk_size=chunk_size):
+                checksum = zlib.crc32(chunk, checksum)
+    elif (file_path.startswith('file://')):
+        file_path = file_path[7:]
+        with open(file_path, 'rb') as f:
+            while (chunk := f.read(chunk_size)):
+                checksum = zlib.crc32(chunk, checksum)
+    else:
+        raise Exception(f'Invalid file_path: "{file_path}" - it must start with "http://", "https://" or "file://".')
+
+    return "%08X" % (checksum & 0xFFFFFFFF)
 
 class Templates:
     def __init__(self, template_path: pathlib.Path, static_base, web_base, repository_base):
@@ -39,7 +58,7 @@ class Templates:
         self.env.globals['repository_base'] = repository_base
         now = datetime.datetime.utcnow()
         self.env.globals['now'] = now
-        self.env.globals['currentYearAndWeek'] = str(now.year) + str(now.isocalendar().week)
+        self.env.globals['crc32'] = crc32
         self.env.globals['show_classifier'] = show_classifier
         self.env.globals['get_artifact_description'] = get_artifact_description
 
