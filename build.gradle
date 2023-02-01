@@ -25,7 +25,7 @@ createJsTask('themeSwitchToggle', "theme-switch-toggle")
 createJsTask('curseAds', "curse-ads")
 createJsTask('googleAds', "google-ads")
 createJsTask('sidebar', "sidebar")
-createJsTask('files', "files
+createJsTask('files', "files")
 
 tasks.register("bundleFiles", Zip) {
     dependsOn minifyJsFiles
