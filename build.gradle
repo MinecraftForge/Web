@@ -10,22 +10,22 @@ tasks.register("css", io.freefair.gradle.plugins.jsass.SassCompile) {
     outputStyle = io.bit3.jsass.OutputStyle.COMPRESSED
 }
 
+def minifyJsFiles = tasks.register("minifyJsFiles")
+
 void createJsTask(final String taskName, final String fileName) {
-    tasks.register("minify${taskName.capitalize()}DotJs", com.eriwen.gradle.js.tasks.MinifyJsTask) {
+    def tmp = tasks.register("minify${taskName.capitalize()}DotJs", com.eriwen.gradle.js.tasks.MinifyJsTask) {
         source = file("${projectDir}/js/${fileName}.js")
         dest = file("${buildDir}/js/${fileName}.min.js")
     }
+    minifyJsFiles.dependsOn(tmp)
 }
 
 createJsTask('themeSwitch', "theme-switch")
 createJsTask('themeSwitchToggle', "theme-switch-toggle")
 createJsTask('curseAds', "curse-ads")
+createJsTask('googleAds', "google-ads")
 createJsTask('sidebar', "sidebar")
-createJsTask('files', "files")
-
-tasks.register("minifyJsFiles") {
-    it.dependsOn("minifyThemeSwitchDotJs", "minifyThemeSwitchToggleDotJs", "minifyCurseAdsDotJs", "minifySidebarDotJs", "minifyFilesDotJs")
-}
+createJsTask('files', "files
 
 tasks.register("bundleFiles", Zip) {
     dependsOn minifyJsFiles
