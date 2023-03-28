@@ -7,6 +7,7 @@ tasks.register("css", io.freefair.gradle.plugins.jsass.SassCompile) {
     sassPath = "${projectDir}/sass"
     cssPath = "${buildDir}/css"
     sourceMapEnabled = false
+    //outputStyle = io.bit3.jsass.OutputStyle.NESTED
     outputStyle = io.bit3.jsass.OutputStyle.COMPRESSED
 }
 
@@ -145,9 +146,9 @@ tasks.register('generateGlobalConfig') {
         def file = file('./test/global_overrides.json')
         file.parentFile.mkdirs()
         file.text = new groovy.json.JsonBuilder([
-            ad_left: '<span>Left Ad</span>',
-            ad_middle: '<span>Middle Ad</span>',
-            ad_right: '<span>Right Ad</span>'
+            ad_left: "<div id='cdm-zone-01' class='promo-content'></div>",
+            ad_middle: "<div id='cdm-zone-03' class='promo-content'></div>",
+            ad_right: "<div id='cdm-zone-02' class='promo-content'></div>"
         ]).toPrettyString()
     }
 }

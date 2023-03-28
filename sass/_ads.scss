@@ -92,6 +92,7 @@
   }
 }
 
+/*
 // Ad block detection
 .loading-done .promo-container {
   // This generally detects various methods of ad blocking, such as simply hiding an element, blocking loading and removing it
@@ -120,6 +121,7 @@
      display: none !important;
    }
  }
+*/
 
 @media screen and (max-width: $mobile-break) {
   .promo, .ad {
