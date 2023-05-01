@@ -161,7 +161,7 @@ class MCVer:
         return self.compareFull(o)
     
     def getFullRelease(self):
-        return '.'.join(map(str, self.near))
+        return '.'.join(map(str, self.near)) if len(self.near) > 0 else self.full
 
     def __lt__(self, other):
         return self.compare(other) < 0

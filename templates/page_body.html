@@ -12,10 +12,10 @@
                     <ul class="section-content scroll-pane">
                         {%- set ns = namespace(version_prefix = '') %}
                         {%- if release_mc_version %}
-                            {%- set active_prefix = release_mc_version.split('.')[0] ~ "." ~ release_mc_version.split('.')[1] %}
+                            {%- set active_prefix = release_mc_version %}
                         {%- endif %}
                         {%- for version in release_mcversions %}
-                            {%- set current_prefix = version.split('.')[0] ~ "." ~ version.split('.')[1] %}
+                            {%- set current_prefix = version %}
                             {%- if ns.version_prefix != current_prefix %}
                                 {%- set ns.version_prefix = current_prefix %}
                                 <li class="li-version-list">
