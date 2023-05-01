@@ -181,15 +181,11 @@ class Artifact:
             sorted_mc_versions = sorted(self.versions.keys(), reverse=True, key=lambda a: MCVer(a))
             release_mc_versions = dict()
             for mc_version in sorted_mc_versions:
-                release_mc_version = MCVer(mc_version).getFullRelease()
-                split = release_mc_version.split('.')
-                release_mc_version = split[0] + "." + split[1] if len(split) > 1 else split[0]
+                release_mc_version = self.get_release_milestone(MCVer(mc_version).getFullRelease())
                 if release_mc_version not in release_mc_versions:
                     release_mc_versions[release_mc_version] = []
                 release_mc_versions[release_mc_version].append(mc_version)
-            release_mc_version = MCVer(mc_version).getFullRelease()
-            split = release_mc_version.split('.')
-            release_mc_version = split[0] + "." + split[1] if len(split) > 1 else split[0]
+            release_mc_version = self.get_release_milestone(MCVer(mc_version).getFullRelease())
             first_idx = next((mc for mc in sorted_mc_versions if 'recommended' in self.promotions.get(mc, [])), sorted_mc_versions[0])
             yield 'index.html', global_context | {'mc_version': first_idx, 'release_mc_version': release_mc_version, 'mcversions': sorted_mc_versions, 'release_mcversions': release_mc_versions}
             for mc_version in sorted_mc_versions:
@@ -198,6 +194,10 @@ class Artifact:
             yield 'index.html', global_context | {'mc_version': list(self.versions.keys())[0]}
         else:
             yield 'index.html', global_context
+    
+    def get_release_milestone(self, release_version):
+        split = release_version.split('.')
+        return split[0] + '.' + split[1] if len(split) > 1 else split[0]
 
     @classmethod
     def load_maven_xml(cls, metadata: Metadata, artifact):
