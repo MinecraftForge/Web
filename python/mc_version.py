@@ -30,6 +30,24 @@ class MCVer:
             self.type = 3
             self.rev = chr(ord('a') - 1)
             self.near = [1, 14]
+        elif '20w14infinite' == lower:  # 2020 April Fools
+            self.week = 14
+            self.year = 20
+            self.type = 3
+            self.rev = chr(ord('a') - 1)
+            self.near = [1, 16]
+        elif '22w13oneblockatatime' == lower:  # 2022 April Fools
+            self.week = 14
+            self.year = 22
+            self.type = 3
+            self.rev = 'b'
+            self.near = [1, 19]
+        elif '23w13a_or_b' == lower:  # 2023 April Fools
+            self.week = 14
+            self.year = 23
+            self.type = 3
+            self.rev = 'b'
+            self.near = [1, 20]
         elif version[0] == 'a' or version[0] == 'b':
             clean = version[1:].replace('_', '.')
             self.type = 1 if version[0] == 'a' else 2
@@ -46,10 +64,12 @@ class MCVer:
             self.near = self.splitDots(self.fromSnapshot(self.year, self.week))
         else:
             self.type = 4
-            for suffix in ['_pre_release_', ' pre_release ', '_pre']:
+            for suffix in ['_pre_release_', ' pre_release ', '_pre', '-rc']:
                 if suffix in self.full:
                     pts = self.full.split(suffix)
                     self.pre = int(pts[1])
+                    if suffix == '-rc':
+                        self.pre *= -1
                     self.near = self.splitDots(pts[0])
                     break
 
@@ -91,12 +111,22 @@ class MCVer:
         range(1743, 1822): '1.13',
         range(1830, 1833): '1.13.1',
         range(1843, 1914): '1.14',
-        range(1934, 9999): '1.15'
+        range(1934, 1946): '1.15',
+        range(2006, 2022): '1.16',
+        range(2027, 2030): '1.16.2',
+        range(2045, 2120): '1.17',
+        range(2137, 2144): '1.18',
+        range(2203, 2207): '1.18.2',
+        range(2211, 2219): '1.19',
+        range(2224, 2224): '1.19.1',
+        range(2242, 2246): '1.19.3',
+        range(2303, 2307): '1.19.4',
+        range(2312, 9999): '1.20'
     })
 
     def fromSnapshot(self, year, week):
         value = (year * 100) + week
-        if ver := SNAPSHOT_RANGES.get(value, None):
+        if ver := self.SNAPSHOT_RANGES[value]:
             return ver
         raise Exception(f'Invalid snapshot date: {value}')
 
@@ -129,6 +159,9 @@ class MCVer:
             return self.compareStr(self.rev, o.rev)
 
         return self.compareFull(o)
+    
+    def getFullRelease(self):
+        return '.'.join(map(str, self.near))
 
     def __lt__(self, other):
         return self.compare(other) < 0

@@ -72,7 +72,7 @@ void writeArtifact(group, name, version, classifier = null, String ext = 'jar') 
     file("./test/maven/${path}.sha256").text = digest(path, 'SHA-256')
 }
 
-void writeXml(String group, String name, List vers) {
+void writeXml(String group, String name, String displayName, List vers, boolean writePromos) {
     final writer = new StringWriter()
     def xml = new groovy.xml.MarkupBuilder(writer)
     String path = "./test/maven/${group}/${name}"
@@ -96,22 +96,24 @@ void writeXml(String group, String name, List vers) {
     file("${path}/maven-metadata.xml.sha1").text = digest(data, 'SHA-1')
     file("${path}/maven-metadata.xml.sha256").text = digest(data, 'SHA-256')
     file("${path}/page_config.json").text = new groovy.json.JsonBuilder([
-            name: "Minecraft Forge",
+            name: displayName,
             comments: false,
             downloads: true,
             shrink_dls: false,
             adfocus: "271228"
     ]).toPrettyString()
-    file("${path}/promotions_slim.json").text = new groovy.json.JsonBuilder([
-        homepage: 'https://not_real.invalid/',
-        promos: [
-            '1.16.5-latest':      '36.1.2',
-            '1.16.5-recommended': '36.1.2',
-            '1.18.1-latest':      '39.1.2',
-            '1.18.1-recommended': '39.1.2',
-            '1.18.2-latest':      '40.0.8'
-        ]
-    ]).toPrettyString()
+    if (writePromos) {
+        file("${path}/promotions_slim.json").text = new groovy.json.JsonBuilder([
+            homepage: 'https://not_real.invalid/',
+            promos: [
+                '1.16.5-latest':      '36.1.2',
+                '1.16.5-recommended': '36.1.2',
+                '1.18.1-latest':      '39.1.2',
+                '1.18.1-recommended': '39.1.2',
+                '1.18.2-latest':      '40.0.8'
+            ]
+        ]).toPrettyString()
+    }
 }
 
 tasks.register("deleteTestData", Delete) {
@@ -136,7 +138,22 @@ tasks.register('generateMaven') {
                 writeArtifact('net/minecraftforge', 'forge', "${ver}.${build}", 'installer')
             }
         }
-        writeXml('net/minecraftforge', 'forge', versions)
+        writeXml('net/minecraftforge', 'forge', "Minecraft Forge", versions, true)
+
+        versions = []
+        ['23w13a_or_b-april-2023.13.b', '23w17a-2023.17.a'].each { ver ->
+            def range = 0..8 // make eight builds
+
+            range.each { build ->
+                versions.add("${ver}.${build}")
+                writeArtifact('net/minecraftforge', 'froge', "${ver}.${build}")
+                writeArtifact('net/minecraftforge', 'froge', "${ver}.${build}", 'userdev')
+                writeArtifact('net/minecraftforge', 'froge', "${ver}.${build}", 'changelog', 'txt')
+                writeArtifact('net/minecraftforge', 'froge', "${ver}.${build}", 'mdk', 'zip')
+                writeArtifact('net/minecraftforge', 'froge', "${ver}.${build}", 'installer')
+            }
+        }
+        writeXml('net/minecraftforge', 'froge', "Minecraft Froge", versions, false)
     }
 }
 
