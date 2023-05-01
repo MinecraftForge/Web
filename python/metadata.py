@@ -15,7 +15,7 @@ import xml.etree.ElementTree as elementtree
 
 MINECRAFT_FORMAT = '(?P<mcversion>1(?:\.\d+){1,2}?(?:[_\-]pre\d+)?|\d\dw\d\d\w+)'
 PROMOTION_REG = re.compile(r'^' + MINECRAFT_FORMAT + '-(?P<tag>[\w]+)$')
-VERSION_REG = re.compile(r'^(?:' + MINECRAFT_FORMAT + '-)?(?P<version>(?:[\w\-]+(?:\.|\+))*[\d]+)-?(?P<branch>[\w\.\-]+)?$')
+VERSION_REG = re.compile(r'^(?:' + MINECRAFT_FORMAT + '-)?(?P<version>(?:\w+(?:\.|\+))*[\d]+)-?(?P<branch>[\w\.\-]+)?$')
 
 def parse_version(version):
     return (versmatch.groupdict().get('mcversion') or 'default', versmatch.group('version'), versmatch.group('branch')) if (versmatch := VERSION_REG.match(version)) else ('default', version, None)
