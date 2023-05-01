@@ -13,7 +13,7 @@ from mc_version import MCVer
 from pprint import pprint
 import xml.etree.ElementTree as elementtree
 
-MINECRAFT_FORMAT = '(?P<mcversion>1(?:\.\d+){1,2}?(?:_pre\d+)?|\d\dw\d\d\w+)'
+MINECRAFT_FORMAT = '(?P<mcversion>1(?:\.\d+){1,2}?(?:[_\-]pre\d+)?|\d\dw\d\d\w+)'
 PROMOTION_REG = re.compile(r'^' + MINECRAFT_FORMAT + '-(?P<tag>[\w]+)$')
 VERSION_REG = re.compile(r'^(?:' + MINECRAFT_FORMAT + '-)?(?P<version>(?:[\w\-]+(?:\.|\+))*[\d]+)-?(?P<branch>[\w\.\-]+)?$')
 
@@ -185,8 +185,8 @@ class Artifact:
                 if release_mc_version not in release_mc_versions:
                     release_mc_versions[release_mc_version] = []
                 release_mc_versions[release_mc_version].append(mc_version)
-            release_mc_version = self.get_release_milestone(MCVer(mc_version).getFullRelease())
             first_idx = next((mc for mc in sorted_mc_versions if 'recommended' in self.promotions.get(mc, [])), sorted_mc_versions[0])
+            release_mc_version = self.get_release_milestone(MCVer(first_idx).getFullRelease())
             yield 'index.html', global_context | {'mc_version': first_idx, 'release_mc_version': release_mc_version, 'mcversions': sorted_mc_versions, 'release_mcversions': release_mc_versions}
             for mc_version in sorted_mc_versions:
                 yield f'index_{mc_version}.html', global_context | {'mc_version': mc_version, 'release_mc_version': release_mc_version, 'mcversions': sorted_mc_versions, 'release_mcversions': release_mc_versions, 'canonical_url': '' if mc_version == first_idx else f'index_{mc_version}.html'}

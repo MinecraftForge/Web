@@ -64,7 +64,7 @@ class MCVer:
             self.near = self.splitDots(self.fromSnapshot(self.year, self.week))
         else:
             self.type = 4
-            for suffix in ['_pre_release_', ' pre_release ', '_pre', '-rc']:
+            for suffix in ['_pre_release_', ' pre_release ', '_pre', '-pre', '-rc']:
                 if suffix in self.full:
                     pts = self.full.split(suffix)
                     self.pre = int(pts[1])
