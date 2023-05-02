@@ -195,7 +195,7 @@ class Artifact:
             yield 'index.html', global_context
     
     def get_release_milestone(self, release_version):
-        if release_version.april: return "April Fools"
+        if release_version.special: return release_version.special.value
         release_mc_version = release_version.getFullRelease()
         split = release_mc_version.split('.')
         return split[0] + '.' + split[1] if len(split) > 1 else split[0]

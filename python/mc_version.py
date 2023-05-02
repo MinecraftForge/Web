@@ -1,3 +1,6 @@
+from enum import Enum
+
+
 class MCVer:
     type = 0
     week = 0
@@ -6,7 +9,7 @@ class MCVer:
     rev = None
     near = []
     full = None
-    april = False
+    special = None
 
     def __init__(self, version):
         self.full = version
@@ -19,42 +22,42 @@ class MCVer:
             self.type = 3
             self.rev = 'a'
             self.near = [1, 10]
-            self.april = True
+            self.special = Special.APRIL
         elif '1.rv_pre1' == lower:  # 2016 April Fools
             self.week = 14
             self.year = 16
             self.type = 3
             self.rev = chr(ord('a') - 1)
             self.near = [1, 9, 3]
-            self.april = True
+            self.special = Special.APRIL
         elif '3d shareware v1.34' == lower:  # 2019 April Fools
             self.week = 14
             self.year = 19
             self.type = 3
             self.rev = chr(ord('a') - 1)
             self.near = [1, 14]
-            self.april = True
+            self.special = Special.APRIL
         elif '20w14infinite' == lower:  # 2020 April Fools
             self.week = 14
             self.year = 20
             self.type = 3
             self.rev = chr(ord('a') - 1)
             self.near = [1, 16]
-            self.april = True
+            self.special = Special.APRIL
         elif '22w13oneblockatatime' == lower:  # 2022 April Fools
             self.week = 13
             self.year = 22
             self.type = 3
             self.rev = 'b'
             self.near = [1, 19]
-            self.april = True
+            self.special = Special.APRIL
         elif '23w13a_or_b' == lower:  # 2023 April Fools
             self.week = 13
             self.year = 23
             self.type = 3
             self.rev = 'b'
             self.near = [1, 20]
-            self.april = True
+            self.special = Special.APRIL
         elif 'inf_20100618' == lower:
             self.week = 25
             self.year = 10
@@ -221,3 +224,6 @@ class MCVer:
 
     def __repr__(self):
         return self.full
+    
+class Special(Enum):
+    APRIL = "April Fools"
