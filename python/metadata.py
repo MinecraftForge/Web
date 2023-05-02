@@ -181,7 +181,8 @@ class Artifact:
             sorted_mc_versions = sorted(self.versions.keys(), reverse=True, key=lambda a: MCVer(a))
             release_mc_versions = dict()
             for mc_version in sorted_mc_versions:
-                release_mc_version = self.get_release_milestone(MCVer(mc_version).getFullRelease())
+                mc_ver = MCVer(mc_version)
+                release_mc_version = self.get_release_milestone(mc_ver.getFullRelease()) if not mc_ver.april else 'april'
                 if release_mc_version not in release_mc_versions:
                     release_mc_versions[release_mc_version] = []
                 release_mc_versions[release_mc_version].append(mc_version)
