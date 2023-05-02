@@ -1,3 +1,6 @@
+from enum import Enum
+
+
 class MCVer:
     type = 0
     week = 0
@@ -6,6 +9,7 @@ class MCVer:
     rev = None
     near = []
     full = None
+    special = None
 
     def __init__(self, version):
         self.full = version
@@ -18,21 +22,69 @@ class MCVer:
             self.type = 3
             self.rev = 'a'
             self.near = [1, 10]
+            self.special = Special.APRIL
         elif '1.rv_pre1' == lower:  # 2016 April Fools
             self.week = 14
             self.year = 16
             self.type = 3
             self.rev = chr(ord('a') - 1)
             self.near = [1, 9, 3]
+            self.special = Special.APRIL
         elif '3d shareware v1.34' == lower:  # 2019 April Fools
             self.week = 14
             self.year = 19
             self.type = 3
             self.rev = chr(ord('a') - 1)
             self.near = [1, 14]
-        elif version[0] == 'a' or version[0] == 'b':
+            self.special = Special.APRIL
+        elif '20w14infinite' == lower:  # 2020 April Fools
+            self.week = 14
+            self.year = 20
+            self.type = 3
+            self.rev = chr(ord('a') - 1)
+            self.near = [1, 16]
+            self.special = Special.APRIL
+        elif '22w13oneblockatatime' == lower:  # 2022 April Fools
+            self.week = 13
+            self.year = 22
+            self.type = 3
+            self.rev = 'b'
+            self.near = [1, 19]
+            self.special = Special.APRIL
+        elif '23w13a_or_b' == lower:  # 2023 April Fools
+            self.week = 13
+            self.year = 23
+            self.type = 3
+            self.rev = 'b'
+            self.near = [1, 20]
+            self.special = Special.APRIL
+        elif 'inf_20100618' == lower:
+            self.week = 25
+            self.year = 10
+            self.type = 1
+            self.rev = 'a'
+            self.near = [1, 0, 4]
+        elif 'c0.0.13a_03' == lower:
+            self.week = -1
+            self.year = -1
+            self.type = 1
+            self.rev = chr(ord('a') - 1)
+            self.near = [0, 0, 13]
+        elif lower.startswith('rd_'):
+            self.week = 20
+            self.year = 9
+            self.type = 1
+            
+            if 'rd_132211' == lower: self.rev = 'a'
+            if 'rd_132328' == lower: self.rev = 'b'
+            if 'rd_20090515' == lower: self.rev = 'c'
+            if 'rd_160052' == lower: self.rev = 'd'
+            if 'rd_161348' == lower: self.rev = 'e'
+
+            self.near = [0, 0, 1]
+        elif version[0] == 'a' or version[0] == 'b' or version[0] == 'c':
             clean = version[1:].replace('_', '.')
-            self.type = 1 if version[0] == 'a' else 2
+            self.type = 2 if version[0] == 'b' else 1
             if clean[-1] < '0' or clean[-1] > '9':
                 self.rev = clean[-1]
                 self.near = self.splitDots(clean[0:-1])
@@ -46,10 +98,12 @@ class MCVer:
             self.near = self.splitDots(self.fromSnapshot(self.year, self.week))
         else:
             self.type = 4
-            for suffix in ['_pre_release_', ' pre_release ', '_pre']:
+            for suffix in ['_pre_release_', ' pre_release ', ' Pre-Release ', '_pre', '-pre', '-rc']:
                 if suffix in self.full:
                     pts = self.full.split(suffix)
                     self.pre = int(pts[1])
+                    if suffix == '-rc':
+                        self.pre *= -1
                     self.near = self.splitDots(pts[0])
                     break
 
@@ -70,33 +124,43 @@ class MCVer:
                 return super().__getitem__(item)
 
     SNAPSHOT_RANGES = RangedDict({
-        range(1147, 1201): '1.1',
-        range(1203, 1208): '1.2',
-        range(1215, 1230): '1.3',
-        range(1232, 1242): '1.4',
-        range(1249, 1250): '1.4.6',
-        range(1301, 1310): '1.5',
-        range(1311, 1312): '1.5.1',
-        range(1316, 1326): '1.6',
-        range(1336, 1343): '1.7',
-        range(1347, 1349): '1.7.4',
-        range(1402, 1434): '1.8',
-        range(1531, 1607): '1.9',
-        range(1614, 1615): '1.9.3',
-        range(1620, 1621): '1.10',
-        range(1632, 1644): '1.11',
-        range(1650, 1650): '1.11.1',
-        range(1706, 1718): '1.12',
-        range(1731, 1731): '1.12.1',
-        range(1743, 1822): '1.13',
-        range(1830, 1833): '1.13.1',
-        range(1843, 1914): '1.14',
-        range(1934, 9999): '1.15'
+        range(1147, 1202): '1.1',
+        range(1203, 1209): '1.2',
+        range(1215, 1231): '1.3',
+        range(1232, 1243): '1.4',
+        range(1249, 1251): '1.4.6',
+        range(1301, 1311): '1.5',
+        range(1311, 1313): '1.5.1',
+        range(1316, 1327): '1.6',
+        range(1336, 1344): '1.7',
+        range(1347, 1350): '1.7.4',
+        range(1402, 1435): '1.8',
+        range(1531, 1608): '1.9',
+        range(1614, 1616): '1.9.3',
+        range(1620, 1622): '1.10',
+        range(1632, 1645): '1.11',
+        range(1650, 1651): '1.11.1',
+        range(1706, 1719): '1.12',
+        range(1731, 1732): '1.12.1',
+        range(1743, 1823): '1.13',
+        range(1830, 1834): '1.13.1',
+        range(1843, 1915): '1.14',
+        range(1934, 1947): '1.15',
+        range(2006, 2023): '1.16',
+        range(2027, 2031): '1.16.2',
+        range(2045, 2121): '1.17',
+        range(2137, 2145): '1.18',
+        range(2203, 2208): '1.18.2',
+        range(2211, 2220): '1.19',
+        range(2224, 2225): '1.19.1',
+        range(2242, 2247): '1.19.3',
+        range(2303, 2308): '1.19.4',
+        range(2312, 9999): '1.20'
     })
 
     def fromSnapshot(self, year, week):
         value = (year * 100) + week
-        if ver := SNAPSHOT_RANGES.get(value, None):
+        if ver := self.SNAPSHOT_RANGES[value]:
             return ver
         raise Exception(f'Invalid snapshot date: {value}')
 
@@ -111,10 +175,9 @@ class MCVer:
 
     def compare(self, o):
         if self.type != o.type:
-            if self.type == 1: return -1
-            if self.type == 2: return 1 if self.type == 1 else -1
-            if self.type == 3: return -1 if self.compareFull(o) == 0 else 1
-            return 1 if self.compareFull(o) == 0 else -1
+            if self.type <= 2 or o.type <= 2: return self.type - o.type
+            if self.type == 3: return -1 if self.compareFull(o) == 0 else self.compareFull(o)
+            return 1 if self.compareFull(o) == 0 else self.compareFull(o)
 
         if self.type == 1 or self.type == 2:
             ret = self.compareFull(o)
@@ -128,7 +191,18 @@ class MCVer:
             if self.week != o.week: return self.week - o.week
             return self.compareStr(self.rev, o.rev)
 
-        return self.compareFull(o)
+        ret = self.compareFull(o)
+        if ret != 0: return ret
+        self_pre_type = min(1, max(-1, self.pre))
+        o_pre_type = min(1, max(-1, o.pre))
+        if self_pre_type == o_pre_type: return abs(self.pre) - abs(o.pre)
+        if self_pre_type == 0: return 1
+        if o_pre_type == 0: return -1
+        if self_pre_type == 1: return -1
+        return 1
+    
+    def getFullRelease(self):
+        return '.'.join(map(str, self.near)) if len(self.near) > 0 else self.full
 
     def __lt__(self, other):
         return self.compare(other) < 0
@@ -150,3 +224,6 @@ class MCVer:
 
     def __repr__(self):
         return self.full
+    
+class Special(Enum):
+    APRIL = "April Fools"

@@ -13,9 +13,9 @@ from mc_version import MCVer
 from pprint import pprint
 import xml.etree.ElementTree as elementtree
 
-MINECRAFT_FORMAT = '(?P<mcversion>1(?:\.\d+){1,2}?(?:_pre\d+)?)'
+MINECRAFT_FORMAT = '(?P<mcversion>1(?:\.\d+){1,2}?(?:[_\-]pre\d+)?|\d\dw\d\d\w+)'
 PROMOTION_REG = re.compile(r'^' + MINECRAFT_FORMAT + '-(?P<tag>[\w]+)$')
-VERSION_REG = re.compile(r'^(?:' + MINECRAFT_FORMAT + '-)?(?P<version>(?:\d+(?:\.|\+))*[\d]+)-?(?P<branch>[\w\.\-]+)?$')
+VERSION_REG = re.compile(r'^(?:' + MINECRAFT_FORMAT + '-)?(?P<version>(?:\w+(?:\.|\+))*[\d]+)-?(?P<branch>[\w\.\-]+)?$')
 
 def parse_version(version):
     return (versmatch.groupdict().get('mcversion') or 'default', versmatch.group('version'), versmatch.group('branch')) if (versmatch := VERSION_REG.match(version)) else ('default', version, None)
@@ -179,14 +179,26 @@ class Artifact:
     def parts(self, global_context: dict):
         if len(self.versions) > 1:
             sorted_mc_versions = sorted(self.versions.keys(), reverse=True, key=lambda a: MCVer(a))
-            first_idx = next((mc for mc in sorted_mc_versions if 'recommended' in self.promotions.get(mc, [])), sorted_mc_versions[0])
-            yield 'index.html', global_context | {'mc_version': first_idx, 'mcversions': sorted_mc_versions}
+            release_mc_versions = dict()
             for mc_version in sorted_mc_versions:
-                yield f'index_{mc_version}.html', global_context | {'mc_version': mc_version, 'mcversions': sorted_mc_versions, 'canonical_url': '' if mc_version == first_idx else f'index_{mc_version}.html'}
+                release_mc_version = self.get_release_milestone(MCVer(mc_version))
+                if release_mc_version not in release_mc_versions:
+                    release_mc_versions[release_mc_version] = []
+                release_mc_versions[release_mc_version].append(mc_version)
+            first_idx = next((mc for mc in sorted_mc_versions if 'recommended' in self.promotions.get(mc, [])), sorted_mc_versions[0])
+            yield 'index.html', global_context | {'mc_version': first_idx, 'release_mc_version': self.get_release_milestone(MCVer(first_idx)), 'mcversions': sorted_mc_versions, 'release_mcversions': release_mc_versions}
+            for mc_version in sorted_mc_versions:
+                yield f'index_{mc_version}.html', global_context | {'mc_version': mc_version, 'release_mc_version': self.get_release_milestone(MCVer(mc_version)), 'mcversions': sorted_mc_versions, 'release_mcversions': release_mc_versions, 'canonical_url': '' if mc_version == first_idx else f'index_{mc_version}.html'}
         elif len(self.versions) == 1 and not 'default' in self.versions:
             yield 'index.html', global_context | {'mc_version': list(self.versions.keys())[0]}
         else:
             yield 'index.html', global_context
+    
+    def get_release_milestone(self, release_version):
+        if release_version.special: return release_version.special.value
+        release_mc_version = release_version.getFullRelease()
+        split = release_mc_version.split('.')
+        return split[0] + '.' + split[1] if len(split) > 1 else split[0]
 
     @classmethod
     def load_maven_xml(cls, metadata: Metadata, artifact):
