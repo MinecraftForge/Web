@@ -141,7 +141,7 @@ tasks.register('generateMaven') {
         writeXml('net/minecraftforge', 'forge', "Minecraft Forge", versions, true)
 
         versions = []
-        ['23w13a_or_b-april.2023.13.b', '23w17a-2023.17.a', '1.20.1-pre1-46.0'].each { ver ->
+        ['23w13a_or_b-april.2023.13.b', '23w17a-2023.17.a', '1.20.1-pre1-46.0', '1.19.4-45.0'].each { ver ->
             def range = 0..8 // make eight builds
 
             range.each { build ->

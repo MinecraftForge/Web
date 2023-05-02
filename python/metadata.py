@@ -181,23 +181,23 @@ class Artifact:
             sorted_mc_versions = sorted(self.versions.keys(), reverse=True, key=lambda a: MCVer(a))
             release_mc_versions = dict()
             for mc_version in sorted_mc_versions:
-                mc_ver = MCVer(mc_version)
-                release_mc_version = self.get_release_milestone(mc_ver.getFullRelease()) if not mc_ver.april else 'april'
+                release_mc_version = self.get_release_milestone(MCVer(mc_version))
                 if release_mc_version not in release_mc_versions:
                     release_mc_versions[release_mc_version] = []
                 release_mc_versions[release_mc_version].append(mc_version)
             first_idx = next((mc for mc in sorted_mc_versions if 'recommended' in self.promotions.get(mc, [])), sorted_mc_versions[0])
-            release_mc_version = self.get_release_milestone(MCVer(first_idx).getFullRelease())
-            yield 'index.html', global_context | {'mc_version': first_idx, 'release_mc_version': release_mc_version, 'mcversions': sorted_mc_versions, 'release_mcversions': release_mc_versions}
+            yield 'index.html', global_context | {'mc_version': first_idx, 'release_mc_version': self.get_release_milestone(MCVer(first_idx)), 'mcversions': sorted_mc_versions, 'release_mcversions': release_mc_versions}
             for mc_version in sorted_mc_versions:
-                yield f'index_{mc_version}.html', global_context | {'mc_version': mc_version, 'release_mc_version': release_mc_version, 'mcversions': sorted_mc_versions, 'release_mcversions': release_mc_versions, 'canonical_url': '' if mc_version == first_idx else f'index_{mc_version}.html'}
+                yield f'index_{mc_version}.html', global_context | {'mc_version': mc_version, 'release_mc_version': self.get_release_milestone(MCVer(mc_version)), 'mcversions': sorted_mc_versions, 'release_mcversions': release_mc_versions, 'canonical_url': '' if mc_version == first_idx else f'index_{mc_version}.html'}
         elif len(self.versions) == 1 and not 'default' in self.versions:
             yield 'index.html', global_context | {'mc_version': list(self.versions.keys())[0]}
         else:
             yield 'index.html', global_context
     
     def get_release_milestone(self, release_version):
-        split = release_version.split('.')
+        if release_version.april: return "April Fools"
+        release_mc_version = release_version.getFullRelease()
+        split = release_mc_version.split('.')
         return split[0] + '.' + split[1] if len(split) > 1 else split[0]
 
     @classmethod
