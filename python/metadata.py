@@ -91,7 +91,6 @@ class ArtifactVersion:
     @classmethod
     def load(cls, artifact, version):
         (mcvers, vers, branch) = parse_version(version)
-        print(mcvers)
         if vers.endswith('-SNAPSHOT') or branch == 'SNAPSHOT':
             return
         if not (d := artifact.path().joinpath(version)).exists():
