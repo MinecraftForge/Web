@@ -13,7 +13,7 @@ from mc_version import MCVer
 from pprint import pprint
 import xml.etree.ElementTree as elementtree
 
-MINECRAFT_FORMAT = '(?P<mcversion>1(?:\.\d+){1,2}?(?:[_\-]pre\d+)?|\d\dw\d\d\w+)'
+MINECRAFT_FORMAT = '(?P<mcversion>1(?:\.\d+){1,2}?(?:[_\-](?:pre|rc)\d+)?|\d\dw\d\d\w+)'
 PROMOTION_REG = re.compile(r'^' + MINECRAFT_FORMAT + '-(?P<tag>[\w]+)$')
 VERSION_REG = re.compile(r'^(?:' + MINECRAFT_FORMAT + '-)?(?P<version>(?:\w+(?:\.|\+))*[\d]+)-?(?P<branch>[\w\.\-]+)?$')
 
