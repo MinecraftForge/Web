@@ -44,7 +44,7 @@ Here's some instructions on how to setup the environment and work with it.
 ## Step 1: Setting up the test environment
 
 Firstly, we need to setup the Python side:
-1. Make sure Python is installed. At the time of writing, the latest Python 3.10.4 seems to work
+1. Make sure Python is installed. At the time of writing, the latest Python 3.11.5 seems to work
 
 Now, let's setup the Gradle side:
 1. Import the `build.gradle` into your IDE
