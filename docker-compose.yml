@@ -1,0 +1,24 @@
+version: '3.3'
+services:
+  webhook:
+    image: pagegen
+    build:
+      context: .
+    container_name: pagegen
+    restart: 'always'
+    environment:
+      - TZ=America/Los_Angeles
+    ports:
+      - 5000:5000
+    volumes:
+      - ./test/maven:/in
+      - ./test/out:/out
+      - ./test/config:/config
+    labels:
+      traefik.enable: 'true'
+      traefik.http.routers.pagegen.entrypoints: 'websecure'
+      traefik.http.routers.pagegen.middlewares: 'pagegen-prefix'
+      traefik.http.routers.pagegen.rule: 'Host(`webhooks.minecraftforge.net`) && PathPrefix(`/pagegen/`)'
+      traefik.http.services.pagegen.loadbalancer.server.port: 5000
+      traefik.http.middlewares.pagegen-prefix.stripprefix.prefixes: '/pagegen'
+      traefik.http.middlewares.pagegen-prefix.stripprefix.forceSlash: true

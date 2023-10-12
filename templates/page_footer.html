@@ -15,14 +15,14 @@
 <script src="https://use.fontawesome.com/a1f20be65b.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jScrollPane/2.0.23/script/jquery.jscrollpane.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/tooltipster/3.3.0/js/jquery.tooltipster.min.js"></script>
-<script src="{{ static_root }}js/theme-switch-toggle.min.js?{{ crc32(static_root + 'js/theme-switch-toggle.min.js') }}"></script>
+<script src="{{ static_root }}js/theme-switch-toggle.min.js?{{ crc32('js/theme-switch-toggle.min.js') }}"></script>
 {%- if md.global_config['enable_adsense'] %}
-<script src="{{ static_root }}js/google-ads.min.js?{{ crc32(static_root + 'js/google-ads.min.js') }}"></script>
+<script src="{{ static_root }}js/google-ads.min.js?{{ crc32('js/google-ads.min.js') }}"></script>
 {%- else %}
-<script src="{{ static_root }}js/curse-ads.min.js?{{ crc32(static_root + 'js/curse-ads.min.js') }}"></script>
+<script src="{{ static_root }}js/curse-ads.min.js?{{ crc32('js/curse-ads.min.js') }}"></script>
 {%- endif %}
-<script src="{{ static_root }}js/sidebar.min.js?{{ crc32(static_root + 'js/sidebar.min.js') }}"></script>
-<script src="{{ static_root }}js/files.min.js?{{ crc32(static_root + 'js/files.min.js') }}"></script>
+<script src="{{ static_root }}js/sidebar.min.js?{{ crc32('js/sidebar.min.js') }}"></script>
+<script src="{{ static_root }}js/files.min.js?{{ crc32('js/files.min.js') }}"></script>
 {% if artifact and artifact.config['analytics'] %}{{ artifact.config['analytics'] }}{% endif %}
 
 {%- if artifact and artifact.config['body_end'] %}

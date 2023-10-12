@@ -6,11 +6,12 @@ import requests
 import zlib
 
 import jinja2
+import markupsafe
 
 from mc_version import MCVer
 from metadata import Artifact
 
-@jinja2.contextfunction
+@jinja2.pass_context 
 def show_classifier(context, mc_version, classifier):
     filters = context.parent['filters']
     mc_vers = MCVer(mc_version)
@@ -19,7 +20,7 @@ def show_classifier(context, mc_version, classifier):
 
 
 def humanformatdate(dt: datetime.datetime):
-    return jinja2.Markup(f'<script>document.write(dayjs.unix({dt.timestamp()}).fromNow())</script>')
+    return markupsafe.Markup(f'<script>document.write(dayjs.unix({dt.timestamp()}).fromNow())</script>')
 
 
 def get_artifact_description(artifact: Artifact, mc_version):
@@ -35,18 +36,9 @@ def get_artifact_description(artifact: Artifact, mc_version):
 def crc32(file_path: str, chunk_size: int = 4096) -> str:
     """Computes the CRC32 checksum of the contents of the file at the given file_path"""
     checksum = 0
-    if (file_path.startswith('https://') or file_path.startswith('http://')):
-        with requests.get(file_path, stream=True) as r:
-            r.raise_for_status()
-            for chunk in r.iter_content(chunk_size=chunk_size):
-                checksum = zlib.crc32(chunk, checksum)
-    elif (file_path.startswith('file://')):
-        file_path = file_path[7:]
-        with open(file_path, 'rb') as f:
-            while (chunk := f.read(chunk_size)):
-                checksum = zlib.crc32(chunk, checksum)
-    else:
-        raise Exception(f'Invalid file_path: "{file_path}" - it must start with "http://", "https://" or "file://".')
+    with open('./static/' + file_path, 'rb') as f:
+        while (chunk := f.read(chunk_size)):
+            checksum = zlib.crc32(chunk, checksum)
 
     return "%08X" % (checksum & 0xFFFFFFFF)
 

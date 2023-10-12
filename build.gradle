@@ -34,24 +34,23 @@ tasks.register("bundleFiles", Zip) {
     destinationDirectory = file("${buildDir}/distributions")
     from(file("${buildDir}/js")) {
         include '*.js'
-        into 'static/js'
+        into 'js'
     }
     from(css) {
         include 'website_*.css'
-        into 'static/css'
+        into 'css'
         rename ~/website_([A-Za-z]+)/, 'styles_$1'
     }
     from("${projectDir}/css") {
         include '*.css'
-        into 'static/css'
+        into 'css'
     }
     from("${projectDir}/images") {
         include '**'
-        into 'static/images'
+        into 'images'
     }
     from("${projectDir}/docs") {
         include '**/*.html'
-        into 'static'
     }
 }
 
@@ -124,7 +123,7 @@ tasks.register('generateMaven') {
     mustRunAfter deleteTestData
     doLast {
         List versions = []
-        ['1.16.5-36.0', '1.16.5-36.1', '1.18.1-39.0', '1.18.1-39.1', '1.18.2-40.0'].each { ver ->
+        ['1.16.5-36.0', '1.16.5-36.1', '1.18.1-39.0', '1.18.1-39.1', '1.18.2-40.0', '1.18.2-40.1'].each { ver ->
             def range = 0..8 // make eight builds for "beta" release period
             if (ver.endsWith('.1'))
                 range = 0..2 // make three builds for "recommended" release period
@@ -160,7 +159,7 @@ tasks.register('generateMaven') {
 tasks.register('generateGlobalConfig') {
     mustRunAfter deleteTestData
     doLast {
-        def file = file('./test/global_overrides.json')
+        def file = file('./test/config/global_overrides.json')
         file.parentFile.mkdirs()
         file.text = new groovy.json.JsonBuilder([
             ad_left: "<div id='cdm-zone-01' class='promo-content'></div>",
@@ -170,30 +169,73 @@ tasks.register('generateGlobalConfig') {
     }
 }
 
+tasks.register('generateTestUsers') {
+	mustRunAfter deleteTestData
+	doLast {
+		def file = file('./test/config/users.json')
+		file.parentFile.mkdirs()
+        file.text = new groovy.json.JsonBuilder([
+			test_name: [
+				password: 'test_password',
+				access: [
+					[group: '', artifact: '']
+				]
+			]
+		]).toPrettyString()
+	}
+}
+
+tasks.register('generateTestConfig') {
+	dependsOn generateGlobalConfig, generateTestUsers
+	mustRunAfter deleteTestData
+	doLast {
+		def cfg = file('./test/config/config.json')
+		cfg.parentFile.mkdirs()
+        cfg.text = new groovy.json.JsonBuilder([
+			promote: [
+				args: [ '--folder', '/in', '--local-data', '--config', '/config/global_overrides.json', '--static',  'file://' + file('./test/static/').absolutePath]
+			]
+		]).toPrettyString()
+	}
+}
+
 tasks.register('extractBundledFiles', Copy) {
     dependsOn bundleFiles
     mustRunAfter deleteTestData
     from zipTree(bundleFiles.archiveFile)
-    into file('./test/')
+    into file('./test/static/')
+}
+
+tasks.register('copyTestTemplates', Copy) {
+    mustRunAfter deleteTestData
+    from file('./templates/')
+    into file('./test/templates/')
+}
+tasks.register('copyTestPython', Copy) {
+    mustRunAfter deleteTestData
+    from file('./python/')
+    into file('./test/python/')
 }
 
 tasks.register('runTestPageGen', Exec) {
+	dependsOn = [copyTestPython, copyTestTemplates]
+	workingDir 'test'
     String os = System.getProperty('os.name').toLowerCase(Locale.ROOT)
     if (os.contains('win'))
-        commandLine 'powershell', '-NoLogo', '-NoProfile', '-ExecutionPolicy', 'Unrestricted', './runTestPageGen.ps1'
+        commandLine 'cmd', '/c', file('runTestPageGen.bat').absolutePath
     else // assume *nix
-        commandLine 'sh', './runTestPageGen.sh'
+        commandLine 'sh', '../runTestPageGen.sh'
 }
 
 tasks.register('setupPageGen', Exec) {
     String os = System.getProperty('os.name').toLowerCase(Locale.ROOT)
     if (os.contains('win'))
-        commandLine 'powershell', '-NoLogo', '-NoProfile', '-Command', 'pip install -r requirements.txt'
+        commandLine 'cmd', '/c', 'pip install -r requirements.txt'
     else // assume *nix
         commandLine 'sh', '-c', 'pip install -r requirements.txt'
 }
 
 tasks.register('setupTest') {
-    dependsOn = [deleteTestData, extractBundledFiles, generateMaven, generateGlobalConfig, setupPageGen]
+    dependsOn = [deleteTestData, extractBundledFiles, generateMaven, setupPageGen, generateTestConfig, copyTestTemplates]
     doLast { file('./test/out').mkdirs() }
 }

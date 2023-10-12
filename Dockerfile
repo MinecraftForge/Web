@@ -1,14 +1,17 @@
-FROM python:3.9
+FROM python:3.9-alpine
 
 VOLUME /in
 VOLUME /out
 
-WORKDIR /usr/src/app
+WORKDIR /app
 
 COPY requirements.txt ./
-RUN python -m pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
 
 COPY python python
 COPY templates templates
 
-ENTRYPOINT [ "python", "python/page_generator.py" ]
+COPY build/distributions/files-bundle.zip .
+RUN unzip files-bundle.zip -d static && rm files-bundle.zip
+
+ENTRYPOINT [ "python", "-u", "python/page_generator_service.py" ]

@@ -12,7 +12,7 @@ def parse_path(f):
     else:
         raise ValueError('The path is missing')
 
-def main():
+def main(raw_args=None):
     parser = argparse.ArgumentParser(description='Maven based download index generator')
     parser.add_argument('--webout', dest='output_web', default='/out', help='Base directory to output generated index pages. Will generate in sub-directories based on the maven path', type=parse_path)
     parser.add_argument('--metaout', dest='output_meta', default='/out', help='Base directory to output generated metadata. Will generate in sub-directories based on the maven path', type=parse_path)
@@ -38,7 +38,10 @@ def main():
     promote_command.add_argument('artifact',  help='Maven Artifact - net.minecraftforge:forge')
     promote_command.add_argument('version', help='Maven Version')
     promote_command.add_argument('type', choices=['latest', 'recommended'], help='Type of promotion')
-    args = parser.parse_args()
+    
+    if raw_args == None:
+        raw_args = sys.argv[1:]
+    args = parser.parse_args(raw_args)
     
     if (args.webroot[-1] != '/'): args.webroot += '/'
     if (args.dlroot[-1] != '/'): args.dlroot += '/'

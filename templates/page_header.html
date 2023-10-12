@@ -37,9 +37,9 @@
 
     <link type="text/css" rel="stylesheet" href="{{ static_root }}css/tooltipster.css">
     <link type="text/css" rel="stylesheet" href="{{ static_root }}css/tooltipster-shadow.css">
-    <link rel="stylesheet" data-theme="light" href="{{ static_root }}css/styles_light.css?{{ crc32(static_root + 'css/styles_light.css') }}">
-    <link rel="stylesheet" data-theme="dark" href="{{ static_root }}css/styles_dark.css?{{ crc32(static_root + 'css/styles_dark.css') }}">
-    <script src="{{ static_root }}js/theme-switch.min.js?{{ crc32(static_root + 'js/theme-switch.min.js') }}"></script>
+    <link rel="stylesheet" data-theme="light" href="{{ static_root }}css/styles_light.css?{{ crc32('css/styles_light.css') }}">
+    <link rel="stylesheet" data-theme="dark" href="{{ static_root }}css/styles_dark.css?{{ crc32('css/styles_dark.css') }}">
+    <script src="{{ static_root }}js/theme-switch.min.js?{{ crc32('js/theme-switch.min.js') }}"></script>
     <!-- relative time in browser -->
     <script src="https://cdn.jsdelivr.net/combine/npm/dayjs@1.10.8,npm/dayjs@1.10.8/plugin/relativeTime.min.js"></script>
     <script>dayjs.extend(dayjs_plugin_relativeTime)</script>

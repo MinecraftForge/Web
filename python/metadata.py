@@ -155,7 +155,7 @@ class Artifact:
     def find_version(self, version: str) -> ArtifactVersion:
         v = next((v for v in self.all_versions if v.version == version), None)
         if not v:
-            pprint(self.all_versions)
+            #pprint(self.all_versions)
             raise ValueError(f'Failed to find {version} in {self.name}')
         return v
 
