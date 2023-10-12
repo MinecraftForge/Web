@@ -1,7 +1,11 @@
 plugins {
     id "io.freefair.jsass-base" version "1.0.2"
     id "com.magnetichq.gradle.js" version "3.0.2"
+	id "net.minecraftforge.gradleutils" version "2.+"
 }
+
+version = gradleutils.getTagOffsetVersion()
+println "Version: $version"
 
 tasks.register("css", io.freefair.gradle.plugins.jsass.SassCompile) {
     sassPath = "${projectDir}/sass"
@@ -10,9 +14,7 @@ tasks.register("css", io.freefair.gradle.plugins.jsass.SassCompile) {
     //outputStyle = io.bit3.jsass.OutputStyle.NESTED
     outputStyle = io.bit3.jsass.OutputStyle.COMPRESSED
 }
-
 def minifyJsFiles = tasks.register("minifyJsFiles")
-
 void createJsTask(final String taskName, final String fileName) {
     def tmp = tasks.register("minify${taskName.capitalize()}DotJs", com.eriwen.gradle.js.tasks.MinifyJsTask) {
         source = file("${projectDir}/js/${fileName}.js")
@@ -20,14 +22,12 @@ void createJsTask(final String taskName, final String fileName) {
     }
     minifyJsFiles.dependsOn(tmp)
 }
-
 createJsTask('themeSwitch', "theme-switch")
 createJsTask('themeSwitchToggle', "theme-switch-toggle")
 createJsTask('curseAds', "curse-ads")
 createJsTask('googleAds', "google-ads")
 createJsTask('sidebar', "sidebar")
 createJsTask('files', "files")
-
 tasks.register("bundleFiles", Zip) {
     dependsOn minifyJsFiles
     archiveBaseName = 'files-bundle'
@@ -53,12 +53,10 @@ tasks.register("bundleFiles", Zip) {
         include '**/*.html'
     }
 }
-
 @groovy.transform.CompileStatic
 static String digest(String data, String hash) {
     return java.security.MessageDigest.getInstance(hash).digest(data.bytes).encodeHex().toString()
 }
-
 void writeArtifact(group, name, version, classifier = null, String ext = 'jar') {
     String path = "${group}/${name}/${version}/${name}-${version}"
     if (classifier != null)
@@ -70,7 +68,6 @@ void writeArtifact(group, name, version, classifier = null, String ext = 'jar') 
     file("./test/maven/${path}.sha1").text = digest(path, 'SHA-1')
     file("./test/maven/${path}.sha256").text = digest(path, 'SHA-256')
 }
-
 void writeXml(String group, String name, String displayName, List vers, boolean writePromos) {
     final writer = new StringWriter()
     def xml = new groovy.xml.MarkupBuilder(writer)
@@ -114,11 +111,9 @@ void writeXml(String group, String name, String displayName, List vers, boolean 
         ]).toPrettyString()
     }
 }
-
 tasks.register("deleteTestData", Delete) {
     delete './test/'
 }
-
 tasks.register('generateMaven') {
     mustRunAfter deleteTestData
     doLast {
@@ -155,7 +150,6 @@ tasks.register('generateMaven') {
         writeXml('net/minecraftforge', 'froge', "Minecraft Froge", versions, false)
     }
 }
-
 tasks.register('generateGlobalConfig') {
     mustRunAfter deleteTestData
     doLast {
@@ -168,7 +162,6 @@ tasks.register('generateGlobalConfig') {
         ]).toPrettyString()
     }
 }
-
 tasks.register('generateTestUsers') {
 	mustRunAfter deleteTestData
 	doLast {
@@ -184,7 +177,6 @@ tasks.register('generateTestUsers') {
 		]).toPrettyString()
 	}
 }
-
 tasks.register('generateTestConfig') {
 	dependsOn generateGlobalConfig, generateTestUsers
 	mustRunAfter deleteTestData
@@ -198,14 +190,12 @@ tasks.register('generateTestConfig') {
 		]).toPrettyString()
 	}
 }
-
 tasks.register('extractBundledFiles', Copy) {
     dependsOn bundleFiles
     mustRunAfter deleteTestData
     from zipTree(bundleFiles.archiveFile)
     into file('./test/static/')
 }
-
 tasks.register('copyTestTemplates', Copy) {
     mustRunAfter deleteTestData
     from file('./templates/')
@@ -216,7 +206,6 @@ tasks.register('copyTestPython', Copy) {
     from file('./python/')
     into file('./test/python/')
 }
-
 tasks.register('runTestPageGen', Exec) {
 	dependsOn = [copyTestPython, copyTestTemplates]
 	workingDir 'test'
@@ -226,7 +215,6 @@ tasks.register('runTestPageGen', Exec) {
     else // assume *nix
         commandLine 'sh', '../runTestPageGen.sh'
 }
-
 tasks.register('setupPageGen', Exec) {
     String os = System.getProperty('os.name').toLowerCase(Locale.ROOT)
     if (os.contains('win'))
@@ -234,8 +222,17 @@ tasks.register('setupPageGen', Exec) {
     else // assume *nix
         commandLine 'sh', '-c', 'pip install -r requirements.txt'
 }
-
 tasks.register('setupTest') {
     dependsOn = [deleteTestData, extractBundledFiles, generateMaven, setupPageGen, generateTestConfig, copyTestTemplates]
     doLast { file('./test/out').mkdirs() }
+}
+tasks.register('publish', Exec) {
+	dependsOn bundleFiles
+	commandLine 'docker-compose', 'build'
+	doLast {
+		exec { commandLine 'docker', 'tag',  'pagegen-webhook:latest', 'containers.minecraftforge.net/pagegen-webhook:latest' }
+		exec { commandLine 'docker', 'tag',  'pagegen-webhook:latest', "containers.minecraftforge.net/pagegen-webhook:$version" }
+		exec { commandLine 'docker', 'push', 'containers.minecraftforge.net/pagegen-webhook:latest' }
+		exec { commandLine 'docker', 'push', "containers.minecraftforge.net/pagegen-webhook:$version" }
+	}
 }

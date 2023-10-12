@@ -24,8 +24,9 @@ app.config['MAX_CONTENT_LENGTH'] = 1 * 1024 # Posts should never need more then 
 
 tasks = PriorityQueue()
 users = {}
+config = {}
 
-TaskTypes = Enum('TaskTypes', ['PROMOTE', 'GEN'])
+TaskTypes = Enum('TaskTypes', ['PROMOTE', 'REGEN_INDEX', 'GEN', 'REGEN'])
     
 class Task:
     def __init__(self, type, data):
@@ -44,7 +45,7 @@ class Task:
 
 @app.route('/promote', methods = ['POST'])
 @app.route('/promote/<type>/<path:group>/<artifact>/<version>', methods = ['GET'])
-def home(type=None, group=None, artifact=None, version=None):
+def promote(type=None, group=None, artifact=None, version=None):
     data = {}
     if request.method == 'GET':
         data = {
@@ -72,23 +73,82 @@ def home(type=None, group=None, artifact=None, version=None):
     tasks.put(Task(TaskTypes.PROMOTE, data))
     
     return 'Promotion Queued'
+
+@app.route('/gen', methods = ['POST'])
+@app.route('/gen/<path:group>/<artifact>', methods = ['GET'])
+def gen(group=None, artifact=None):
+    data = {}
+    if request.method == 'GET':
+        data = {
+            'group': group.replace('/', '.'),
+            'artifact': artifact
+        }
+    elif request.method == 'POST':
+        data = request.get_json()
+    else:
+        return 'Unsupported Request', 404
+        
+    if data.get('group') == None or data.get('artifact') == None:
+        return "Missing generator target: {}".format(data), 400
+    
+    loginResponse = checkAccess(data)
+    if loginResponse:
+        return loginResponse
+        
+    logger.info("Queueing Gen: {}:{}".format(data['group'], data['artifact']))
+    tasks.put(Task(TaskTypes.GEN, data))
+    
+    return 'Generation Queued'
+    
+@app.route('/regen', methods = ['GET'])
+def regen():
+    loginResponse = checkAccess({'group': '', 'artifact': ''})
+    if loginResponse:
+        return loginResponse
+        
+    logger.info("Queueing Complete Regen")
+    tasks.put(Task(TaskTypes.REGEN, {}))
+    
+    return 'Complete Generation Queued'
+    
+@app.route('/regen-index', methods = ['GET'])
+def regen_index():
+    loginResponse = checkAccess({'group': '', 'artifact': ''})
+    if loginResponse:
+        return loginResponse
+        
+    logger.info("Queueing Index Regen")
+    tasks.put(Task(TaskTypes.REGEN_INDEX, {}))
+    
+    return 'Index Generation Queued'
     
 def process_queue():
     while tasks:
         task = tasks.get()
         logger.info(task)
         data = task.data
+        key = task.type.name.lower()
+        args = []
+        if key in config and 'args' in config[key]:
+            args += config[key]['args']
         
-        if (task.type == TaskTypes.PROMOTE):
+        if task.type == TaskTypes.PROMOTE:
             logger.info('Promoting %s:%s', data['group'], data['artifact'])
-            args = []
-            if 'promote' in config and 'args' in config['promote']:
-                args += config['promote']['args']
             args += ['promote', data['group'] + ':' + data['artifact'], data['version'], data['type']]
-            try:
-                page_generator.main(args)
-            except Exception as e:
-                logger.error('Failed to run promotion: %s', e)
+        elif task.type == TaskTypes.REGEN:
+            logger.info('Regnerating Everything')
+            args += ['regen']
+        elif task.type == TaskTypes.REGEN_INDEX:
+            logger.info('Regnerating Tracked Index')
+            args += ['index']
+        elif task.type == TaskTypes.GEN:
+            logger.info('Generating %s:%s', data['group'], data['artifact'])
+            args += ['gen', data['group'] + ':' + data['artifact']]
+            
+        try:
+            page_generator.main(args)
+        except Exception as e:
+            logger.error('Failed to run generator: %s', e)
             
     logger.error("Task queue ended")
         

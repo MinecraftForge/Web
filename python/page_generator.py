@@ -70,7 +70,8 @@ def main(raw_args=None):
 
     for gen in Generators[args.command]:
         gen.generate(metadata, artifact, templates, args)
-
+    
+    print('Finished')
 
 if __name__ == '__main__':
     main()

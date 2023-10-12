@@ -1,10 +1,10 @@
 version: '3.3'
 services:
-  webhook:
-    image: pagegen
+  pagegen-webhook:
+    image: pagegen-webhook:latest
     build:
       context: .
-    container_name: pagegen
+    container_name: pagegen-webhook
     restart: 'always'
     environment:
       - TZ=America/Los_Angeles
