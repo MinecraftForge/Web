@@ -236,3 +236,13 @@ tasks.register('publish', Exec) {
 		exec { commandLine 'docker', 'push', "containers.minecraftforge.net/pagegen-webhook:$version" }
 	}
 }
+tasks.register('publishTest', Exec) {
+	dependsOn bundleFiles
+	commandLine 'docker-compose', 'build'
+	doLast {
+		exec { commandLine 'docker', 'tag',  'pagegen-webhook:latest', 'containers.minecraftforge.net/pagegen-webhook-test:latest' }
+		exec { commandLine 'docker', 'tag',  'pagegen-webhook:latest', "containers.minecraftforge.net/pagegen-webhook-test:$version" }
+		exec { commandLine 'docker', 'push', 'containers.minecraftforge.net/pagegen-webhook-test:latest' }
+		exec { commandLine 'docker', 'push', "containers.minecraftforge.net/pagegen-webhook-test:$version" }
+	}
+}

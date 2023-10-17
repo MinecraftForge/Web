@@ -155,7 +155,10 @@ class Artifact:
     def find_version(self, version: str) -> ArtifactVersion:
         v = next((v for v in self.all_versions if v.version == version), None)
         if not v:
-            #pprint(self.all_versions)
+            print(f'Failed to find {version} in {self.name}')
+            print('Known Versions:')
+            for kv in self.all_versions:
+              print(f'  {kv.version}')
             raise ValueError(f'Failed to find {version} in {self.name}')
         return v
 
@@ -205,12 +208,17 @@ class Artifact:
         (group, name) = parse_artifact(artifact)
         artifact = Artifact(metadata, group, name)
         try:
-            meta_file = artifact.path().joinpath('maven-metadata.xml')
-            if (not meta_file.exists()):
-                raise RuntimeError(f'Failed to read maven-metadata from {meta_file}')
-                
-            print(f'File: {meta_file}')
-            versions = [v.text for v in elementtree.parse(meta_file).findall("./versioning/versions/version")]
+            # Reposilite doesn't flus the maven-metadata.xml file to disk fast enough for us to see it after a new
+            # build is coreated. So we hackily gather the data over the web. Which is stupid. But I'll fix this 
+            # after I rebuild the reposilite stack
+            if (metadata.local_data and (meta_file := artifact.path().joinpath('maven-metadata.xml')).exists()):
+                versions = [v.text for v in elementtree.parse(meta_file).findall("./versioning/versions/version")]
+            else:
+                if (xmlresponse := requests.get(f'{metadata.dl_root}{artifact.mvnpath()}/maven-metadata.xml')).status_code == 200:
+                    versions = [v.text for v in elementtree.fromstring(xmlresponse.content).findall("./versioning/versions/version")]
+                else:
+                    raise RuntimeError(f'Failed to read maven-metadata from {metadata.dl_root}{artifact.mvnpath()}/maven-metadata.xml')
+
             artifact.all_versions = sorted((av for v in versions if (av := ArtifactVersion.load(artifact, v)) is not None), key=lambda v: v.timestamp)
             mc_versions = (av.minecraft_version for av in artifact.all_versions)
             artifact.versions = {mc_version: {av.version: av for av in artifact.all_versions if av.minecraft_version == mc_version} for mc_version in mc_versions}
