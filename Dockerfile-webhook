@@ -14,4 +14,4 @@ COPY templates templates
 COPY build/distributions/files-bundle.zip .
 RUN unzip files-bundle.zip -d static && rm files-bundle.zip
 
-ENTRYPOINT [ "python", "-u", "python/page_generator.py" ]
+ENTRYPOINT [ "python", "-u", "python/page_generator_service.py" ]

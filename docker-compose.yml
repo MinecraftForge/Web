@@ -3,6 +3,7 @@ services:
   pagegen-webhook:
     image: pagegen-webhook:latest
     build:
+      dockerfile: Dockerfile-webhook
       context: .
     container_name: pagegen-webhook
     restart: 'always'
@@ -22,3 +23,11 @@ services:
       traefik.http.services.pagegen.loadbalancer.server.port: 5000
       traefik.http.middlewares.pagegen-prefix.stripprefix.prefixes: '/pagegen'
       traefik.http.middlewares.pagegen-prefix.stripprefix.forceSlash: true
+  pagegen:
+    image: pagegen:latest
+    build:
+      context: .
+    container_name: pagegen
+    restart: 'always'
+    environment:
+      - TZ=America/Los_Angeles

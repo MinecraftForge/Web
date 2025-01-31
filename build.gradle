@@ -230,6 +230,11 @@ tasks.register('publish', Exec) {
 	dependsOn bundleFiles
 	commandLine 'docker-compose', 'build'
 	doLast {
+		exec { commandLine 'docker', 'tag',  'pagegen:latest', 'containers.minecraftforge.net/pagegen:latest' }
+		exec { commandLine 'docker', 'tag',  'pagegen:latest', "containers.minecraftforge.net/pagegen:$version" }
+		exec { commandLine 'docker', 'push', 'containers.minecraftforge.net/pagegen:latest' }
+		exec { commandLine 'docker', 'push', "containers.minecraftforge.net/pagegen:$version" }
+        
 		exec { commandLine 'docker', 'tag',  'pagegen-webhook:latest', 'containers.minecraftforge.net/pagegen-webhook:latest' }
 		exec { commandLine 'docker', 'tag',  'pagegen-webhook:latest', "containers.minecraftforge.net/pagegen-webhook:$version" }
 		exec { commandLine 'docker', 'push', 'containers.minecraftforge.net/pagegen-webhook:latest' }
@@ -240,6 +245,12 @@ tasks.register('publishTest', Exec) {
 	dependsOn bundleFiles
 	commandLine 'docker-compose', 'build'
 	doLast {
+		exec { commandLine 'docker', 'tag',  'pagegen:latest', 'containers.minecraftforge.net/pagegen-test:latest' }
+		exec { commandLine 'docker', 'tag',  'pagegen:latest', "containers.minecraftforge.net/pagegen-test:$version" }
+		exec { commandLine 'docker', 'push', 'containers.minecraftforge.net/pagegen-test:latest' }
+		exec { commandLine 'docker', 'push', "containers.minecraftforge.net/pagegen-test:$version" }
+        
+        
 		exec { commandLine 'docker', 'tag',  'pagegen-webhook:latest', 'containers.minecraftforge.net/pagegen-webhook-test:latest' }
 		exec { commandLine 'docker', 'tag',  'pagegen-webhook:latest', "containers.minecraftforge.net/pagegen-webhook-test:$version" }
 		exec { commandLine 'docker', 'push', 'containers.minecraftforge.net/pagegen-webhook-test:latest' }
