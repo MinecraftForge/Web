@@ -1,10 +1,12 @@
 plugins {
+    id 'maven-publish'
     id "io.freefair.jsass-base" version "1.0.2"
     id "com.magnetichq.gradle.js" version "3.0.2"
-	id "net.minecraftforge.gradleutils" version "2.+"
+    id 'net.minecraftforge.gradleutils' version '[2.3,2.4)'
 }
 
-version = gradleutils.getTagOffsetVersion()
+group = 'net.minecraftforge'
+version = gradleutils.tagOffsetVersion
 println "Version: $version"
 
 tasks.register("css", io.freefair.gradle.plugins.jsass.SassCompile) {
@@ -28,9 +30,9 @@ createJsTask('curseAds', "curse-ads")
 createJsTask('googleAds', "google-ads")
 createJsTask('sidebar', "sidebar")
 createJsTask('files', "files")
-tasks.register("bundleFiles", Zip) {
+tasks.register('bundleStatic', Zip) {
     dependsOn minifyJsFiles
-    archiveBaseName = 'files-bundle'
+    archiveBaseName = 'static-bundle'
     destinationDirectory = file("${buildDir}/distributions")
     from(file("${buildDir}/js")) {
         include '*.js'
@@ -53,6 +55,23 @@ tasks.register("bundleFiles", Zip) {
         include '**/*.html'
     }
 }
+tasks.register('bundleFiles', Zip) {
+    dependsOn bundleStatic
+    archiveBaseName = 'full-bundle'
+    destinationDirectory = file("${buildDir}/distributions")
+    from(zipTree(bundleStatic.archiveFile)) {
+        into 'static'
+    }
+    from(file("${projectDir}/python")) {
+        exclude '__pycache__/'
+        into 'python'
+    }
+    from(file("${projectDir}/templates")) {
+        into 'templates'
+    }
+    from(file("${projectDir}/requirements.txt"))
+}
+
 @groovy.transform.CompileStatic
 static String digest(String data, String hash) {
     return java.security.MessageDigest.getInstance(hash).digest(data.bytes).encodeHex().toString()
@@ -163,37 +182,37 @@ tasks.register('generateGlobalConfig') {
     }
 }
 tasks.register('generateTestUsers') {
-	mustRunAfter deleteTestData
-	doLast {
-		def file = file('./test/config/users.json')
-		file.parentFile.mkdirs()
+    mustRunAfter deleteTestData
+    doLast {
+        def file = file('./test/config/users.json')
+        file.parentFile.mkdirs()
         file.text = new groovy.json.JsonBuilder([
-			test_name: [
-				password: 'test_password',
-				access: [
-					[group: '', artifact: '']
-				]
-			]
-		]).toPrettyString()
-	}
+            test_name: [
+                password: 'test_password',
+                access: [
+                    [group: '', artifact: '']
+                ]
+            ]
+        ]).toPrettyString()
+    }
 }
 tasks.register('generateTestConfig') {
-	dependsOn generateGlobalConfig, generateTestUsers
-	mustRunAfter deleteTestData
-	doLast {
-		def cfg = file('./test/config/config.json')
-		cfg.parentFile.mkdirs()
+    dependsOn generateGlobalConfig, generateTestUsers
+    mustRunAfter deleteTestData
+    doLast {
+        def cfg = file('./test/config/config.json')
+        cfg.parentFile.mkdirs()
         cfg.text = new groovy.json.JsonBuilder([
-			promote: [
-				args: [ '--folder', '/in', '--local-data', '--config', '/config/global_overrides.json', '--static',  'file://' + file('./test/static/').absolutePath]
-			]
-		]).toPrettyString()
-	}
+            promote: [
+                args: [ '--folder', '/in', '--local-data', '--config', '/config/global_overrides.json', '--static',  'file://' + file('./test/static/').absolutePath]
+            ]
+        ]).toPrettyString()
+    }
 }
 tasks.register('extractBundledFiles', Copy) {
-    dependsOn bundleFiles
+    dependsOn bundleStatic
     mustRunAfter deleteTestData
-    from zipTree(bundleFiles.archiveFile)
+    from zipTree(bundleStatic.archiveFile)
     into file('./test/static/')
 }
 tasks.register('copyTestTemplates', Copy) {
@@ -207,8 +226,8 @@ tasks.register('copyTestPython', Copy) {
     into file('./test/python/')
 }
 tasks.register('runTestPageGen', Exec) {
-	dependsOn = [copyTestPython, copyTestTemplates]
-	workingDir 'test'
+    dependsOn = [copyTestPython, copyTestTemplates]
+    workingDir 'test'
     String os = System.getProperty('os.name').toLowerCase(Locale.ROOT)
     if (os.contains('win'))
         commandLine 'cmd', '/c', file('runTestPageGen.bat').absolutePath
@@ -226,34 +245,62 @@ tasks.register('setupTest') {
     dependsOn = [deleteTestData, extractBundledFiles, generateMaven, setupPageGen, generateTestConfig, copyTestTemplates]
     doLast { file('./test/out').mkdirs() }
 }
-tasks.register('publish', Exec) {
-	dependsOn bundleFiles
-	commandLine 'docker-compose', 'build'
-	doLast {
-		exec { commandLine 'docker', 'tag',  'pagegen:latest', 'containers.minecraftforge.net/pagegen:latest' }
-		exec { commandLine 'docker', 'tag',  'pagegen:latest', "containers.minecraftforge.net/pagegen:$version" }
-		exec { commandLine 'docker', 'push', 'containers.minecraftforge.net/pagegen:latest' }
-		exec { commandLine 'docker', 'push', "containers.minecraftforge.net/pagegen:$version" }
+
+
+tasks.register('publishDocker', Exec) {
+    dependsOn bundleStatic
+    commandLine 'docker-compose', 'build'
+    doLast {
+        exec { commandLine 'docker', 'tag',  'pagegen:latest', 'containers.minecraftforge.net/pagegen:latest' }
+        exec { commandLine 'docker', 'tag',  'pagegen:latest', "containers.minecraftforge.net/pagegen:$version" }
+        exec { commandLine 'docker', 'push', 'containers.minecraftforge.net/pagegen:latest' }
+        exec { commandLine 'docker', 'push', "containers.minecraftforge.net/pagegen:$version" }
         
-		exec { commandLine 'docker', 'tag',  'pagegen-webhook:latest', 'containers.minecraftforge.net/pagegen-webhook:latest' }
-		exec { commandLine 'docker', 'tag',  'pagegen-webhook:latest', "containers.minecraftforge.net/pagegen-webhook:$version" }
-		exec { commandLine 'docker', 'push', 'containers.minecraftforge.net/pagegen-webhook:latest' }
-		exec { commandLine 'docker', 'push', "containers.minecraftforge.net/pagegen-webhook:$version" }
-	}
+        exec { commandLine 'docker', 'tag',  'pagegen-webhook:latest', 'containers.minecraftforge.net/pagegen-webhook:latest' }
+        exec { commandLine 'docker', 'tag',  'pagegen-webhook:latest', "containers.minecraftforge.net/pagegen-webhook:$version" }
+        exec { commandLine 'docker', 'push', 'containers.minecraftforge.net/pagegen-webhook:latest' }
+        exec { commandLine 'docker', 'push', "containers.minecraftforge.net/pagegen-webhook:$version" }
+    }
 }
-tasks.register('publishTest', Exec) {
-	dependsOn bundleFiles
-	commandLine 'docker-compose', 'build'
-	doLast {
-		exec { commandLine 'docker', 'tag',  'pagegen:latest', 'containers.minecraftforge.net/pagegen-test:latest' }
-		exec { commandLine 'docker', 'tag',  'pagegen:latest', "containers.minecraftforge.net/pagegen-test:$version" }
-		exec { commandLine 'docker', 'push', 'containers.minecraftforge.net/pagegen-test:latest' }
-		exec { commandLine 'docker', 'push', "containers.minecraftforge.net/pagegen-test:$version" }
+tasks.register('publishDockerTest', Exec) {
+    dependsOn bundleStatic
+    commandLine 'docker-compose', 'build'
+    doLast {
+        exec { commandLine 'docker', 'tag',  'pagegen:latest', 'containers.minecraftforge.net/pagegen-test:latest' }
+        exec { commandLine 'docker', 'tag',  'pagegen:latest', "containers.minecraftforge.net/pagegen-test:$version" }
+        exec { commandLine 'docker', 'push', 'containers.minecraftforge.net/pagegen-test:latest' }
+        exec { commandLine 'docker', 'push', "containers.minecraftforge.net/pagegen-test:$version" }
         
         
-		exec { commandLine 'docker', 'tag',  'pagegen-webhook:latest', 'containers.minecraftforge.net/pagegen-webhook-test:latest' }
-		exec { commandLine 'docker', 'tag',  'pagegen-webhook:latest', "containers.minecraftforge.net/pagegen-webhook-test:$version" }
-		exec { commandLine 'docker', 'push', 'containers.minecraftforge.net/pagegen-webhook-test:latest' }
-		exec { commandLine 'docker', 'push', "containers.minecraftforge.net/pagegen-webhook-test:$version" }
-	}
+        exec { commandLine 'docker', 'tag',  'pagegen-webhook:latest', 'containers.minecraftforge.net/pagegen-webhook-test:latest' }
+        exec { commandLine 'docker', 'tag',  'pagegen-webhook:latest', "containers.minecraftforge.net/pagegen-webhook-test:$version" }
+        exec { commandLine 'docker', 'push', 'containers.minecraftforge.net/pagegen-webhook-test:latest' }
+        exec { commandLine 'docker', 'push', "containers.minecraftforge.net/pagegen-webhook-test:$version" }
+    }
+}
+
+publishing {
+    publications.register('forgeMaven', MavenPublication) {
+        artifact source: bundleFiles, extension: 'zip'
+
+        artifactId = 'web'
+
+        pom {
+            name = 'Forge Page Generator'
+            description = 'Python code to generate a download frontend for maven repository'
+            url = 'https://github.com/MinecraftForge/Web'
+
+            gradleutils.pom.setGitHubDetails(pom, 'Web')
+
+            license gradleutils.pom.Licenses.LGPLv2_1
+
+            developers {
+                developer gradleutils.pom.Developers.LexManos
+            }
+        }
+    }
+
+    repositories {
+        maven gradleutils.publishingForgeMaven
+    }
 }

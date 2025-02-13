@@ -103,7 +103,7 @@ class PromoteGenerator(Generator):
         out = artifact.path(root='output_meta')
         out.mkdir(parents=True, exist_ok=True)
         print(f'Writing promotion files at {out}')
-        writeHashed(out, 'promotions_slim', json.dumps(slimpromos, indent=2), args.gzip, False)
+        writeHashed(out, 'promotions_slim.json', json.dumps(slimpromos, indent=2), args.gzip, False)
 
 
 class TrackingGenerator(Generator):
