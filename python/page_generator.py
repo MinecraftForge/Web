@@ -19,6 +19,7 @@ def main(raw_args=None):
     parser.add_argument('--downloadroot', dest='dlroot', default='https://maven.minecraftforge.net/', help='Root URL for downloading artifacts')
     parser.add_argument('--webroot', dest='webroot', default='https://files.minecraftforge.net/', help='Root URL for artifact pages')
     parser.add_argument('--static', dest='static', default='https://files.minecraftforge.net/static/', help='Root URL for static assets used by the templates')
+    parser.add_argument('--static-root', dest='staticroot', default='static', help='Root static files on disc')
 
     parser.add_argument('--folder', dest='folder', default='/in/repositories/releases/', help='Root directory for the maven structure to read metadata from files', type=parse_path)
     parser.add_argument('--config', dest='config', default='/in/global_overrides.json', help="Location of global_overrides.json file", type=parse_path)
@@ -53,6 +54,7 @@ def main(raw_args=None):
     print(f'Config:   {args.config}')
     print(f'Web Out:  {args.output_web}')
     print(f'Meta Out: {args.output_meta}')
+    print(f'Static:   {args.staticroot}')
     print(f'WebRoot:  {args.webroot}')
     print(f'LocalData:{args.localdata}')
     print(f'Gzip:     {args.gzip}')
@@ -66,7 +68,7 @@ def main(raw_args=None):
 
     metadata = Metadata(args.folder, args.output_meta, args.output_web, args.webroot, args.dlroot, args.static, args.config, args.localdata)
     artifact = Artifact.load_maven_xml(metadata, args.artifact) if 'artifact' in args else None
-    templates = Templates(args.templates, args.static, args.webroot, args.dlroot)
+    templates = Templates(args.templates, args.static, args.webroot, args.dlroot, args.staticroot)
 
     for gen in Generators[args.command]:
         gen.generate(metadata, artifact, templates, args)

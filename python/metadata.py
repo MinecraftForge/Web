@@ -18,7 +18,19 @@ PROMOTION_REG = re.compile(r'^' + MINECRAFT_FORMAT + '-(?P<tag>[\w]+)$')
 VERSION_REG = re.compile(r'^(?:' + MINECRAFT_FORMAT + '-)?(?P<version>(?:\w+(?:\.|\+))*[\d]+)-?(?P<branch>[\w\.\-]+)?$')
 
 def parse_version(version):
-    return (versmatch.groupdict().get('mcversion') or 'default', versmatch.group('version'), versmatch.group('branch')) if (versmatch := VERSION_REG.match(version)) else ('default', version, None)
+    versmatch = VERSION_REG.match(version)
+    if (versmatch is None):
+        return ('default', version, None)
+
+    mcver = versmatch.groupdict().get('mcversion') or 'default'
+    ver = versmatch.group('version')
+    branch = versmatch.group('branch')
+
+    if (not branch is None and branch.startswith(('beta', 'rc', 'pre'))):
+        ver = ver + '-' + branch
+        branch = None
+
+    return (mcver, ver, branch)
 
 
 def parse_artifact(artifact: str):
@@ -166,12 +178,17 @@ class Artifact:
         (mc_vers, ver, branch) = parse_version(version)
         tag = tag.lower()
         v = self.find_version(ver)
+        #print(f'Version: {version} --- {ver}')
 
         if not v.minecraft_version in self.promotions:
             self.promotions[v.minecraft_version] = {}
-            
+
         if existing := self.promotions[v.minecraft_version].get(tag):
-            self.find_version(existing).promotion_tags.remove(tag)
+            old = self.find_version(existing)
+            if tag in old.promotion_tags:
+                old.promotion_tags.remove(tag)
+            else:
+                print('Failed to find %s in %s tags %s' % (tag, existing, old.promotion_tags))
 
         self.promotions[v.minecraft_version][tag] = ver
         v.promotion_tags.append(tag)

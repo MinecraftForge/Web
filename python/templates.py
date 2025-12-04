@@ -4,6 +4,7 @@ import pathlib
 import re
 import requests
 import zlib
+import os
 
 import jinja2
 import markupsafe
@@ -36,21 +37,21 @@ def get_artifact_description(artifact: Artifact, mc_version):
 def crc32(file_path: str, chunk_size: int = 4096) -> str:
     """Computes the CRC32 checksum of the contents of the file at the given file_path"""
     checksum = 0
-    with open('./static/' + file_path, 'rb') as f:
+    with open(file_path, 'rb') as f:
         while (chunk := f.read(chunk_size)):
             checksum = zlib.crc32(chunk, checksum)
 
     return "%08X" % (checksum & 0xFFFFFFFF)
 
 class Templates:
-    def __init__(self, template_path: pathlib.Path, static_base, web_base, repository_base):
+    def __init__(self, template_path: pathlib.Path, static_base, web_base, repository_base, static_file_root: pathlib.Path):
         self.env = jinja2.Environment(loader=jinja2.FileSystemLoader(template_path))
         self.env.globals['static_root'] = static_base
         self.env.globals['web_base'] = web_base
         self.env.globals['repository_base'] = repository_base
         now = datetime.datetime.utcnow()
         self.env.globals['now'] = now
-        self.env.globals['crc32'] = crc32
+        self.env.globals['crc32'] = lambda file_path, chunk_size=4096: crc32(os.path.join(static_file_root, file_path), chunk_size)
         self.env.globals['show_classifier'] = show_classifier
         self.env.globals['get_artifact_description'] = get_artifact_description
 
